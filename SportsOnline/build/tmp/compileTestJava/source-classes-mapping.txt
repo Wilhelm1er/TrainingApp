@@ -1,0 +1,52 @@
+com/yaps/petstore/web/FindUsersControllerTest.java
+ com.yaps.petstore.web.FindUsersControllerTest
+com/yaps/petstore/domain/dao/OrderDAOTest.java
+ com.yaps.petstore.domain.dao.OrderDAOTest
+com/yaps/petstore/web/CreateCustomerTestWebClient.java
+ com.yaps.petstore.web.CreateCustomerTestWebClient
+AllTests.java
+ AllTests
+com/yaps/petstore/configuration/TestConfig.java
+ com.yaps.petstore.configuration.TestConfig
+com/yaps/petstore/authentication/domain/service/UserServiceTest.java
+ com.yaps.petstore.authentication.domain.service.UserServiceTest
+com/yaps/petstore/web/SearchItemsTestWebClient.java
+ com.yaps.petstore.web.SearchItemsTestWebClient
+com/yaps/petstore/web/UpdateAccountTestWebClient.java
+ com.yaps.petstore.web.UpdateAccountTestWebClient
+com/yaps/petstore/domain/service/CatalogServiceTest.java
+ com.yaps.petstore.domain.service.CatalogServiceTest
+com/yaps/petstore/web/WebTestMockMvc.java
+ com.yaps.petstore.web.WebTestMockMvc
+com/yaps/petstore/domain/service/OrderServiceTest.java
+ com.yaps.petstore.domain.service.OrderServiceTest
+com/yaps/petstore/web/OrderTestWebClient.java
+ com.yaps.petstore.web.OrderTestWebClient
+com/yaps/petstore/domain/model/ItemTest.java
+ com.yaps.petstore.domain.model.ItemTest
+com/yaps/petstore/domain/dao/CategoryDAOTest.java
+ com.yaps.petstore.domain.dao.CategoryDAOTest
+com/yaps/petstore/domain/dao/ProductDAOTest.java
+ com.yaps.petstore.domain.dao.ProductDAOTest
+com/yaps/petstore/web/ProductRestTestClient.java
+ com.yaps.petstore.web.ProductRestTestClient
+com/yaps/petstore/domain/service/CreditCardServiceTest.java
+ com.yaps.petstore.domain.service.CreditCardServiceTest
+com/yaps/petstore/domain/dao/ItemDAOTest.java
+ com.yaps.petstore.domain.dao.ItemDAOTest
+com/yaps/petstore/authentication/domain/dao/UserDAOTest.java
+ com.yaps.petstore.authentication.domain.dao.UserDAOTest
+com/yaps/petstore/web/CatagoryRestTestClient.java
+ com.yaps.petstore.web.CatagoryRestTestClient
+com/yaps/petstore/web/VisualiseCatalogTestWebClient.java
+ com.yaps.petstore.web.VisualiseCatalogTestWebClient
+com/yaps/petstore/web/ManageCatalogTestWebClient.java
+ com.yaps.petstore.web.ManageCatalogTestWebClient
+com/yaps/petstore/util/UniqueIdGeneratorTest.java
+ com.yaps.petstore.util.UniqueIdGeneratorTest
+com/yaps/petstore/domain/service/ShoppingCartTest.java
+ com.yaps.petstore.domain.service.ShoppingCartTest
+com/yaps/petstore/domain/dao/OrderLineDAOTest.java
+ com.yaps.petstore.domain.dao.OrderLineDAOTest
+com/yaps/petstore/web/ShoppingCartWebTest.java
+ com.yaps.petstore.web.ShoppingCartWebTest
