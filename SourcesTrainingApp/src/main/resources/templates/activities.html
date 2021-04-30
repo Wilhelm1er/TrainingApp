@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/default.html :: header">
+</head>
+<body>
+<nav th:insert="layout/default.html :: navbar"></nav>
+<div class="container">
+<br><br><br><br>
+	<h3 th:text="#{activities.included}+' '+${disciplineId}"></h3>
+	<br>
+	<div style="border: 2px solid gray;border-radius: 4px;padding:5px">
+	<div th:each="activityDTO : ${activityDTOs}">
+		<a th:href="@{'/find-events?activityId='+${activityDTO.id}}" th:text="${activityDTO.name}" ></a>
+    	<p th:text="${activityDTO.description}"></p>
+	</div>
+	</div>
+	
+<br>
+<div th:insert="layout/default.html :: footer"></div>
+</div>
+</body>
+</html>
