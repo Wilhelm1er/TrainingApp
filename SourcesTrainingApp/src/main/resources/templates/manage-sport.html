@@ -34,74 +34,49 @@
 		<th class="col-sm-1"></th>
 		<th class="col-sm-1"></th>
 		</tr>
-			<tr th:if="${categoryDTOs.size()>0}" th:each="categoryDTO: ${categoryDTOs}">
-				<td class="col-sm-1"><a th:href="@{'/manage-products/'+${categoryDTO.id}}"  th:text="${categoryDTO.id}"></a></td>
-				<td class="col-sm-3" th:text="${categoryDTO.name}"></td>
-				<th class="col-sm-1"><a class="btn btn-primary" th:href="@{'/update-category/'+${categoryDTO.id}}" th:text="#{catalog.update}"></a></th>
-				<th class="col-sm-1"><a class="btn btn-primary" th:href="@{'/delete-category/'+${categoryDTO.id}}" th:text="#{catalog.delete}"></a></th>
+			<tr th:if="${disciplineDTOs.size()>0}" th:each="disciplineDTO: ${disciplineDTOs}">
+				<td class="col-sm-1"><a th:href="@{'/manage-activities/'+${disciplineDTO.id}}"  th:text="${disciplineDTO.id}"></a></td>
+				<td class="col-sm-3" th:text="${disciplineDTO.name}"></td>
+				<th class="col-sm-1"><a class="btn btn-primary" th:href="@{'/update-discipline/'+${disciplineDTO.id}}" th:text="#{sport.update}"></a></th>
+				<th class="col-sm-1"><a class="btn btn-primary" th:href="@{'/delete-discipline/'+${disciplineDTO.id}}" th:text="#{sport.delete}"></a></th>
 			</tr>		
-			<tr th:if="${categoryDTOs.size()==0}">
-				<td class="col-sm-7" th:text=#{category.empty}></td>
+			<tr th:if="${disciplineDTOs.size()==0}">
+				<td class="col-sm-7" th:text=#{discipline.empty}></td>
 		</tr>	
 		</table>	
 		</div>
 </div>		
 		<!-- ---------------------------------------------------- PRODUCTS ---------------------------------------------------- -->
 		
-		<div th:if="${productDTOs !=null}">
-		<h3 th:text="#{product.list}"></h3>
+		<div th:if="${activityDTOs !=null}">
+		<h3 th:text="#{activity.list}"></h3>
 		<br>
 		<div class="row justify-content-start" >
 		<table>		
 		<tr class="bg-light">
-		<th class="col-sm-1" th:text="#{catalog.id}"></th>
-		<th class="col-sm-3" th:text="#{catalog.name}"></th>
+		<th class="col-sm-1" th:text="#{sport.id}"></th>
+		<th class="col-sm-3" th:text="#{sport.name}"></th>
 		<th class="col-sm-1"></th>
 		<th class="col-sm-1"></th>
 		</tr>
-			<tr th:if="${productDTOs.size()>0}" th:each="productDTO: ${productDTOs}">
-				<td class="col-sm-1"><a th:href="@{'/manage-items/'+${productDTO.id}}"  th:text="${productDTO.id}"></a></td>
+			<tr th:if="${activityDTOs.size()>0}" th:each="activityDTO: ${activityDTOs}">
+				<td class="col-sm-1"><a th:href="@{'/manage-events/'+${activityDTO.id}}"  th:text="${activityDTO.id}"></a></td>
 				<td class="col-sm-3" th:text="${productDTO.name}"></td>
-				<th class="col-sm-1"><a class="btn btn-primary" th:href="@{'/create-item/'+${productDTO.id}}" th:text="#{item.create}"></a></th>
-				<th class="col-sm-1"><a class="btn btn-primary" th:href="@{'/update-product/'+${productDTO.id}}" th:text="#{catalog.update}"></a></th>
-				<th class="col-sm-1"><a class="btn btn-primary" th:href="@{'/delete-product/'+${productDTO.id}}" th:text="#{catalog.delete}"></a></th>
+				<th class="col-sm-1"><a class="btn btn-primary" th:href="@{'/create-event/'+${activityDTO.id}}" th:text="#{event.create}"></a></th>
+				<th class="col-sm-1"><a class="btn btn-primary" th:href="@{'/update-activity/'+${activityDTO.id}}" th:text="#{sport.update}"></a></th>
+				<th class="col-sm-1"><a class="btn btn-primary" th:href="@{'/delete-activity/'+${activityDTO.id}}" th:text="#{sport.delete}"></a></th>
 			</tr>		
-			<tr th:if="${productDTOs.size()==0}">
-				<td class="col-sm-7" th:text=#{product.empty}></td>
-		</tr>	
-		</table>	
-		</div>
-</div>	
-		<!-- ---------------------------------------------------- ITEMS ---------------------------------------------------- -->
-		
-<div th:if="${itemDTOs !=null}">
-		<h3 th:text="#{item.list}"></h3>
-		<br>
-		<div class="row justify-content-start" >
-		<table>		
-		<tr class="bg-light">
-		<th class="col-sm-1" th:text="#{catalog.id}"></th>
-		<th class="col-sm-3" th:text="#{catalog.name}"></th>
-		<th class="col-sm-1"></th>
-		<th class="col-sm-1"></th>
-		</tr>
-			<tr th:if="${itemDTOs.size()>0}" th:each="itemDTO: ${itemDTOs}">
-				<td class="col-sm-1" th:text="${itemDTO.id}"></td>
-				<td class="col-sm-3" th:text="${itemDTO.name}"></td>
-				<th class="col-sm-1"><a class="btn btn-primary" th:href="@{'/update-item/'+${itemDTO.id}}" th:text="#{catalog.update}"></a></th>
-				<th class="col-sm-1"><a class="btn btn-primary" th:href="@{'/delete-item/'+${itemDTO.id}}" th:text="#{catalog.delete}"></a></th>
-			</tr>		
-			<tr th:if="${itemDTOs.size()==0}">
-				<td class="col-sm-7" th:text=#{item.empty}></td>
+			<tr th:if="${activityDTOs.size()==0}">
+				<td class="col-sm-7" th:text=#{activity.empty}></td>
 		</tr>	
 		</table>	
 		</div>
 </div>	
 
+
 <br><br><br><br>
 <div th:insert="layout/default.html :: footer"></div>
 </div>
-<nav th:insert="layout/default.html :: footernavbar"></nav>
 <div th:insert="layout/default.html :: scripts"></div>
 </body>
 </html>

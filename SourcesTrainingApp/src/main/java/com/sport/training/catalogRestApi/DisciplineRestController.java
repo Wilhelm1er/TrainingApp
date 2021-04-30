@@ -32,7 +32,7 @@ public class DisciplineRestController {
 	@Autowired
 	private SportService sportService;
 	
-	@GetMapping("/categories")
+	@GetMapping("/disciplines")
 	public ResponseEntity<List<DisciplineDTO>> getDisciplines() {
 		final String mname = "getDisciplines";
 		LOGGER.debug("entering "+mname);
