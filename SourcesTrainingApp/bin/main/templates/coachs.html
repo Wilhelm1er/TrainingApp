@@ -4,37 +4,42 @@
 <head th:replace="layout/default.html :: header">
 </head>
 <body>
-<nav th:insert="layout/default.html :: navbar"></nav>
-<div class="container" >
-<br><br><br><br>
+	<nav th:insert="layout/default.html :: navbar"></nav>
 	<div class="container">
-		<div th:if="${coachDTOs} !=null" >
-		
-			<h3 th:text="#{coachs.list}"></h3>
-			<br>
-			<div class="row justify-content-start" >
-		<table>	
-			<tr>
-			<th class="col-sm-2" th:text="#{login.id}"></th>
-			<th class="col-sm-2" th:text="#{new.account.firstname}"></th>
-			<th class="col-sm-2" th:text="#{new.account.name}"></th>
-			<th class="col-sm-3" th:text="#{user.email}"></th>
-			</tr>	
-			<tr  th:each="coach : ${coachDTOs}">
-				<td class="col-sm-2" th:text="${coach.username}"></td>
-				<td class="col-sm-2" th:text="${coach.firstname}"></td>
-				<td class="col-sm-2" th:text="${coach.lastname}"></td>
-				<td class="col-sm-3" th:text="${coach.email}"></td>
-			</tr>		
-		</table>	
-		</div>
+		<br>
+		<br>
+		<br>
+		<br>
+		<div class="container">
+			<div th:if="${coachDTOs} !=null">
+
+				<h3 th:text="#{coachs.list}"></h3>
+				<br>
+				<div class="row justify-content-start">
+					<table>
+						<tr>
+							<th class="col-sm-2" th:text="#{login.id}"></th>
+							<th class="col-sm-2" th:text="#{new.account.firstname}"></th>
+							<th class="col-sm-2" th:text="#{new.account.name}"></th>
+							<th class="col-sm-3" th:text="#{user.email}"></th>
+						</tr>
+						<tr th:each="coach : ${coachDTOs}">
+							<td class="col-sm-2" th:text="${coach.username}"></td>
+							<td class="col-sm-2" th:text="${coach.firstname}"></td>
+							<td class="col-sm-2" th:text="${coach.lastname}"></td>
+							<td class="col-sm-3" th:text="${coach.email}"></td>
+						</tr>
+					</table>
+				</div>
 			</div>
 		</div>
-		
-	<br><br><br><br>
-<br>
-<div th:insert="layout/default.html :: footer"></div>
-</div>
-<div th:insert="layout/default.html :: scripts"></div>
+
+		<br>
+		<br>
+		<br>
+		<br> <br>
+		<div th:insert="layout/default.html :: footer"></div>
+	</div>
+	<div th:insert="layout/default.html :: scripts"></div>
 </body>
 </html>

@@ -24,18 +24,18 @@ import com.sport.training.authentication.domain.model.User;
  */
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "T_REGISTRATION") 
-public class Registration implements Serializable {
+@Table(name = "T_EVENT_ATHLETES") 
+public class EventAthletes implements Serializable {
 
     // ======================================
     // =             Attributes             =
     // ======================================
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO, generator="order_seq_gen")
+	@GeneratedValue(strategy = GenerationType.AUTO, generator="event_seq_gen")
 	private Long id;
 	
-	@Column(name = "REGISTRATION_DATE")
-	private Date registrationDate;
+	@Column(name = "EVENT_DATE")
+	private Date eventDate;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "EVENT_FK")
@@ -44,19 +44,20 @@ public class Registration implements Serializable {
 	
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="USER_FK", nullable = false)
-    @NotNull(message = "invalid Customer")
+    @NotNull(message = "invalid Athlete")
     private User athlete;
 
     // ======================================
     // =            Constructors            =
     // ======================================
-    public Registration() {
-    	this.registrationDate=new Date();
+    public EventAthletes() {
+    	this.eventDate=new Date();
     }
 
-    public Registration(final String firstname, final String lastname, final String street1, final String city, final String zipcode, final String country, final User customer) {
-    	this.registrationDate=new Date();
-        setRegistrationDate(registrationDate);
+    public EventAthletes(final User athlete) {
+    	this.eventDate=new Date();
+    	setEventDate(eventDate);
+        setAthlete(athlete);
     }
 
     // ======================================
@@ -71,12 +72,12 @@ public class Registration implements Serializable {
 		this.id = id;
 	}
 
-	public Date getRegistrationDate() {
-        return registrationDate;
+	public Date getEventDate() {
+        return eventDate;
     }
 
-    private void setRegistrationDate(final Date registrationDate) {
-    	this.registrationDate = registrationDate;
+    private void setEventDate(final Date eventDate) {
+    	this.eventDate = eventDate;
     }
 
     public User getAthlete() {
@@ -89,9 +90,10 @@ public class Registration implements Serializable {
 
     public String toString() {
         final StringBuffer buf = new StringBuffer();
-        buf.append("Registration{");
+        buf.append("Event Athletes{");
         buf.append("id=").append(getId());
-        buf.append(",registrationDate=").append(getRegistrationDate());
+        buf.append(",eventDate=").append(getEventDate());
+        buf.append(",athleteID=").append(getAthlete().getUsername());
         buf.append('}');
         return buf.toString();
     }
