@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import com.sport.training.authentication.domain.dto.UserDTO;
 import com.sport.training.authentication.domain.model.Role;
+import com.sport.training.domain.model.Discipline;
 import com.sport.training.exception.CreateException;
 import com.sport.training.exception.FinderException;
 import com.sport.training.exception.RemoveException;
@@ -24,5 +25,6 @@ public interface UserService {
 	    public List<UserDTO> findUsers() throws FinderException;
 
 		public List<UserDTO> findUsersByRole(Role role) throws FinderException;
-
+		
+		public List<UserDTO> findUsersByDiscipline(String disciplineId) throws FinderException;
 }

@@ -14,6 +14,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import com.sport.training.authentication.domain.dto.UserDTO;
+import com.sport.training.authentication.domain.service.UserService;
 import com.sport.training.domain.dto.ActivityDTO;
 import com.sport.training.exception.FinderException;
 
@@ -22,38 +23,27 @@ import com.sport.training.exception.FinderException;
  */
 @Controller
 public class FindCoachController {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(FindCoachController.class);
-  
+
+	@Autowired
+	private UserService userService;
+
 	@GetMapping("/find-coachs")
-    protected String findCoachs(Model model,@RequestParam String disciplineId) {
-        final String mname = "findCoachs";
-        LOGGER.debug("entering "+mname);
-        try {
-        List<UserDTO> coachDTOs = null;
-        model.addAttribute("disciplineId", disciplineId);
-        model.addAttribute("coachDTOs", coachDTOs);
-        } catch (WebClientResponseException e) {
-			if(e.getMessage().contains("404 Not Found")) {
-				LOGGER.error("exception in "+mname+" : "+e.getMessage());
-        		model.addAttribute("message", "No coach for discipline "+disciplineId);
-        		return "index";
-			}
-			LOGGER.error("exception in "+mname+" : "+e.getMessage());
-			model.addAttribute("exception", e.getClass().getName());
+	protected String findCoachs(Model model, @RequestParam String disciplineId) {
+		final String mname = "findCoachs";
+		LOGGER.debug("entering " + mname);
+
+		List<UserDTO> coachDTOs = null;
+		try {
+			coachDTOs = userService.findUsersByDiscipline(disciplineId);
+		} catch (FinderException e) {
+			model.addAttribute("exception", e.getMessage());
 			return "error";
-		}	
-        return "coachs";
-    }
-	
-	
-	/*
-	 * List<UserDTO> coachDTOs = null; try { coachDTOs =
-	 * userService.findUsersByDiscipline(disciplineService.findByDisciplineName(
-	 * disciplineId)); } catch (FinderException e) { model.addAttribute("exception",
-	 * e.getMessage()); return "error"; } model.addAttribute("coachDTOs",
-	 * coachDTOs); return "display-users";
-	 */
-	
+		}
+		model.addAttribute("coachDTOs", coachDTOs);
+
+		return "coachs";
+	}
 
 }
