@@ -24,7 +24,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	private UserService userService;
 
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		final String mname = "loadUserByUsername";
         LOGGER.debug("entering "+mname);
 		UserDTO userDTO = null;
@@ -40,7 +40,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		} else {
 			List<SimpleGrantedAuthority> grantedAuthorities = Collections.singletonList(new SimpleGrantedAuthority(userDTO.getRoleName()));
 			LOGGER.debug("exiting "+mname);
-			return new org.springframework.security.core.userdetails.User(userDTO.getUsername(), userDTO.getPassword(), grantedAuthorities);
+			return new CustomUserDetails(userDTO.getUsername(), userDTO.getPassword(), grantedAuthorities, userDTO.getCredit(), userDTO.getStatut());
 		}
 	}
 

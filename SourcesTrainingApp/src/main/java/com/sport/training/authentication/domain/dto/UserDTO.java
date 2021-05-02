@@ -26,6 +26,7 @@ public class UserDTO implements Serializable {
     private String statut;
 	private AddressDTO addressDTO = new AddressDTO();
     private CreditCardDTO creditCardDTO = new CreditCardDTO();
+    private String disciplineName;
     private String roleName;
 
 
@@ -192,6 +193,14 @@ public class UserDTO implements Serializable {
 		this.statut = statut;
 	}
 
+	public String getDisciplineName() {
+		return disciplineName;
+	}
+
+	public void setDisciplineName(String disciplineName) {
+		this.disciplineName = disciplineName;
+	}
+	
 	public String getRoleName() {
 		return roleName;
 	}
@@ -202,7 +211,7 @@ public class UserDTO implements Serializable {
 
     public String toString() {
          StringBuffer buf = new StringBuffer();
-        buf.append("CustomerDTO{");
+        buf.append("UserDTO{");
         buf.append("id=").append(getUsername());
         buf.append(",firstname=").append(getFirstname());
         buf.append(",lastname=").append(getLastname());

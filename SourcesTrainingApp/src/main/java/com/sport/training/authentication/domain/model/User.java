@@ -15,6 +15,7 @@ import javax.validation.constraints.Size;
 
 import com.sport.training.domain.model.Address;
 import com.sport.training.domain.model.CreditCard;
+import com.sport.training.domain.model.Discipline;
 
 
 /**
@@ -56,6 +57,10 @@ public class User implements Serializable {
     
     @Embedded
     private CreditCard creditCard = new CreditCard();
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "DISCIPLINE_FK", referencedColumnName="ID")
+	private Discipline discipline;
     
     @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ROLE_FK", referencedColumnName="ID")
@@ -224,7 +229,15 @@ public class User implements Serializable {
     public void setCreditCardExpiryDate(final String creditCardExpiryDate) {
         creditCard.setCreditCardExpiryDate(creditCardExpiryDate);
     }
+    
+	public Discipline getDiscipline() {
+		return discipline;
+	}
 
+	public void setDiscipline(Discipline discipline) {
+		this.discipline = discipline;
+	}
+	
 	public Role getRole() {
 		return role;
 	}

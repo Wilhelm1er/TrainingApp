@@ -37,6 +37,11 @@ public class Registration implements Serializable {
 	@Column(name = "REGISTRATION_DATE")
 	private Date registrationDate;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "EVENT_FK")
+	@NotNull(message = "invalid Event")
+	private Event event;
+	
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="USER_FK", nullable = false)
     @NotNull(message = "invalid Customer")
