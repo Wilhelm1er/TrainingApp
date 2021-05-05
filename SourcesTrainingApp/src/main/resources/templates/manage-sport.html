@@ -76,7 +76,6 @@
 					<tr th:if="${activityDTOs.size()>0}"
 						th:each="activityDTO: ${activityDTOs}">
 						<td class="col-sm-1"><a
-							th:href="@{'/manage-events/'+${activityDTO.id}}"
 							th:text="${activityDTO.id}"></a></td>
 						<td class="col-sm-3" th:text="${activityDTO.name}"></td>
 						<th class="col-sm-1"><a class="btn btn-primary"
@@ -92,7 +91,6 @@
 				</table>
 			</div>
 		</div>
-
 
 		<br>
 		<br>

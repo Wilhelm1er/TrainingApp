@@ -12,9 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.sport.training.authentication.domain.dto.UserDTO;
 import com.sport.training.authentication.domain.service.UserService;
-import com.sport.training.domain.constant.AmericanStates;
-import com.sport.training.domain.constant.Countries;
-import com.sport.training.domain.constant.CreditCardTypes;
 import com.sport.training.exception.CreateException;
 import com.sport.training.exception.DuplicateKeyException;
 
@@ -29,9 +26,6 @@ public class NewAccountController {
 	@GetMapping(path = "/new-account")
 	public String newAccount(Model model) {
 		final String mname = "newAccount";
-		model.addAttribute("states", AmericanStates.getAll());
-		model.addAttribute("countries", Countries.getAll());
-		model.addAttribute("ccTypes", CreditCardTypes.getAll());
 		LOGGER.debug("entering "+mname);
 		
 		model.addAttribute("userDTO", new UserDTO());

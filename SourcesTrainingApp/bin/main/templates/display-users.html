@@ -6,10 +6,7 @@
 <body>
 	<nav th:insert="layout/default.html :: navbar"></nav>
 	<div class="container">
-		<br>
-		<br>
-		<br>
-		<br>
+		<br> <br> <br> <br>
 		<div class="container" sec:authorize="hasAnyRole('ADMIN')">
 			<div th:if="${athleteDTOs} !=null">
 				<h3 th:text="#{athletes.list}"></h3>
@@ -21,12 +18,17 @@
 							<th class="col-sm-2" th:text="#{new.account.firstname}"></th>
 							<th class="col-sm-2" th:text="#{new.account.name}"></th>
 							<th class="col-sm-3" th:text="#{user.email}"></th>
+							<th class="col-sm-3" th:text="#{user.statut}"></th>
 						</tr>
 						<tr th:each="athlete : ${athleteDTOs}">
 							<td class="col-sm-2" th:text="${athlete.username}"></td>
 							<td class="col-sm-2" th:text="${athlete.firstname}"></td>
 							<td class="col-sm-2" th:text="${athlete.lastname}"></td>
 							<td class="col-sm-3" th:text="${athlete.email}"></td>
+							<td class="col-sm-3" th:text="${athlete.statut}"></td>
+							<td><a th:href="@{'/update-account/'+${athlete.username}}">
+									<button type="button" class="btn btn-sm btn-outline-secondary">Modifier</button>
+							</a></td>
 						</tr>
 					</table>
 				</div>
@@ -42,22 +44,27 @@
 							<th class="col-sm-2" th:text="#{new.account.firstname}"></th>
 							<th class="col-sm-2" th:text="#{new.account.name}"></th>
 							<th class="col-sm-3" th:text="#{user.email}"></th>
+							<th class="col-sm-3" th:text="#{coachs.discipline}"></th>
+							<th class="col-sm-3" th:text="#{user.statut}"></th>
+
 						</tr>
 						<tr th:each="coach : ${coachDTOs}">
 							<td class="col-sm-2" th:text="${coach.username}"></td>
 							<td class="col-sm-2" th:text="${coach.firstname}"></td>
 							<td class="col-sm-2" th:text="${coach.lastname}"></td>
 							<td class="col-sm-3" th:text="${coach.email}"></td>
+							<td class="col-sm-3" th:text="${coach.disciplineName}"></td>
+							<td class="col-sm-3" th:text="${coach.statut}"></td>
+							<td><a th:href="@{'/update-account/'+${coach.username}}">
+									<button type="button" class="btn btn-sm btn-outline-secondary">Modifier</button>
+							</a></td>
 						</tr>
 					</table>
 				</div>
 			</div>
 		</div>
 
-		<br>
-		<br>
-		<br>
-		<br> <br>
+		<br> <br> <br> <br> <br>
 		<div th:insert="layout/default.html :: footer"></div>
 	</div>
 	<div th:insert="layout/default.html :: scripts"></div>

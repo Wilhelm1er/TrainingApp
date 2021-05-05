@@ -24,7 +24,6 @@ import com.sport.training.domain.dto.ActivityDTO;
 import com.sport.training.domain.dto.DisciplineDTO;
 import com.sport.training.domain.model.Activity;
 import com.sport.training.domain.model.Discipline;
-import com.sport.training.domain.service.CreditCardService;
 import com.sport.training.domain.service.SportService;
 import com.sport.training.exception.CreateException;
 import com.sport.training.exception.DuplicateKeyException;
@@ -51,18 +50,12 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private DisciplineRepository disciplineRepository;
-	
-	@Autowired
-	private SportService sportService;
 
 	@Autowired
 	private RoleService roleService;
 
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
-
-	@Autowired
-	private CreditCardService creditCardService;
 
 	@Autowired
 	private ModelMapper userModelMapper, userDTOModelMapper;
@@ -90,11 +83,6 @@ public class UserServiceImpl implements UserService {
 				throw new DuplicateKeyException();
 		} catch (FinderException e) {
 		}
-
-		// Credit Card Check
-		if (userDTO.getCreditCardNumber() != null && userDTO.getCreditCardExpiryDate() != null
-				&& !userDTO.getCreditCardNumber().equals("") && !userDTO.getCreditCardExpiryDate().equals(""))
-			creditCardService.verifyCreditCard(userDTO.getCreditCardDTO());
 
 		if (userDTO.getPassword().length() < 4)
 			throw new CreateException("password's length exception (mini. of 4 char. required)");
@@ -177,11 +165,6 @@ public class UserServiceImpl implements UserService {
 		// Checks if the object exists
 		if (!userRepository.findById(userDTO.getUsername()).isPresent())
 			throw new UpdateException("User must exist to be updated");
-
-		// Credit Card Check
-		if (userDTO.getCreditCardNumber() != null && userDTO.getCreditCardExpiryDate() != null
-				&& !userDTO.getCreditCardNumber().equals("") && !userDTO.getCreditCardExpiryDate().equals(""))
-			creditCardService.verifyCreditCard(userDTO.getCreditCardDTO());
 
 		// :::::::::::::::: We change DTO to model ::::::::::::::: //
 		User user = userModelMapper.map(userDTO, User.class);

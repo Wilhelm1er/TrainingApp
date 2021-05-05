@@ -59,7 +59,7 @@
 							th:text="#{manage.sport}" sec:authorize="hasRole('ADMIN')"></a> <a
 							class="dropdown-item" th:href="@{/display-coachs}"
 							th:text="#{coachs.list}" sec:authorize="hasRole('ADMIN')"></a> <a
-							class="dropdown-item" th:href="@{/display-users}"
+							class="dropdown-item" th:href="@{/display-athletes}"
 							th:text="#{athletes.list}" sec:authorize="hasAnyRole('ADMIN')"></a>
 						<a class="dropdown-item"
 							th:href="@{'/update-account/'+${#authentication.getPrincipal().getUsername()}}"
@@ -78,11 +78,15 @@
 					</form>
 
 				</li>
-				<li class="nav-item" sec:authorize="isAuthenticated()"><a
-					class="nav-link" th:href="@{/credit}"
-					th:text="'Solde: '+${#authentication.getPrincipal().getCredit()}+ ' Cr'">Credit</a>
+				<li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+				<a class="nav-link dropdown-toggle" th:href="@{/#}"
+					id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
+					aria-haspopup="true" aria-expanded="false"><span th:text="'Solde: '+${#authentication.getPrincipal().getCredit()}+ ' Cr'"></span></a>
+				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+				<a class="nav-item dropdown-item" ></a>
+						<a class="dropdown-item" th:href="@{/credit}" 
+						th:text="#{credit.gestion}">Credit</a></div>
 				</li>
-
 
 			</ul>
 		</div>

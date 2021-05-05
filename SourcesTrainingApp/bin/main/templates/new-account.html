@@ -6,9 +6,7 @@
 <body>
 	<nav th:insert="layout/default.html :: navbar"></nav>
 	<div class="container">
-		<br>
-		<br>
-		<br>
+		<br> <br> <br>
 		<h3 th:text="#{new.account.title}">New Account</h3>
 		<hr />
 		<br>
@@ -16,11 +14,11 @@
 			th:action="@{/new-account}" th:object="${userDTO}">
 			<div class="form-group">
 				<label for="username" class="col-sm-2 control-label"
-					th:text="#{new.account.username}">e-mail</label>
+					th:text="#{new.account.id}">e-mail</label>
 				<div class="col-sm-5">
 					<input th:field="${userDTO.username}" type="text" id="username"
 						name="${username}" class="form-control"
-						th:placeholder="#{new.account.your.username}" />
+						th:placeholder="#{new.account.your.id}" />
 				</div>
 			</div>
 			<div class="form-group">
@@ -53,107 +51,133 @@
 
 			<div class="form-group">
 				<label for="email" class="col-sm-2 control-label"
-					th:text="#{customer.email}"></label>
+					th:text="#{user.email}"></label>
 				<div class="col-sm-5">
 					<input th:field="${userDTO.email}" type="text" id="email"
-						name="email" class="form-control"
-						th:placeholder="#{customer.email}" />
+						name="email" class="form-control" th:placeholder="#{user.email}" />
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="telephone" class="col-sm-2 control-label"
-					th:text="#{customer.telephone}"></label>
+					th:text="#{user.telephone}"></label>
 				<div class="col-sm-5">
 					<input th:field="${userDTO.telephone}" type="text" id="telephone"
 						name="telephone" class="form-control"
-						th:placeholder="#{customer.telephone}" />
+						th:placeholder="#{user.telephone}" />
 				</div>
 			</div>
 			<!-- Address -->
-			<h5 th:text="#{customer.address}"></h5>
+			<h5 th:text="#{user.address}"></h5>
 			<div class="form-group">
-				<label for="street1" class="col-sm-2 control-label"
-					th:text="#{customer.street1}"></label>
+				<label for="address1" class="col-sm-2 control-label"
+					th:text="#{user.address1}"></label>
 				<div class="col-sm-5">
-					<input th:field="${userDTO.street1}" type="text" id="street1"
-						name="street1" class="form-control"
-						th:placeholder="#{customer.street1}" />
+					<input th:field="${userDTO.address1}" type="text" id="address1"
+						name="address1" class="form-control"
+						th:placeholder="#{user.address1}" />
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="street2" class="col-sm-2 control-label"
-					th:text="#{customer.street2}"></label>
+				<label for="address2" class="col-sm-2 control-label"
+					th:text="#{user.address2}"></label>
 				<div class="col-sm-5">
-					<input th:field="${userDTO.street2}" type="text" id="street2"
-						name="street2" class="form-control"
-						th:placeholder="#{customer.street2}" />
+					<input th:field="${userDTO.address2}" type="text" id="address2"
+						name="address2" class="form-control"
+						th:placeholder="#{user.address2}" />
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="city" class="col-sm-2 control-label"
-					th:text="#{customer.city}"></label>
+					th:text="#{user.city}"></label>
 				<div class="col-sm-5">
 					<input th:field="${userDTO.city}" type="text" id="city" name="city"
-						class="form-control" th:placeholder="#{customer.city}" />
+						class="form-control" th:placeholder="#{user.city}" />
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="state" class="col-sm-2 control-label"
-					th:text="#{customer.state}"></label>
+					th:text="#{user.state}"></label>
 				<div class="col-sm-5">
 					<input th:field="${userDTO.state}" type="text" id="state"
-						name="state" class="form-control"
-						th:placeholder="#{customer.state}" />
+						name="state" class="form-control" th:placeholder="#{user.state}" />
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="zipcode" class="col-sm-2 control-label"
-					th:text="#{customer.zipcode}"></label>
+					th:text="#{user.zipcode}"></label>
 				<div class="col-sm-5">
 					<input th:field="${userDTO.zipcode}" type="text" id="zipcode"
 						name="zipcode" class="form-control"
-						th:placeholder="#{customer.zipcode}" />
+						th:placeholder="#{user.zipcode}" />
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="country" class="col-sm-2 control-label"
-					th:text="#{customer.country}"></label>
+					th:text="#{user.country}"></label>
 				<div class="col-sm-5">
 					<input th:field="${userDTO.country}" type="text" id="country"
 						name="country" class="form-control"
-						th:placeholder="#{customer.country}" />
+						th:placeholder="#{user.country}" />
 				</div>
 			</div>
-			<!-- Credit card -->
-			<h5 th:text="#{customer.creditcard.information}"></h5>
-			<div class="form-group">
-				<label for="creditCardType" class="col-sm-3 control-label"
-					th:text="#{customer.creditCardType}"></label>
-				<div class="col-sm-5">
-					<input th:field="${userDTO.creditCardType}" type="text"
-						id="creditCardType" name="creditCardType" class="form-control"
-						th:placeholder="#{customer.creditCardType}" />
+
+			<h5 th:text="#{user.profil}"></h5>
+			<div class="d-block my-2">
+				<div class="custom-control custom-radio">
+					<input th:field="${userDTO.roleName}" id="athlete" name="roleName"
+						type="radio" class="custom-control-input" value="ROLE_ATHLETE"
+						checked required> <label class="custom-control-label"
+						for="athlete">Athlète</label>
+				</div>
+				<div class="custom-control custom-radio">
+					<input th:field="${userDTO.roleName}" id="coach" name="roleName"
+						type="radio" class="custom-control-input" value="ROLE_COACH"
+						required> <label class="custom-control-label" for="coach">Entraîneur</label>
 				</div>
 			</div>
-			<div class="form-group">
-				<label for="creditCardNumber" class="col-sm-3 control-label"
-					th:text="#{customer.creditCardNumber}"></label>
-				<div class="col-sm-5">
-					<input th:field="${userDTO.creditCardNumber}" type="text"
-						id="creditCardNumber" name="creditCardNumber" class="form-control"
-						th:placeholder="#{customer.creditCardNumber}" />
+
+			<div th:if="${condition}">
+				<h5 th:text="#{user.discipline.information}"></h5>
+				<div class="d-block my-6">
+					<div class="custom-control custom-radio">
+						<input th:field="${userDTO.disciplineName}" id="boxe"
+							name="discipline" type="radio" class="custom-control-input"
+							value="BOXE" checked required> <label
+							class="custom-control-label" for="boxe">Boxe</label>
+					</div>
+					<div class="custom-control custom-radio">
+						<input th:field="${userDTO.disciplineName}" id="cardio"
+							name="discipline" type="radio" class="custom-control-input"
+							value="CARDIO" required> <label
+							class="custom-control-label" for="cardio">Cardio-Training</label>
+					</div>
+					<div class="custom-control custom-radio">
+						<input th:field="${userDTO.disciplineName}" id="danse"
+							name="discipline" type="radio" class="custom-control-input"
+							value="DANSE" required> <label
+							class="custom-control-label" for="danse">Danse</label>
+					</div>
+					<div class="custom-control custom-radio">
+						<input th:field="${userDTO.disciplineName}" id="gym"
+							name="discipline" type="radio" class="custom-control-input"
+							value="GYM" required> <label class="custom-control-label"
+							for="gym">Gym-Pilates</label>
+					</div>
+					<div class="custom-control custom-radio">
+						<input th:field="${userDTO.disciplineName}" id="muscu"
+							name="discipline" type="radio" class="custom-control-input"
+							value="MUSCU" required> <label
+							class="custom-control-label" for="muscu">Musculation</label>
+					</div>
+					<div class="custom-control custom-radio">
+						<input th:field="${userDTO.disciplineName}" id="yoga"
+							name="discipline" type="radio" class="custom-control-input"
+							value="YOGA" required> <label
+							class="custom-control-label" for="yoga">Yoga</label>
+					</div>
 				</div>
 			</div>
-			<div class="form-group">
-				<label for="creditCardExpiryDate" class="col-sm-3 control-label"
-					th:text="#{customer.creditCardExpiryDate}"></label>
-				<div class="col-sm-5">
-					<input th:field="${userDTO.creditCardExpiryDate}" type="text"
-						id="creditCardExpiryDate" name="creditCardExpiryDate"
-						class="form-control" maxlength="5" value=""
-						th:placeholder="#{customer.creditCardExpiryDate}" />
-				</div>
-			</div>
+
 			<br>
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-5">
@@ -162,10 +186,7 @@
 				</div>
 			</div>
 		</form>
-		<br>
-		<br>
-		<br>
-		<br>
+		<br> <br> <br> <br>
 	</div>
 	<div th:insert="layout/default.html :: footer"></div>
 </body>

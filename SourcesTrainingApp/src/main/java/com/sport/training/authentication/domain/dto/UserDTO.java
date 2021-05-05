@@ -25,7 +25,6 @@ public class UserDTO implements Serializable {
     private int credit;
     private String statut;
 	private AddressDTO addressDTO = new AddressDTO();
-    private CreditCardDTO creditCardDTO = new CreditCardDTO();
     private String disciplineName;
     private String roleName;
 
@@ -145,38 +144,6 @@ public class UserDTO implements Serializable {
         addressDTO.setCountry(country);
     }
     
-    public CreditCardDTO getCreditCardDTO() {
-		return creditCardDTO;
-	}
-    
-    public void setCreditCardDTO(CreditCardDTO creditCardDTO) {
-		this.creditCardDTO=creditCardDTO;
-	}
-
-    public String getCreditCardNumber() {
-        return creditCardDTO.getCreditCardNumber();
-    }
-
-    public void setCreditCardNumber( String creditCardNumber) {
-        creditCardDTO.setCreditCardNumber(creditCardNumber);
-    }
-
-    public String getCreditCardType() {
-        return creditCardDTO.getCreditCardType();
-    }
-
-    public void setCreditCardType( String creditCardType) {
-        creditCardDTO.setCreditCardType(creditCardType);
-    }
-
-    public String getCreditCardExpiryDate() {
-        return creditCardDTO.getCreditCardExpiryDate();
-    }
-
-    public void setCreditCardExpiryDate( String creditCardExpiryDate) {
-        creditCardDTO.setCreditCardExpiryDate(creditCardExpiryDate);
-    }
-    
     public int getCredit() {
   		return credit;
   	}
@@ -223,9 +190,6 @@ public class UserDTO implements Serializable {
         buf.append(",state=").append(getState());
         buf.append(",zipcode=").append(getZipcode());
         buf.append(",country=").append(getCountry());
-        buf.append(",creditCardNumber=").append(getCreditCardNumber());
-        buf.append(",creditCardType=").append(getCreditCardType());
-        buf.append(",creditCardExpiryDate=").append(getCreditCardExpiryDate());
         buf.append(",Solde de crédit=").append(getCredit());
         buf.append('}');
         return buf.toString();

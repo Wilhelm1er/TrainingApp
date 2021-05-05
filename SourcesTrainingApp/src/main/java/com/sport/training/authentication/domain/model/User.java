@@ -55,9 +55,6 @@ public class User implements Serializable {
     @Embedded
     private Address address = new Address();
     
-    @Embedded
-    private CreditCard creditCard = new CreditCard();
-    
     @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "DISCIPLINE_FK", referencedColumnName="ID")
 	private Discipline discipline;
@@ -197,38 +194,6 @@ public class User implements Serializable {
     public void setCountry(final String country) {
         address.setCountry(country);
     }
-
-	public CreditCard getCreditCard() {
-		return creditCard;
-	}
-	
-	public void setCreditCard(CreditCard creditCard) {
-		this.creditCard=creditCard;
-	}
-	
-	public String getCreditCardNumber() {
-        return creditCard.getCreditCardNumber();
-    }
-
-    public void setCreditCardNumber(final String creditCardNumber) {
-        creditCard.setCreditCardNumber(creditCardNumber);
-    }
-
-    public String getCreditCardType() {
-        return creditCard.getCreditCardType();
-    }
-
-    public void setCreditCardType(final String creditCardType) {
-        creditCard.setCreditCardType(creditCardType);
-    }
-
-    public String getCreditCardExpiryDate() {
-        return creditCard.getCreditCardExpiryDate();
-    }
-
-    public void setCreditCardExpiryDate(final String creditCardExpiryDate) {
-        creditCard.setCreditCardExpiryDate(creditCardExpiryDate);
-    }
     
 	public Discipline getDiscipline() {
 		return discipline;
@@ -260,9 +225,6 @@ public class User implements Serializable {
         buf.append(",state=").append(getState());
         buf.append(",zipcode=").append(getZipcode());
         buf.append(",country=").append(getCountry());
-        buf.append(",creditCardNumber=").append(getCreditCardNumber());
-        buf.append(",creditCardType=").append(getCreditCardType());
-        buf.append(",creditCardExpiryDate=").append(getCreditCardExpiryDate());
         buf.append(",Solde de crédit=").append(getCredit());
         buf.append("\n\t}");
         return buf.toString();
