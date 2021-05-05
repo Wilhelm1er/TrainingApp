@@ -54,7 +54,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
     }
 
     public Collection<ShoppingCartEventDTO> getEvents() {
-    	final String mname = "getItems";
+    	final String mname = "getEvents";
     	LOGGER.debug("entering "+mname);
     	
         final Collection<ShoppingCartEventDTO>  events = new ArrayList<>();
@@ -66,10 +66,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
             final EventDTO eventDTO;
             try {
             	eventDTO = sportService.findEvent(eventId);
-                ShoppingCartEventDTO ShoppingCartEventDTO = new ShoppingCartEventDTO(eventId, eventDTO.getName(), eventDTO.getActivityDTO().getDescription(), eventDTO.getCreditCost());
+                ShoppingCartEventDTO ShoppingCartEventDTO = new ShoppingCartEventDTO(eventId, eventDTO.getDate(), eventDTO.getActivityDTO().getDescription(), eventDTO.getCreditCost());
                  events.add(ShoppingCartEventDTO);
             } catch (FinderException e) {
-            	LOGGER.error(mname+" - itemId : "+ eventId+" => "+e.getMessage());
+            	LOGGER.error(mname+" - eventId : "+ eventId+" => "+e.getMessage());
             }
         }
         return  events;

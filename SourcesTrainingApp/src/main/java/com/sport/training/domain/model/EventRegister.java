@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import com.sport.training.authentication.domain.model.User;
@@ -24,8 +25,8 @@ import com.sport.training.authentication.domain.model.User;
  */
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "T_EVENT_ATHLETES") 
-public class EventAthletes implements Serializable {
+@Table(name = "T_EVENT_REGISTER") 
+public class EventRegister implements Serializable {
 
     // ======================================
     // =             Attributes             =
@@ -34,15 +35,21 @@ public class EventAthletes implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO, generator="event_seq_gen")
 	private Long id;
 	
-	@Column(name = "EVENT_DATE")
+	@Column(name = "REGISTER_DATE")
+	private Date registerDate;
+	
+	@NotBlank(message = "invalid event date")
 	private Date eventDate;
+
+	@Column(name = "CREDITCOST")
+	private int creditcost;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "EVENT_FK")
 	@NotNull(message = "invalid Event")
 	private Event event;
-	
-    @ManyToOne(fetch = FetchType.LAZY)
+
+	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="USER_FK", nullable = false)
     @NotNull(message = "invalid Athlete")
     private User athlete;
@@ -50,13 +57,14 @@ public class EventAthletes implements Serializable {
     // ======================================
     // =            Constructors            =
     // ======================================
-    public EventAthletes() {
-    	this.eventDate=new Date();
+    public EventRegister() {
+    	this.registerDate=new Date();
     }
 
-    public EventAthletes(final User athlete) {
-    	this.eventDate=new Date();
+	public EventRegister(final Date eventDate, final Event event,final User athlete) {
+    	this.registerDate=new Date();
     	setEventDate(eventDate);
+    	setRegisterDate(registerDate);
         setAthlete(athlete);
     }
 
@@ -72,13 +80,38 @@ public class EventAthletes implements Serializable {
 		this.id = id;
 	}
 
-	public Date getEventDate() {
-        return eventDate;
+    private void setRegisterDate(final Date registerDate) {
+    	this.registerDate = registerDate;
     }
 
-    private void setEventDate(final Date eventDate) {
-    	this.eventDate = eventDate;
-    }
+    public Date getRegisterDate() {
+		return registerDate;
+	}
+	
+	public Date getEventDate() {
+		return eventDate;
+	}
+
+	public void setEventDate(Date eventDate) {
+		this.eventDate = eventDate;
+	}
+
+    public Event getEvent() {
+		return event;
+	}
+
+	public void setEvent(Event event) {
+		this.event = event;
+	}
+
+	public int getCreditcost() {
+		return creditcost;
+	}
+
+	public void setCreditcost(int creditcost) {
+		this.creditcost = creditcost;
+	}
+
 
     public User getAthlete() {
         return athlete;
@@ -90,9 +123,11 @@ public class EventAthletes implements Serializable {
 
     public String toString() {
         final StringBuffer buf = new StringBuffer();
-        buf.append("Event Athletes{");
+        buf.append("Event Register{");
         buf.append("id=").append(getId());
-        buf.append(",eventDate=").append(getEventDate());
+        buf.append(",registerDate=").append(getRegisterDate());
+        buf.append(",eventDate=").append(getEvent().getDate());
+        buf.append(",eventID=").append(getId());
         buf.append(",athleteID=").append(getAthlete().getUsername());
         buf.append('}');
         return buf.toString();
