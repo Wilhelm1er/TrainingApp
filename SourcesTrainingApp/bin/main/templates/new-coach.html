@@ -2,19 +2,23 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
 <head th:replace="layout/default.html :: header">
+<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+<script type="text/javascript" src="js/show.js" ></script>
+
 </head>
 <body>
 	<nav th:insert="layout/default.html :: navbar"></nav>
 	<div class="container">
 		<br> <br> <br>
-		<h3 th:text="#{new.account.title}">New Account</h3>
+		<h3 th:text="#{new.account.coach}">Nouveau compte entraîneur</h3>
 		<hr />
 		<br>
 		<form class="form-horizontal" method="post" name="userForm"
-			th:action="@{/new-account}" th:object="${userDTO}">
+			th:action="@{/new-coach}" th:object="${userDTO}">
+
 			<div class="form-group">
 				<label for="username" class="col-sm-2 control-label"
-					th:text="#{new.account.id}">e-mail</label>
+					th:text="#{new.account.id}">Identifiant</label>
 				<div class="col-sm-5">
 					<input th:field="${userDTO.username}" type="text" id="username"
 						name="${username}" class="form-control"
@@ -121,63 +125,46 @@
 				</div>
 			</div>
 
-			<h5 th:text="#{user.profil}"></h5>
-			<div class="d-block my-2">
-				<div class="custom-control custom-radio">
-					<input th:field="${userDTO.roleName}" id="athlete" name="roleName"
-						type="radio" class="custom-control-input" value="ROLE_ATHLETE"
-						checked required> <label class="custom-control-label"
-						for="athlete">Athlète</label>
-				</div>
-				<div class="custom-control custom-radio">
-					<input th:field="${userDTO.roleName}" id="coach" name="roleName"
-						type="radio" class="custom-control-input" value="ROLE_COACH"
-						required> <label class="custom-control-label" for="coach">Entraîneur</label>
-				</div>
-			</div>
-
-			<div th:if="${condition}">
 				<h5 th:text="#{user.discipline.information}"></h5>
-				<div class="d-block my-6">
+				<div id="discipline" class="d-block my-6" style="display:none;">
 					<div class="custom-control custom-radio">
 						<input th:field="${userDTO.disciplineName}" id="boxe"
-							name="discipline" type="radio" class="custom-control-input"
-							value="BOXE" checked required> <label
+							name="disciplineName" type="radio" class="custom-control-input"
+							value="Boxe" checked required> <label
 							class="custom-control-label" for="boxe">Boxe</label>
 					</div>
 					<div class="custom-control custom-radio">
 						<input th:field="${userDTO.disciplineName}" id="cardio"
-							name="discipline" type="radio" class="custom-control-input"
-							value="CARDIO" required> <label
+							name="disciplineName" type="radio" class="custom-control-input"
+							value="Cardio-Training" required> <label
 							class="custom-control-label" for="cardio">Cardio-Training</label>
 					</div>
 					<div class="custom-control custom-radio">
 						<input th:field="${userDTO.disciplineName}" id="danse"
-							name="discipline" type="radio" class="custom-control-input"
-							value="DANSE" required> <label
+							name="disciplineName" type="radio" class="custom-control-input"
+							value="Danse" required> <label
 							class="custom-control-label" for="danse">Danse</label>
 					</div>
 					<div class="custom-control custom-radio">
 						<input th:field="${userDTO.disciplineName}" id="gym"
-							name="discipline" type="radio" class="custom-control-input"
-							value="GYM" required> <label class="custom-control-label"
+							name="disciplineName" type="radio" class="custom-control-input"
+							value="Gym-Pilates" required> <label class="custom-control-label"
 							for="gym">Gym-Pilates</label>
 					</div>
 					<div class="custom-control custom-radio">
 						<input th:field="${userDTO.disciplineName}" id="muscu"
-							name="discipline" type="radio" class="custom-control-input"
-							value="MUSCU" required> <label
+							name="disciplineName" type="radio" class="custom-control-input"
+							value="Musculation" required> <label
 							class="custom-control-label" for="muscu">Musculation</label>
 					</div>
 					<div class="custom-control custom-radio">
 						<input th:field="${userDTO.disciplineName}" id="yoga"
-							name="discipline" type="radio" class="custom-control-input"
-							value="YOGA" required> <label
+							name="disciplineName" type="radio" class="custom-control-input"
+							value="Yoga" required> <label
 							class="custom-control-label" for="yoga">Yoga</label>
 					</div>
 				</div>
-			</div>
-
+		
 			<br>
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-5">
@@ -191,3 +178,16 @@
 	<div th:insert="layout/default.html :: footer"></div>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+

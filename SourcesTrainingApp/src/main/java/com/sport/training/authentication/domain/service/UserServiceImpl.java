@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,6 +54,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private RoleService roleService;
+	
+	@Autowired
+	private SportService sportService;
 
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -96,17 +100,28 @@ public class UserServiceImpl implements UserService {
 		// make sure that the user has a role
 		if (user.getRole() == null || user.getRole().getName() == null) {
 			try {
-				user.setRole(roleService.findByRoleName("ROLE_USER"));
+				user.setRole(roleService.findByRoleName("ROLE_ATHLETE"));
 			} catch (FinderException e) {
-				LOGGER.error("role missing for user");
+				LOGGER.error("role missing for athlete");
 			}
 		} else if (user.getRole().getId() == null || user.getRole().getId() == 0) {
 			try {
 				user.setRole(roleService.findByRoleName(user.getRole().getName()));
 			} catch (FinderException e) {
-				LOGGER.error("role missing for user");
+				LOGGER.error("role missing for athlete");
 			}
 		}
+		// make sure that coach has a discipline
+		if (user.getRole().getId() ==  2 || user.getRole().getName() == "ROLE_COACH") {
+		
+				user.setDiscipline(sportService.findByDisciplineName(user.getDiscipline().getName()));
+				user.setStatut("INVALIDE");
+			} 
+		if (user.getRole().getId() ==  3 || user.getRole().getName() == "ROLE_ATHLETE") {
+			
+			user.setStatut("VALIDE");
+		} 
+
 		// Creates the object
 		userRepository.save(user);
 

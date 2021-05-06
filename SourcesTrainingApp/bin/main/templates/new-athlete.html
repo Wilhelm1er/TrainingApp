@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/default.html :: header">
+</head>
+<body>
+	<nav th:insert="layout/default.html :: navbar"></nav>
+	<div class="container">
+		<br> <br> <br>
+		<h3 th:text="#{new.account.athlete}">Nouveau compte athlète</h3>
+		<hr />
+		<br>
+		<form class="form-horizontal" method="post" name="userForm"
+			th:action="@{/new-athlete}" th:object="${userDTO}">
+			
+			<div class="form-group">
+				<label for="username" class="col-sm-2 control-label"
+					th:text="#{new.account.id}">Identifiant</label>
+				<div class="col-sm-5">
+					<input th:field="${userDTO.username}" type="text" id="username"
+						name="${username}" class="form-control"
+						th:placeholder="#{new.account.your.id}" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="firstname" class="col-sm-2 control-label"
+					th:text="#{new.account.firstname}">Firstname</label>
+				<div class="col-sm-5">
+					<input th:field="${userDTO.firstname}" type="text" id="firstname"
+						class="form-control"
+						th:placeholder="#{new.account.your.firstname}" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="lastname" class="col-sm-2 control-label"
+					th:text="#{new.account.name}">Name</label>
+				<div class="col-sm-5">
+					<input th:field="${userDTO.lastname}" type="text" id="lastname"
+						class="form-control" th:placeholder="#{new.account.your.name}" />
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="password" class="col-sm-2 control-label"
+					th:text="#{new.account.password}">Password</label>
+				<div class="col-sm-5">
+					<input th:field="${userDTO.password}" type="password"
+						class="form-control" id="password" name="password"
+						th:placeholder="#{new.account.your.password}" />
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="email" class="col-sm-2 control-label"
+					th:text="#{user.email}"></label>
+				<div class="col-sm-5">
+					<input th:field="${userDTO.email}" type="text" id="email"
+						name="email" class="form-control" th:placeholder="#{user.email}" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="telephone" class="col-sm-2 control-label"
+					th:text="#{user.telephone}"></label>
+				<div class="col-sm-5">
+					<input th:field="${userDTO.telephone}" type="text" id="telephone"
+						name="telephone" class="form-control"
+						th:placeholder="#{user.telephone}" />
+				</div>
+			</div>
+			<!-- Address -->
+			<h5 th:text="#{user.address}"></h5>
+			<div class="form-group">
+				<label for="address1" class="col-sm-2 control-label"
+					th:text="#{user.address1}"></label>
+				<div class="col-sm-5">
+					<input th:field="${userDTO.address1}" type="text" id="address1"
+						name="address1" class="form-control"
+						th:placeholder="#{user.address1}" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="address2" class="col-sm-2 control-label"
+					th:text="#{user.address2}"></label>
+				<div class="col-sm-5">
+					<input th:field="${userDTO.address2}" type="text" id="address2"
+						name="address2" class="form-control"
+						th:placeholder="#{user.address2}" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="city" class="col-sm-2 control-label"
+					th:text="#{user.city}"></label>
+				<div class="col-sm-5">
+					<input th:field="${userDTO.city}" type="text" id="city" name="city"
+						class="form-control" th:placeholder="#{user.city}" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="state" class="col-sm-2 control-label"
+					th:text="#{user.state}"></label>
+				<div class="col-sm-5">
+					<input th:field="${userDTO.state}" type="text" id="state"
+						name="state" class="form-control" th:placeholder="#{user.state}" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="zipcode" class="col-sm-2 control-label"
+					th:text="#{user.zipcode}"></label>
+				<div class="col-sm-5">
+					<input th:field="${userDTO.zipcode}" type="text" id="zipcode"
+						name="zipcode" class="form-control"
+						th:placeholder="#{user.zipcode}" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="country" class="col-sm-2 control-label"
+					th:text="#{user.country}"></label>
+				<div class="col-sm-5">
+					<input th:field="${userDTO.country}" type="text" id="country"
+						name="country" class="form-control"
+						th:placeholder="#{user.country}" />
+				</div>
+			</div>
+
+			<br>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-5">
+					<button type="submit" class="btn btn-primary"
+						th:text="#{new.account.create}">Create</button>
+				</div>
+			</div>
+		</form>
+		<br> <br> <br> <br>
+	</div>
+	<div th:insert="layout/default.html :: footer"></div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+

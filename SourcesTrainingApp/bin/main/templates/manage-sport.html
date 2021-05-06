@@ -12,7 +12,7 @@
 	<div class="container" sec:authorize="hasRole('ADMIN')">
 		<h3 th:text=#{manage.sport}></h3>
 
-		<!-- ---------------------------------------------------- CATEGORIES ---------------------------------------------------- -->
+		<!-- ---------------------------------------------------- DISCIPLINE ---------------------------------------------------- -->
 		<div th:if="${disciplineDTOs !=null}">
 			<div th:if="${disciplineDeleted != null}">
 				<h4 class="alert alert-success"
@@ -47,9 +47,15 @@
 							th:href="@{'/manage-activities/'+${disciplineDTO.id}}"
 							th:text="${disciplineDTO.id}"></a></td>
 						<td class="col-sm-3" th:text="${disciplineDTO.name}"></td>
+						
+						<th class="col-sm-1"><a class="btn btn-primary"
+							th:href="@{'/create-activity/'+${disciplineDTO.id}}"
+							th:text="#{sport.create}"></a></th>
+						
 						<th class="col-sm-1"><a class="btn btn-primary"
 							th:href="@{'/update-discipline/'+${disciplineDTO.id}}"
 							th:text="#{sport.update}"></a></th>
+							
 						<th class="col-sm-1"><a class="btn btn-primary"
 							th:href="@{'/delete-discipline/'+${disciplineDTO.id}}"
 							th:text="#{sport.delete}"></a></th>
@@ -60,7 +66,7 @@
 				</table>
 			</div>
 		</div>
-		<!-- ---------------------------------------------------- PRODUCTS ---------------------------------------------------- -->
+		<!-- ---------------------------------------------------- ACTIVITY ---------------------------------------------------- -->
 
 		<div th:if="${activityDTOs !=null}">
 			<h3 th:text="#{activity.list}"></h3>
@@ -90,6 +96,9 @@
 					</tr>
 				</table>
 			</div>
+			
+			
+			
 		</div>
 
 		<br>

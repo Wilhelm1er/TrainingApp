@@ -16,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 
 import com.sport.training.domain.dao.DisciplineRepository;
 import com.sport.training.domain.dao.EventRepository;
+import com.sport.training.authentication.domain.model.Role;
 import com.sport.training.domain.dao.ActivityRepository;
 import com.sport.training.domain.dto.DisciplineDTO;
 import com.sport.training.domain.dto.EventDTO;
@@ -103,6 +104,14 @@ public class SportServiceImpl implements SportService {
 
 		LOGGER.debug("exiting " + mname);
 		return commonModelMapper.map(discipline, DisciplineDTO.class);
+	}
+	
+	@Override
+	public Discipline findByDisciplineName(String disciplineName) throws FinderException {
+		Discipline discipline;
+		if( (discipline=disciplineRepository.findByName(disciplineName))==null)
+			throw new FinderException("discipline unknown");
+		return discipline;
 	}
 
 	@Override

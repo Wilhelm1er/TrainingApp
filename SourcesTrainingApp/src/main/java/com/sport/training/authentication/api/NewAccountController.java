@@ -23,23 +23,24 @@ public class NewAccountController {
 	@Autowired
 	private UserService userService;
 	
-	@GetMapping(path = "/new-account")
-	public String newAccount(Model model) {
-		final String mname = "newAccount";
+	@GetMapping(path = "/new-athlete")
+	public String newAthlete(Model model) {
+		final String mname = "newAthlete";
 		LOGGER.debug("entering "+mname);
 		
 		model.addAttribute("userDTO", new UserDTO());
-		return "new-account";
+		return "new-athlete";
 	}
 
-	@PostMapping(path = "/new-account")
-	public String createAccount(@Valid UserDTO userDTO, Model model) {
-		final String mname = "createAccount";
+	@PostMapping(path = "/new-athlete")
+	public String createAthlete(@Valid UserDTO userDTO, Model model) {
+		final String mname = "createAthlete";
 		LOGGER.debug("entering "+mname);
 
 		try {
+			userDTO.setRoleName("ROLE_ATHLETE");
 			userService.createUser(userDTO);
-			model.addAttribute("message","account created");
+			model.addAttribute("message","Athlete account created");
 			return "index";
 		} catch (CreateException e) {
 			if(e instanceof DuplicateKeyException)
@@ -53,4 +54,34 @@ public class NewAccountController {
 		}
 	}
 
+	@GetMapping(path = "/new-coach")
+	public String newCoach(Model model) {
+		final String mname = "newCoach";
+		LOGGER.debug("entering "+mname);
+		
+		model.addAttribute("userDTO", new UserDTO());
+		return "new-coach";
+	}
+
+	@PostMapping(path = "/new-coach")
+	public String createCoach(@Valid UserDTO userDTO, Model model) {
+		final String mname = "createCoach";
+		LOGGER.debug("entering "+mname);
+
+		try {
+			userDTO.setRoleName("ROLE_COACH");
+			userService.createUser(userDTO);
+			model.addAttribute("message","Coach account created");
+			return "index";
+		} catch (CreateException e) {
+			if(e instanceof DuplicateKeyException)
+				model.addAttribute("exception", "this id is already assigned");
+			else
+				model.addAttribute("exception", e.getMessage());
+			return "error";
+		} catch(Exception exc) {
+			model.addAttribute("exception", exc.getMessage());
+			return "error";
+		}
+	}
 }

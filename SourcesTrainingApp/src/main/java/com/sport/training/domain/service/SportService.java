@@ -6,10 +6,12 @@ import javax.validation.Valid;
 
 import com.sport.training.domain.dto.DisciplineDTO;
 import com.sport.training.domain.dto.EventDTO;
+import com.sport.training.domain.model.Discipline;
 import com.sport.training.exception.CreateException;
 import com.sport.training.exception.FinderException;
 import com.sport.training.exception.RemoveException;
 import com.sport.training.exception.UpdateException;
+import com.sport.training.authentication.domain.model.Role;
 import com.sport.training.domain.dto.ActivityDTO;
 
 
@@ -22,6 +24,7 @@ public interface SportService  {
     public void deleteDiscipline(final String disciplineId) throws FinderException, RemoveException ;
     public void updateDiscipline(@Valid final DisciplineDTO disciplineDTO) throws UpdateException ;
     public List<DisciplineDTO> findDisciplines() throws FinderException ;
+    public Discipline findByDisciplineName(String disciplineName) throws FinderException;
 
     // ======================================
     // =      Activity Business methods     =

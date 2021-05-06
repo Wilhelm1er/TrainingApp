@@ -40,7 +40,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	        	.and()
 	        .authorizeRequests()
 	        	.antMatchers(staticResources).permitAll()
-	        	.antMatchers("/", "/login","/new-account","/find-activities","/find-events","/find-event","/find-coachs","/disciplines","/discipline/*","/activities","/activities/*","/activity/*","/coachs","/credit").permitAll()
+	        	.antMatchers("/", "/login","/new-athlete","/new-coach","/find-activities","/find-events","/find-event","/find-coachs","/disciplines","/discipline/*","/activities","/activities/*","/activity/*","/coachs","/credit","/create-activity/*").permitAll()
 	        	.anyRequest().authenticated();
 	}
 	

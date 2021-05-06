@@ -24,6 +24,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import com.sport.training.domain.dto.DisciplineDTO;
+import com.sport.training.domain.dto.EventDTO;
+import com.sport.training.domain.service.SportService;
+import com.sport.training.exception.CreateException;
+import com.sport.training.exception.FinderException;
 import com.sport.training.domain.dto.ActivityDTO;
 
 import reactor.core.publisher.Mono;
@@ -36,6 +40,9 @@ public class ManageActivityController {
 
 	@Autowired
 	private WebClient webClient;
+	
+	@Autowired
+	private SportService sportService;
 
 	@GetMapping("/manage-activities/{disciplineId}")
 	public String manageActivities(@PathVariable String disciplineId, Model model) {
@@ -55,6 +62,47 @@ public class ManageActivityController {
 			return "error";
 		}		
 		return "manage-sport";
+	}
+	
+	@GetMapping("/create-activity/{disciplineId}")
+	public String showCreateActivity(@PathVariable String disciplineId, Model model) {
+		final String mname = "showCreateActivity";
+		LOGGER.debug("entering " + mname);
+		try {
+			DisciplineDTO disciplineDTO = sportService.findDiscipline(disciplineId);
+			model.addAttribute("disciplineDTO", disciplineDTO);
+			model.addAttribute("activityDTO", new ActivityDTO());
+		} catch (FinderException e) {
+			LOGGER.error("exception in " + mname + " : " + e.getMessage());
+			model.addAttribute("exception", e.getClass().getName());
+			return "error";
+		} catch (Exception e) {
+			LOGGER.error("exception in " + mname + " : " + e.getMessage());
+			model.addAttribute("exception", e.getMessage());
+			return "error";
+		}
+		return "create-activity";
+	}
+
+	@PostMapping("/create-activity")
+	public String createActivity(@Valid @ModelAttribute ActivityDTO activityDTO, Model model) {
+		final String mname = "createActivity";
+		LOGGER.debug("entering " + mname);
+		try {
+			sportService.createActivity(activityDTO);
+			List<ActivityDTO> disciplineDTOs = sportService.findActivities();
+			model.addAttribute("disciplineDTOs", disciplineDTOs);
+			model.addAttribute("activityDTO", activityDTO);
+			return "create-activity";
+		} catch (CreateException e) {
+			LOGGER.error("exception in " + mname + " : " + e.getMessage());
+			model.addAttribute("exception", e.getClass().getName());
+			return "error";
+		} catch (Exception e) {
+			LOGGER.error("exception in " + mname + " : " + e.getMessage());
+			model.addAttribute("exception", e.getMessage());
+			return "error";
+		}
 	}
 
 	@GetMapping("/update-activity/{activityId}")
