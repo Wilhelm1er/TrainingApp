@@ -7,11 +7,11 @@ import com.sport.training.authentication.domain.dto.UserDTO;
 
 /**
  * This class follows the Data Transfert Object design pattern. It is a client
- * view of an Event. This class only transfers data from a distant service to a
+ * view of an Event registration. This class only transfers data from a distant service to a
  * client.
  */
 @SuppressWarnings("serial")
-public class EventRegisterDTO implements Serializable {
+public class EventRegistryDTO implements Serializable {
 
 	// ======================================
 	// = Attributes =
@@ -26,10 +26,10 @@ public class EventRegisterDTO implements Serializable {
 	// ======================================
 	// = Constructors =
 	// ======================================
-    public EventRegisterDTO() {
+    public EventRegistryDTO() {
     }
 
-    public EventRegisterDTO(final Date eventDate, final EventDTO eventDTO, final UserDTO athlete) {
+    public EventRegistryDTO(final Date eventDate, final EventDTO eventDTO, final UserDTO athlete) {
     	setEventDate(eventDate);
     	setEventDTO(eventDTO);
         setAthleteDTO(athlete);
@@ -62,11 +62,11 @@ public class EventRegisterDTO implements Serializable {
 		this.eventDate = eventDate;
 	}
 
-    public EventDTO getEvent() {
+    public EventDTO getEventDTO() {
 		return eventDTO;
 	}
 
-	public void setEvent(EventDTO eventDTO) {
+	public void setEventDTO(EventDTO eventDTO) {
 		this.eventDTO = eventDTO;
 	}
 
@@ -84,14 +84,6 @@ public class EventRegisterDTO implements Serializable {
 
 	public void setAthleteDTO(UserDTO athleteDTO) {
 		this.athleteDTO = athleteDTO;
-	}
-
-	public EventDTO getEventDTO() {
-		return eventDTO;
-	}
-
-	public void setEventDTO(EventDTO eventDTO) {
-		this.eventDTO = eventDTO;
 	}
 
 	@Override

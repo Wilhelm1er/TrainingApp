@@ -2,9 +2,9 @@ package com.sport.training.domain.dao;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.sport.training.domain.model.EventRegister;
+import com.sport.training.domain.model.EventRegistry;
 
-public interface EventRegisterRepository extends CrudRepository<EventRegister, String> {
+public interface EventRegistryRepository extends CrudRepository<EventRegistry, String> {
 
 	//Iterable<EventRegister> findAllByUser(User athlete);
 

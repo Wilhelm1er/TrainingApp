@@ -124,7 +124,7 @@ public class SportServiceImpl implements SportService {
 
 		Discipline discipline = null;
 		if (!disciplineRepository.findById(disciplineId).isPresent())
-			throw new RemoveException("Category must exist to be deleted");
+			throw new RemoveException("Discipline must exist to be deleted");
 		else
 			discipline = disciplineRepository.findById(disciplineId).get();
 		// Deletes the object
@@ -139,11 +139,11 @@ public class SportServiceImpl implements SportService {
 		LOGGER.debug("entering " + mname);
 
 		if (updatedDisciplineDTO == null)
-			throw new UpdateException("Category object is null");
+			throw new UpdateException("Discipline object is null");
 
 		// Checks if the object exists
 		if (!disciplineRepository.findById(updatedDisciplineDTO.getId()).isPresent())
-			throw new UpdateException("Category must exist to be updated");
+			throw new UpdateException("Discipline must exist to be updated");
 
 		// :::::::::::::::: We change DTO to model ::::::::::::::: //
 		Discipline updatedDiscipline = commonModelMapper.map(updatedDisciplineDTO, Discipline.class);

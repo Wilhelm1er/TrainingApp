@@ -12,8 +12,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.sport.training.authentication.domain.dto.UserDTO;
 import com.sport.training.authentication.domain.service.UserService;
+import com.sport.training.domain.dto.DisciplineDTO;
+import com.sport.training.domain.dto.DisciplineRegistryDTO;
+import com.sport.training.domain.service.RegistryService;
+import com.sport.training.domain.service.SportService;
 import com.sport.training.exception.CreateException;
 import com.sport.training.exception.DuplicateKeyException;
+import com.sport.training.exception.FinderException;
 
 @Controller
 public class NewAccountController {
@@ -22,6 +27,13 @@ public class NewAccountController {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private RegistryService registryService;
+	
+	@Autowired
+	private SportService sportService;
+	
 	
 	@GetMapping(path = "/new-athlete")
 	public String newAthlete(Model model) {
@@ -36,7 +48,6 @@ public class NewAccountController {
 	public String createAthlete(@Valid UserDTO userDTO, Model model) {
 		final String mname = "createAthlete";
 		LOGGER.debug("entering "+mname);
-
 		try {
 			userDTO.setRoleName("ROLE_ATHLETE");
 			userService.createUser(userDTO);
@@ -64,12 +75,20 @@ public class NewAccountController {
 	}
 
 	@PostMapping(path = "/new-coach")
-	public String createCoach(@Valid UserDTO userDTO, Model model) {
+	public String createCoach(@Valid UserDTO userDTO,@Valid DisciplineDTO disciplineDTO, Model model) {
 		final String mname = "createCoach";
 		LOGGER.debug("entering "+mname);
 
+		DisciplineRegistryDTO disciplineRegistryDTO = null;
+		try {
+			disciplineRegistryDTO = new DisciplineRegistryDTO(sportService.findDiscipline(disciplineDTO.getId()), userDTO);
+		} catch (FinderException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		try {
 			userDTO.setRoleName("ROLE_COACH");
+			registryService.createDisciplineRegistry(disciplineRegistryDTO);
 			userService.createUser(userDTO);
 			model.addAttribute("message","Coach account created");
 			return "index";

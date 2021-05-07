@@ -27,7 +27,6 @@ public class MapperConfig {
 		TypeMap<User, UserDTO> typeMap = modelMapper.createTypeMap(User.class, UserDTO.class);
 		modelMapper.getConfiguration().setSkipNullEnabled(true);
 		typeMap.addMapping(src -> src.getRole().getName(), UserDTO::setRoleName);
-		typeMap.addMapping(src -> src.getDiscipline().getName(), UserDTO::setDisciplineName);
 		return modelMapper;
 	}
 	
@@ -39,7 +38,6 @@ public class MapperConfig {
 		// on ne retransmet pas le password vers la vue
 		typeMap.addMappings(mapper -> mapper.skip(UserDTO::setPassword));
 		typeMap.addMapping(src -> src.getRole().getName(), UserDTO::setRoleName);
-		typeMap.addMapping(src -> src.getDiscipline().getName(), UserDTO::setDisciplineName);
 		return modelMapper;
 	}
 	

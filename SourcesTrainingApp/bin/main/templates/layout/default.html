@@ -79,13 +79,14 @@
 
 				</li>
 				<li class="nav-item dropdown" sec:authorize="isAuthenticated()">
-				<a class="nav-link dropdown-toggle" th:href="@{/#}"
+					<a class="nav-link dropdown-toggle" th:href="@{/#}"
 					id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
-					aria-haspopup="true" aria-expanded="false"><span th:text="'Solde: '+${#authentication.getPrincipal().getCredit()}+ ' Cr'"></span></a>
-				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-				<a class="nav-item dropdown-item" ></a>
-						<a class="dropdown-item" th:href="@{/credit}" 
-						th:text="#{credit.gestion}">Credit</a></div>
+					aria-haspopup="true" aria-expanded="false"><span
+						th:text="'Solde: '+${#authentication.getPrincipal().getCredit()}+ ' Cr'"></span></a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+						<a class="nav-item dropdown-item"></a> <a class="dropdown-item"
+							th:href="@{/credit}" th:text="#{credit.gestion}">Credit</a>
+					</div>
 				</li>
 
 			</ul>
@@ -101,26 +102,21 @@
 			<a class="nav-link" th:href="@{/login}" th:text="#{menu.login}">
 			</a>
 		</form>
-		
+
 
 
 		<form class="nav-item dropdown" sec:authorize="isAnonymous()">
-				<a class="nav-link dropdown-toggle" th:href="@{/#}"
-					id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
-					aria-haspopup="true" aria-expanded="false"><span th:text="#{menu.register}"></span></a>
-				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-				<a class="nav-item dropdown-item" ></a>
-						<a class="dropdown-item" th:href="@{/new-athlete}">Athlète</a>
-						<a class="nav-item dropdown-item" ></a>
-						<a class="dropdown-item" th:href="@{/new-coach}">Entraîneur</a></div>
-				</form>
-
-
-
-
-
-
-
+			<a class="nav-link dropdown-toggle" th:href="@{/#}"
+				id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
+				aria-haspopup="true" aria-expanded="false"><span
+				th:text="#{menu.register}"></span></a>
+			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+				<a class="nav-item dropdown-item"></a> <a class="dropdown-item"
+					th:href="@{/new-athlete}">Athlète</a> <a
+					class="nav-item dropdown-item"></a> <a class="dropdown-item"
+					th:href="@{/new-coach}">Entraîneur</a>
+			</div>
+		</form>
 	</nav>
 
 

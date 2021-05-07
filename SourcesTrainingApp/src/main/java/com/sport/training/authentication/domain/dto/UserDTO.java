@@ -25,7 +25,6 @@ public class UserDTO implements Serializable {
     private int credit;
     private String statut;
 	private AddressDTO addressDTO = new AddressDTO();
-    private String disciplineName;
     private String roleName;
 
 
@@ -158,14 +157,6 @@ public class UserDTO implements Serializable {
 
 	public void setStatut(String statut) {
 		this.statut = statut;
-	}
-
-	public String getDisciplineName() {
-		return disciplineName;
-	}
-
-	public void setDisciplineName(String disciplineName) {
-		this.disciplineName = disciplineName;
 	}
 	
 	public String getRoleName() {

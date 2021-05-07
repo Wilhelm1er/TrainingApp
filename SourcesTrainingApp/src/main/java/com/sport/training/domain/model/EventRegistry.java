@@ -18,15 +18,14 @@ import javax.validation.constraints.NotNull;
 import com.sport.training.authentication.domain.model.User;
 
 /**
- * A registration represents the event that an athlete registered. This registration has one
+ * An event register represents the event that an athlete registered. This registration has one
  * registration event and is relevant for one athlete.
  *
- * @see User
  */
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "T_EVENT_REGISTER") 
-public class EventRegister implements Serializable {
+@Table(name = "T_EVENT_REGISTRY") 
+public class EventRegistry implements Serializable {
 
     // ======================================
     // =             Attributes             =
@@ -57,14 +56,15 @@ public class EventRegister implements Serializable {
     // ======================================
     // =            Constructors            =
     // ======================================
-    public EventRegister() {
+    public EventRegistry() {
     	this.registerDate=new Date();
     }
 
-	public EventRegister(final Date eventDate, final Event event,final User athlete) {
+	public EventRegistry(final Date eventDate, final Event event,final User athlete) {
     	this.registerDate=new Date();
     	setEventDate(eventDate);
     	setRegisterDate(registerDate);
+    	setEvent(event);
         setAthlete(athlete);
     }
 

@@ -36,7 +36,7 @@ public class FindCoachController {
 
 		List<UserDTO> coachDTOs = null;
 		try {
-			coachDTOs = userService.findUsersByDiscipline(disciplineId);
+			coachDTOs = userService.findCoachsByDiscipline(disciplineId);
 		} catch (FinderException e) {
 			model.addAttribute("exception", e.getMessage());
 			return "error";

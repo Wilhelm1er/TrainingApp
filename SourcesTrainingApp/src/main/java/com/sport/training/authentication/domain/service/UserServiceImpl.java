@@ -20,11 +20,13 @@ import com.sport.training.authentication.domain.dao.UserRepository;
 import com.sport.training.authentication.domain.dto.UserDTO;
 import com.sport.training.authentication.domain.model.Role;
 import com.sport.training.authentication.domain.model.User;
+import com.sport.training.domain.dao.DisciplineRegistryRepository;
 import com.sport.training.domain.dao.DisciplineRepository;
 import com.sport.training.domain.dto.ActivityDTO;
 import com.sport.training.domain.dto.DisciplineDTO;
 import com.sport.training.domain.model.Activity;
 import com.sport.training.domain.model.Discipline;
+import com.sport.training.domain.model.DisciplineRegistry;
 import com.sport.training.domain.service.SportService;
 import com.sport.training.exception.CreateException;
 import com.sport.training.exception.DuplicateKeyException;
@@ -48,15 +50,10 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserRepository userRepository;
-	
-	@Autowired
-	private DisciplineRepository disciplineRepository;
 
 	@Autowired
 	private RoleService roleService;
 	
-	@Autowired
-	private SportService sportService;
 
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -111,10 +108,9 @@ public class UserServiceImpl implements UserService {
 				LOGGER.error("role missing for athlete");
 			}
 		}
+		
 		// make sure that coach has a discipline
 		if (user.getRole().getId() ==  2 || user.getRole().getName() == "ROLE_COACH") {
-		
-				user.setDiscipline(sportService.findByDisciplineName(user.getDiscipline().getName()));
 				user.setStatut("INVALIDE");
 			} 
 		if (user.getRole().getId() ==  3 || user.getRole().getName() == "ROLE_ATHLETE") {
@@ -233,37 +229,6 @@ public class UserServiceImpl implements UserService {
 										.collect(Collectors.toList());
 		LOGGER.debug("exiting " + mname + " size of collection : " + size);
 		return usersDTOByRole;
-	}
-	
-	@Override
-	@Transactional(readOnly = true)
-	public List<UserDTO> findUsersByDiscipline(final String disciplineId) throws FinderException {
-		final String mname = "findUsersByDiscipline";
-		LOGGER.debug("entering " + mname);
-
-		checkId(disciplineId);
-
-		Discipline discipline = null;
-		if (!disciplineRepository.findById(disciplineId).isPresent())
-			throw new FinderException("Discipline must exist to be found");
-		else
-			discipline = disciplineRepository.findById(disciplineId).get();
-
-		// Finds all the objects
-		final Iterable<User> coachsByDiscipline = userRepository.findAllByDiscipline(discipline);
-		
-		int size;
-		if ((size = ((Collection<User>) coachsByDiscipline).size()) == 0) {
-			throw new FinderException("No Coach in the database");
-		}
-
-		List<UserDTO> coachDTOs = ((List<User>) coachsByDiscipline)
-										.stream()
-										.map(coach -> userModelMapper.map(coach, UserDTO.class))
-										.collect(Collectors.toList());
-
-		LOGGER.debug("exiting " + mname + " size of collection : " + size);
-		return coachDTOs;
 	}
 
 	// ======================================

@@ -25,6 +25,4 @@ public interface UserService {
 	    public List<UserDTO> findUsers() throws FinderException;
 
 		public List<UserDTO> findUsersByRole(Role role) throws FinderException;
-		
-		public List<UserDTO> findUsersByDiscipline(String disciplineId) throws FinderException;
 }

@@ -56,10 +56,6 @@ public class User implements Serializable {
     private Address address = new Address();
     
     @ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "DISCIPLINE_FK", referencedColumnName="ID")
-	private Discipline discipline;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ROLE_FK", referencedColumnName="ID")
 	private Role role;
 
@@ -194,14 +190,6 @@ public class User implements Serializable {
     public void setCountry(final String country) {
         address.setCountry(country);
     }
-    
-	public Discipline getDiscipline() {
-		return discipline;
-	}
-
-	public void setDiscipline(Discipline discipline) {
-		this.discipline = discipline;
-	}
 	
 	public Role getRole() {
 		return role;
