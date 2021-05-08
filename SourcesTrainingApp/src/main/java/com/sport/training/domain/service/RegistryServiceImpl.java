@@ -16,17 +16,17 @@ import org.springframework.validation.annotation.Validated;
 
 import com.sport.training.authentication.domain.dto.UserDTO;
 import com.sport.training.authentication.domain.model.User;
+import com.sport.training.authentication.domain.service.UserService;
 import com.sport.training.authentication.domain.service.UserServiceImpl;
 import com.sport.training.domain.dao.DisciplineRegistryRepository;
+import com.sport.training.domain.dao.DisciplineRepository;
 import com.sport.training.domain.dao.EventRegistryRepository;
-import com.sport.training.domain.dto.DisciplineDTO;
 import com.sport.training.domain.dto.DisciplineRegistryDTO;
 import com.sport.training.domain.dto.EventRegistryDTO;
 import com.sport.training.domain.model.Discipline;
 import com.sport.training.domain.model.DisciplineRegistry;
 import com.sport.training.domain.model.EventRegistry;
 import com.sport.training.exception.CreateException;
-import com.sport.training.exception.DuplicateKeyException;
 import com.sport.training.exception.FinderException;
 import com.sport.training.exception.RemoveException;
 import com.sport.training.exception.UpdateException;
@@ -52,6 +52,13 @@ public class RegistryServiceImpl implements RegistryService {
 	@Autowired
 	private EventRegistryRepository eventRegistryRepository;
 	
+	@Autowired
+	private DisciplineRepository disciplineRepository;
+	
+	
+	@Autowired
+	private UserService userService;
+	
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
@@ -72,14 +79,19 @@ public class RegistryServiceImpl implements RegistryService {
 			throws CreateException {
 		final String mname = "createDisciplineRegistry";
 		LOGGER.debug("entering " + mname);
+		
+		
+		if (disciplineRegistryDTO == null)
+			throw new CreateException("DisciplineRegistry object is null");
 
-		if (disciplineRegistryDTO == null || disciplineRegistryDTO.getId() == null || disciplineRegistryDTO.getId().equals(""))
-			throw new CreateException("Discipline registry object is null");
+		if (disciplineRegistryDTO.getDisciplineDTO() == null || disciplineRegistryDTO.getDisciplineDTO().getId() == null || !disciplineRepository.findById(disciplineRegistryDTO.getDisciplineDTO().getId()).isPresent())
+			throw new CreateException("Discipline must exist to create a discipline registry");
+
 
 		try {
-			if (findDisciplineRegistry(disciplineRegistryDTO.getId()) != null)
-				throw new DuplicateKeyException();
-		} catch (FinderException e) {
+			userService.findUser(disciplineRegistryDTO.getCoachDTO().getUsername());
+		} catch (NullPointerException | FinderException e) {
+			throw new CreateException("User must exist to create a DisciplineRegistry");
 		}
 
 		// :::::::::::::::: We change DTO to model ::::::::::::::: //
@@ -94,7 +106,7 @@ public class RegistryServiceImpl implements RegistryService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public DisciplineRegistryDTO findDisciplineRegistry(final String disciplineRegistryId) throws FinderException {
+	public DisciplineRegistryDTO findDisciplineRegistry(final Long disciplineRegistryId) throws FinderException {
 		final String mname = "findDiscipline";
 		LOGGER.debug("entering " + mname + " for id " + disciplineRegistryId);
 
@@ -112,7 +124,7 @@ public class RegistryServiceImpl implements RegistryService {
 
 	@Override
 	@Transactional
-	public void deleteDisciplineRegistry(final String disciplineRegistryId) throws FinderException, RemoveException {
+	public void deleteDisciplineRegistry(final Long disciplineRegistryId) throws FinderException, RemoveException {
 		final String mname = "deleteDisciplineRegistry";
 		LOGGER.debug("entering " + mname + " for id " + disciplineRegistryId);
 
@@ -202,13 +214,16 @@ public class RegistryServiceImpl implements RegistryService {
 		final String mname = "createEventRegistry";
 		LOGGER.debug("entering " + mname);
 
-		if (eventRegistryDTO == null || eventRegistryDTO.getId() == null || eventRegistryDTO.getId().equals(""))
-			throw new CreateException("Event registry object is null");
+		if (eventRegistryDTO == null)
+			throw new CreateException("EventRegistryDTO object is null");
 
+		if (eventRegistryDTO.getEventDTO() == null || eventRegistryDTO.getEventDTO().getId() == null || !disciplineRepository.findById(eventRegistryDTO.getEventDTO().getId()).isPresent())
+			throw new CreateException("Discipline must exist to create a discipline registry");
+		
 		try {
-			if (findDisciplineRegistry(eventRegistryDTO.getId()) != null)
-				throw new DuplicateKeyException();
-		} catch (FinderException e) {
+			userService.findUser(eventRegistryDTO.getAthleteDTO().getUsername());
+		} catch (NullPointerException | FinderException e) {
+			throw new CreateException("Athlete must exist to create a EventRegistry");
 		}
 
 		// :::::::::::::::: We change DTO to model ::::::::::::::: //
@@ -219,11 +234,12 @@ public class RegistryServiceImpl implements RegistryService {
 
 		LOGGER.debug("exiting " + mname);
 		return eventRegistryDTO;
+
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public EventRegistryDTO findEventRegistry(final String eventRegistryId) throws FinderException {
+	public EventRegistryDTO findEventRegistry(final Long eventRegistryId) throws FinderException {
 		final String mname = "findDiscipline";
 		LOGGER.debug("entering " + mname + " for id " + eventRegistryId);
 
@@ -241,7 +257,7 @@ public class RegistryServiceImpl implements RegistryService {
 
 	@Override
 	@Transactional
-	public void deleteEventRegistry(final String eventRegistryId) throws FinderException, RemoveException {
+	public void deleteEventRegistry(final Long eventRegistryId) throws FinderException, RemoveException {
 		final String mname = "deleteEventRegistry";
 		LOGGER.debug("entering " + mname + " for id " + eventRegistryId);
 
@@ -301,9 +317,9 @@ public class RegistryServiceImpl implements RegistryService {
     // ======================================
 	
 
-	private void checkId(final String id) throws FinderException {
-		if (id == null || id.equals(""))
-			throw new FinderException(id + " should not be null or empty");
+	private void checkId(final long l) throws FinderException {
+		if (l == 0)
+			throw new FinderException("Id should not be 0");
 	}
 
 }

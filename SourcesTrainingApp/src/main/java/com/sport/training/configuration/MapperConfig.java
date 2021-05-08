@@ -6,11 +6,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.sport.training.authentication.domain.dto.UserDTO;
+import com.sport.training.domain.dto.DisciplineDTO;
 import com.sport.training.authentication.domain.model.User;
 import com.sport.training.domain.dto.EventDTO;
 import com.sport.training.domain.dto.ActivityDTO;
+import com.sport.training.domain.dto.DisciplineRegistryDTO;
+import com.sport.training.domain.dto.EventRegistryDTO;
 import com.sport.training.domain.model.Event;
 import com.sport.training.domain.model.Activity;
+import com.sport.training.domain.model.DisciplineRegistry;
+import com.sport.training.domain.model.EventRegistry;
 
 @Configuration
 public class MapperConfig {
@@ -56,4 +61,5 @@ public class MapperConfig {
 		typeMap.addMappings(mapper -> mapper.map(Event::getActivity, EventDTO::setActivityDTO));
 		return modelMapper;
 	}
+
 }

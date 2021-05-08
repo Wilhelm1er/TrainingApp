@@ -3,6 +3,8 @@ package com.sport.training.domain.dto;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.validation.Valid;
+
 import com.sport.training.authentication.domain.dto.UserDTO;
 import com.sport.training.authentication.domain.model.User;
 
@@ -18,61 +20,55 @@ public class DisciplineRegistryDTO implements Serializable {
     // =             Attributes             =
     // ======================================
 
-    private UserDTO coachDTO;
-    private DisciplineDTO disciplineDTO;
-	private String id;
+	private Long id;
 	private Date registerDate;
+	 private UserDTO coachDTO;
+	    private DisciplineDTO disciplineDTO;
 
 	// ======================================
     // =            Constructors            =
     // ======================================
-    public DisciplineRegistryDTO() {
-    	this.registerDate=new Date();
-    }
-
-    public DisciplineRegistryDTO(final DisciplineDTO disciplineDTO,final UserDTO coachDTO) {
-    	this.registerDate=new Date();
-    	setRegisterDate(registerDate);
+    public DisciplineRegistryDTO(DisciplineDTO disciplineDTO, UserDTO userDTO) {
+    	setCoachDTO(userDTO);
     	setDisciplineDTO(disciplineDTO);
-        setCoachDTO(coachDTO);
+    	
     }
 
     // ======================================
     // =         Getters and Setters        =
     // ======================================
     
-	public String getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(final String id) {
+	public void setId(final Long id) {
 		this.id = id;
 	}
 	
-	private Object getRegisterDate() {
+	public Object getRegisterDate() {
 		return registerDate;
 	}
     
-    private void setCoachDTO(UserDTO coachDTO) {
+	public void setCoachDTO(UserDTO coachDTO) {
     	this.coachDTO = coachDTO;
 		
 	}
-    
-	private void setDisciplineDTO(DisciplineDTO disciplineDTO) {
-		this.disciplineDTO = disciplineDTO;
-		
-	}
-
-	public DisciplineDTO getDisciplineDTO() {
+	
+    public DisciplineDTO getDisciplineDTO() {
 		return disciplineDTO;
 	}
 
-	private void setRegisterDate(Date registerDate) {
+	public void setDisciplineDTO(DisciplineDTO disciplineDTO) {
+		this.disciplineDTO = disciplineDTO;
+	}
+
+	public void setRegisterDate(Date registerDate) {
 		this.registerDate = registerDate;
 		
 	}
 	
-	private UserDTO getCoachDTO() {
+	public UserDTO getCoachDTO() {
 		return coachDTO;
 	}
 	

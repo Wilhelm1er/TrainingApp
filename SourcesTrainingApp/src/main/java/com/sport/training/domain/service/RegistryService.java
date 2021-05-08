@@ -19,8 +19,8 @@ public interface RegistryService  {
     // = DisciplineRegistry Business methods=
     // ======================================
 	public DisciplineRegistryDTO createDisciplineRegistry(@Valid final DisciplineRegistryDTO disciplineRegistryDTO) throws CreateException ;
-    public DisciplineRegistryDTO findDisciplineRegistry(final String disciplineRegistryId) throws FinderException ;
-    public void deleteDisciplineRegistry(final String disciplineRegistryId) throws FinderException, RemoveException ;
+    public DisciplineRegistryDTO findDisciplineRegistry(final Long disciplineRegistryId) throws FinderException ;
+    public void deleteDisciplineRegistry(final Long disciplineRegistryId) throws FinderException, RemoveException ;
     public void updateDisciplineRegistry(@Valid final DisciplineRegistryDTO disciplineRegistryDTO) throws UpdateException ;
     public List<DisciplineRegistryDTO> findDisciplineRegistries() throws FinderException ;
     public List<UserDTO> findCoachsByDiscipline(final String disciplineId) throws FinderException ;
@@ -30,8 +30,8 @@ public interface RegistryService  {
     // =   EventRegistry Business methods   =
     // ======================================
 	public EventRegistryDTO createEventRegistry(@Valid final EventRegistryDTO eventRegistryDTO) throws CreateException ;
-    public EventRegistryDTO findEventRegistry(final String eventRegistryId) throws FinderException ;
-    public void deleteEventRegistry(final String eventRegistryId) throws FinderException, RemoveException ;
+    public EventRegistryDTO findEventRegistry(final Long eventRegistryId) throws FinderException ;
+    public void deleteEventRegistry(final Long eventRegistryId) throws FinderException, RemoveException ;
     public void updateEventRegistry(@Valid final EventRegistryDTO eventRegistryDTO) throws UpdateException ;
     public List<EventRegistryDTO> findEventRegistries() throws FinderException ;
     

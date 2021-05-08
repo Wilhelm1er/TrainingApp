@@ -23,6 +23,10 @@ public class DisciplineDTO implements Serializable {
     // ======================================
     public DisciplineDTO() {
     }
+    
+    public DisciplineDTO(final String id) {
+    	this.id = id;
+    }
 
     public DisciplineDTO(final String id, final String name, final String description) {
     	this.id = id;

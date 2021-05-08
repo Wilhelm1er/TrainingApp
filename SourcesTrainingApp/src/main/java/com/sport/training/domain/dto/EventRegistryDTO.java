@@ -16,7 +16,7 @@ public class EventRegistryDTO implements Serializable {
 	// ======================================
 	// = Attributes =
 	// ======================================
-	private String id;
+	private Long id;
 	private Date registerDate;
 	private Date eventDate;
 	private int creditCost;
@@ -29,20 +29,18 @@ public class EventRegistryDTO implements Serializable {
     public EventRegistryDTO() {
     }
 
-    public EventRegistryDTO(final Date eventDate, final EventDTO eventDTO, final UserDTO athlete) {
+    public EventRegistryDTO(final Date eventDate) {
     	setEventDate(eventDate);
-    	setEventDTO(eventDTO);
-        setAthleteDTO(athlete);
     }
 
 	// ======================================
 	// = Getters and Setters =
 	// ======================================
-	public String getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(final String id) {
+	public void setId(final Long id) {
 		this.id = id;
 	}
 

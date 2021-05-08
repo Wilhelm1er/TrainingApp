@@ -495,6 +495,4 @@ public class SportServiceImpl implements SportService {
 			throw new FinderException(id + " should not be null or empty");
 	}
 
-	
-
 }

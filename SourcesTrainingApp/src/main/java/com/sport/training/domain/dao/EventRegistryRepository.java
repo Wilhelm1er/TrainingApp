@@ -4,7 +4,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.sport.training.domain.model.EventRegistry;
 
-public interface EventRegistryRepository extends CrudRepository<EventRegistry, String> {
+public interface EventRegistryRepository extends CrudRepository<EventRegistry, Long> {
 
 	//Iterable<EventRegister> findAllByUser(User athlete);
 

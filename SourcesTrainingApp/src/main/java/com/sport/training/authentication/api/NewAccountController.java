@@ -18,7 +18,6 @@ import com.sport.training.domain.service.RegistryService;
 import com.sport.training.domain.service.SportService;
 import com.sport.training.exception.CreateException;
 import com.sport.training.exception.DuplicateKeyException;
-import com.sport.training.exception.FinderException;
 
 @Controller
 public class NewAccountController {
@@ -33,7 +32,6 @@ public class NewAccountController {
 	
 	@Autowired
 	private SportService sportService;
-	
 	
 	@GetMapping(path = "/new-athlete")
 	public String newAthlete(Model model) {
@@ -69,7 +67,7 @@ public class NewAccountController {
 	public String newCoach(Model model) {
 		final String mname = "newCoach";
 		LOGGER.debug("entering "+mname);
-		
+		model.addAttribute("disciplineDTO", new DisciplineDTO());
 		model.addAttribute("userDTO", new UserDTO());
 		return "new-coach";
 	}
@@ -78,18 +76,11 @@ public class NewAccountController {
 	public String createCoach(@Valid UserDTO userDTO,@Valid DisciplineDTO disciplineDTO, Model model) {
 		final String mname = "createCoach";
 		LOGGER.debug("entering "+mname);
-
-		DisciplineRegistryDTO disciplineRegistryDTO = null;
-		try {
-			disciplineRegistryDTO = new DisciplineRegistryDTO(sportService.findDiscipline(disciplineDTO.getId()), userDTO);
-		} catch (FinderException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+	
 		try {
 			userDTO.setRoleName("ROLE_COACH");
-			registryService.createDisciplineRegistry(disciplineRegistryDTO);
 			userService.createUser(userDTO);
+			registryService.createDisciplineRegistry(new DisciplineRegistryDTO(sportService.findDiscipline(disciplineDTO.getId()),userDTO));
 			model.addAttribute("message","Coach account created");
 			return "index";
 		} catch (CreateException e) {
