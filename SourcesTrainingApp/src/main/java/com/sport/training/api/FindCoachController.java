@@ -16,6 +16,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import com.sport.training.authentication.domain.dto.UserDTO;
 import com.sport.training.authentication.domain.service.UserService;
 import com.sport.training.domain.dto.ActivityDTO;
+import com.sport.training.domain.service.RegistryService;
 import com.sport.training.exception.FinderException;
 
 /**
@@ -27,7 +28,7 @@ public class FindCoachController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FindCoachController.class);
 
 	@Autowired
-	private UserService userService;
+	private RegistryService registryService;
 
 	@GetMapping("/find-coachs")
 	protected String findCoachs(Model model, @RequestParam String disciplineId) {
@@ -36,7 +37,7 @@ public class FindCoachController {
 
 		List<UserDTO> coachDTOs = null;
 		try {
-			coachDTOs = userService.findCoachsByDiscipline(disciplineId);
+			coachDTOs = registryService.findCoachsByDiscipline(disciplineId);
 		} catch (FinderException e) {
 			model.addAttribute("exception", e.getMessage());
 			return "error";

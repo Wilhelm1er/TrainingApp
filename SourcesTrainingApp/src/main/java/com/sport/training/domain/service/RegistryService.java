@@ -23,7 +23,7 @@ public interface RegistryService  {
     public void deleteDisciplineRegistry(final String disciplineRegistryId) throws FinderException, RemoveException ;
     public void updateDisciplineRegistry(@Valid final DisciplineRegistryDTO disciplineRegistryDTO) throws UpdateException ;
     public List<DisciplineRegistryDTO> findDisciplineRegistries() throws FinderException ;
-    public List<UserDTO> findCoachs() throws FinderException ;
+    public List<UserDTO> findCoachsByDiscipline(final String disciplineId) throws FinderException ;
     public Discipline findByDisciplineName(String disciplineName) throws FinderException;
     
     // ======================================

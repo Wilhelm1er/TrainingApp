@@ -15,9 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import com.sport.training.authentication.domain.dto.UserDTO;
+import com.sport.training.authentication.domain.model.User;
 import com.sport.training.authentication.domain.service.UserServiceImpl;
 import com.sport.training.domain.dao.DisciplineRegistryRepository;
 import com.sport.training.domain.dao.EventRegistryRepository;
+import com.sport.training.domain.dto.DisciplineDTO;
 import com.sport.training.domain.dto.DisciplineRegistryDTO;
 import com.sport.training.domain.dto.EventRegistryDTO;
 import com.sport.training.domain.model.Discipline;
@@ -166,9 +168,22 @@ public class RegistryServiceImpl implements RegistryService {
 	}
 
 	@Override
-	public List<UserDTO> findCoachs() throws FinderException {
-		// TODO Auto-generated method stub
-		return null;
+	@Transactional(readOnly = true)
+	public List<UserDTO> findCoachsByDiscipline(String disciplineId) throws FinderException {
+		final String mname = "findCoachsDiscipline";
+		LOGGER.debug("entering " + mname);
+
+		// Finds all the objects
+		final Iterable<User> coachs = disciplineRegistryRepository.findAllByDisciplineId(disciplineId);
+		int size;
+		if ((size = ((Collection<User>) coachs).size()) == 0) {
+			throw new FinderException("No coach in the database");
+		}
+		List<UserDTO> userDTOs = ((List<User>) coachs).stream()
+				.map(coach -> commonModelMapper.map(coach, UserDTO.class)).collect(Collectors.toList());
+
+		LOGGER.debug("exiting " + mname + " size of collection : " + size);
+		return userDTOs;
 	}
 
 	@Override
