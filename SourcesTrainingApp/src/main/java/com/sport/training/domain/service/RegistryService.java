@@ -1,6 +1,7 @@
 package com.sport.training.domain.service;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.validation.Valid;
 
@@ -20,12 +21,12 @@ public interface RegistryService  {
 	// ======================================
     // = DisciplineRegistry Business methods=
     // ======================================
-	public DisciplineRegistryDTO createDisciplineRegistry(@Valid final DisciplineRegistryDTO disciplineRegistryDTO) throws CreateException ;
+	public DisciplineRegistryDTO createDisciplineRegistry(@Valid final DisciplineRegistryDTO disciplineRegistryDTO) throws CreateException, FinderException ;
     public DisciplineRegistryDTO findDisciplineRegistry(final Long disciplineRegistryId) throws FinderException ;
     public void deleteDisciplineRegistry(final Long disciplineRegistryId) throws FinderException, RemoveException ;
     public void updateDisciplineRegistry(@Valid final DisciplineRegistryDTO disciplineRegistryDTO) throws UpdateException ;
     public List<DisciplineRegistryDTO> findDisciplineRegistries() throws FinderException ;
-    public List<UserDTO> findCoachsByDiscipline(final String disciplineId) throws FinderException ;
+    public Set<UserDTO> findCoachsByDiscipline(final String disciplineId) throws FinderException ;
     public List<DisciplineDTO> findDisciplinesByCoach(String coachId) throws FinderException;
     
     // ======================================

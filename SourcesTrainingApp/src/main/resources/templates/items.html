@@ -6,10 +6,7 @@
 <body>
 	<nav th:insert="layout/default.html :: navbar"></nav>
 	<div class="container">
-		<br>
-		<br>
-		<br>
-		<br>
+		<br> <br> <br> <br>
 		<h3 th:if="${productDTO}!=null"
 			th:text="#{items.included}+' '+${productDTO.name}"></h3>
 		<h3 th:if="${keyword}!=null" th:unless="${price}!=null"

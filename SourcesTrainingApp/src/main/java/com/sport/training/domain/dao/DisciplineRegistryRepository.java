@@ -8,9 +8,10 @@ import com.sport.training.domain.model.DisciplineRegistry;
 
 public interface DisciplineRegistryRepository extends CrudRepository<DisciplineRegistry, Long> {
 
-	// Iterable<Discipline> findAllByUser(User user);
 	Iterable<DisciplineRegistry> findAllByDiscipline(Discipline discipline);
 
 	Iterable<DisciplineRegistry> findAllByCoach(User coach);
+	
+	Iterable<DisciplineRegistry> findAllByCoachAndDiscipline(User user, Discipline discipline);
 
 }

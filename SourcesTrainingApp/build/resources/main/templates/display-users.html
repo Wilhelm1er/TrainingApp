@@ -6,10 +6,7 @@
 <body>
 	<nav th:insert="layout/default.html :: navbar"></nav>
 	<div class="container">
-		<br>
-		<br>
-		<br>
-		<br>
+		<br> <br> <br> <br>
 		<div class="container"
 			sec:authorize="hasAnyRole('ADMIN','FRANCHISEE')">
 			<div th:if="${customerDTOs} !=null">
@@ -55,10 +52,7 @@
 			</div>
 		</div>
 
-		<br>
-		<br>
-		<br>
-		<br> <br>
+		<br> <br> <br> <br> <br>
 		<div th:insert="layout/default.html :: footer"></div>
 	</div>
 	<nav th:insert="layout/default.html :: footernavbar"></nav>

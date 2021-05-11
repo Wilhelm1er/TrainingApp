@@ -6,9 +6,7 @@
 <body>
 	<nav th:insert="layout/default.html :: navbar"></nav>
 	<div class="container">
-		<br>
-		<br>
-		<br>
+		<br> <br> <br>
 		<div th:if="${param.message != null}" class="alert alert-info"
 			th:text="${param.message[0]}">message</div>
 		<div th:if="${param.error != null}" class="alert alert-danger"

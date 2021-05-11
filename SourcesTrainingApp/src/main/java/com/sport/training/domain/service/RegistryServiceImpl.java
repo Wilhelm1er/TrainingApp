@@ -2,7 +2,9 @@ package com.sport.training.domain.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -30,6 +32,7 @@ import com.sport.training.domain.model.Discipline;
 import com.sport.training.domain.model.DisciplineRegistry;
 import com.sport.training.domain.model.EventRegistry;
 import com.sport.training.exception.CreateException;
+import com.sport.training.exception.DuplicateKeyException;
 import com.sport.training.exception.FinderException;
 import com.sport.training.exception.RemoveException;
 import com.sport.training.exception.UpdateException;
@@ -186,7 +189,7 @@ public class RegistryServiceImpl implements RegistryService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<UserDTO> findCoachsByDiscipline(String disciplineId) throws FinderException {
+	public Set<UserDTO> findCoachsByDiscipline(String disciplineId) throws FinderException {
 		final String mname = "findCoachsDiscipline";
 		LOGGER.debug("entering " + mname);
 
@@ -207,7 +210,7 @@ public class RegistryServiceImpl implements RegistryService {
 			throw new FinderException("No Coach in the database");
 		}
 
-		Collection<User> coachList = new ArrayList<User>();
+		Set<User> coachList = new HashSet<User>();
 
 		for (DisciplineRegistry discReg : disciplineRegistriesByDiscipline) {
 			if(discReg.getCoach().getStatut().equals("VALIDE")) {
@@ -218,8 +221,8 @@ public class RegistryServiceImpl implements RegistryService {
 			throw new FinderException("No Coach in the database");
 		}
 
-		List<UserDTO> coachDTOs = ((List<User>) coachList).stream()
-				.map(coach -> userDTOModelMapper.map(coach, UserDTO.class)).collect(Collectors.toList());
+		Set<UserDTO> coachDTOs = (((Set<User>) coachList).stream()
+				.map(coach -> userDTOModelMapper.map(coach, UserDTO.class)).collect(Collectors.toSet()));
 
 		LOGGER.debug("exiting " + mname + " size of collection : " + size);
 		return coachDTOs;

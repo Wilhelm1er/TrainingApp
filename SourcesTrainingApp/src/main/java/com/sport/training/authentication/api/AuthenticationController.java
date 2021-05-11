@@ -10,16 +10,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.sport.training.authentication.domain.dto.UserDTO;
 import com.sport.training.authentication.domain.service.UserService;
 import com.sport.training.domain.dto.DisciplineDTO;
+import com.sport.training.domain.dto.DisciplineRegistryDTO;
 import com.sport.training.domain.service.RegistryService;
 import com.sport.training.domain.service.SportService;
+import com.sport.training.exception.CreateException;
+import com.sport.training.exception.DuplicateKeyException;
 import com.sport.training.exception.FinderException;
 import com.sport.training.exception.UpdateException;
 
@@ -59,15 +64,18 @@ public class AuthenticationController {
 		model.addAttribute("disciplineDTOs", disciplineDTOs);
 
 		return "update-account";
-		
 	}
 
 	@PostMapping(path = "/update-account")
-	public String updateAccount(@Valid @ModelAttribute UserDTO userDTO, Model model) {
+	public String updateAccount(@Valid @ModelAttribute UserDTO userDTO, 
+			@RequestParam(value = "discipline.id" , required = false) String[] disciplineId , BindingResult bindingResult ,Model model) {
 		final String mname = "updateAccount";
 		LOGGER.debug("entering "+mname);
 		try {
 			userService.updateUser(userDTO);
+			for(String disciplineIdChecked: disciplineId) {
+				registryService.createDisciplineRegistry(new DisciplineRegistryDTO(sportService.findDiscipline(disciplineIdChecked),userDTO));
+			}
 			model.addAttribute("message","account updated");
 			return "index";
 		} catch (UpdateException e) {
@@ -78,5 +86,4 @@ public class AuthenticationController {
 			return "error";
 		}
 	}
-	
 }

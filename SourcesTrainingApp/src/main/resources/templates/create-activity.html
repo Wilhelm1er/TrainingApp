@@ -4,63 +4,78 @@
 </head>
 <body>
 	<nav th:insert="layout/default.html :: navbar"></nav>
-    <div class="container">	
-    <br><br><br>
+	<div class="container">
+		<br>
+		<br>
+		<br>
 		<h3 th:text="#{create.activity.title}"></h3>
 		<hr />
 		<br>
-		<form class="form-horizontal" name="activityCreateForm" method="post" th:action="@{/create-activity}" th:object="${activityDTO}">
-				<div class="form-group">
-		    <label for="id" class="col-sm-2 control-label" th:text="#{sport.id}"></label>
-		    <div class="col-sm-6">
-		        <input th:field="${activityDTO.id}" type="text" id="id" class="form-control" />
-		    </div>
-		</div>
-		<div class="form-group">
-		    <label for="name" class="col-sm-2 control-label" th:text="#{sport.name}"></label>
-		    <div class="col-sm-6">
-		        <input th:field="${activityDTO.name}" type="text" id="name" name="name" class="form-control" th:value="${activityDTO.name}" />
-		    </div>
-		</div>
-				<div class="form-group">
-		    <label for="description" class="col-sm-2 control-label" th:text="#{sport.description}"></label>
-		    <div class="col-sm-6">
-		        <input th:field="${activityDTO.description}" type="text" id="name" name="name" class="form-control" th:value="${activityDTO.description}" />
-		    </div>
-		</div>
-		<div class="form-group">
-		    <label for="creditCostMin" class="col-sm-2 control-label" th:text="#{activity.cost}"></label>
-		    <div class="col-sm-6">
-		        <input th:field="${activityDTO.creditCostMin}" type="text" id="creditCostMin" name="creditCostMin" class="form-control" th:value="${activityDTO.creditCostMin}" />
-		    </div>
-		</div>
-				<div class="form-group">
-		    <label for="creditCostMax" class="col-sm-2 control-label" th:text="#{activity.cost}"></label>
-		    <div class="col-sm-6">
-		        <input th:field="${activityDTO.creditCostMax}" type="text" id="creditCostMax" name="creditCostMax" class="form-control" th:value="${activityDTO.creditCostMax}" />
-		    </div>
-		</div>
-		<div class="form-group">
-		    <label for="disciplineName" class="col-sm-4 control-label" th:text="#{sport.disciplineName}"></label>
-		    <div class="col-sm-6">
-		        <input th:field="${disciplineDTO.name}" type="text" id="disciplineName" name="disciplineName" class="form-control" th:value="${disciplineDTO.name}" readonly/>
-		    </div>
-		</div>
+		<form class="form-horizontal" name="activityCreateForm" method="post"
+			th:action="@{/create-activity}" th:object="${activityDTO}">
+			<div class="form-group">
+				<label for="id" class="col-sm-2 control-label" th:text="#{sport.id}"></label>
+				<div class="col-sm-6">
+					<input th:field="${activityDTO.id}" type="text" id="id"
+						class="form-control" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="name" class="col-sm-2 control-label"
+					th:text="#{sport.name}"></label>
+				<div class="col-sm-6">
+					<input th:field="${activityDTO.name}" type="text" id="name"
+						name="name" class="form-control" th:value="${activityDTO.name}" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="description" class="col-sm-2 control-label"
+					th:text="#{sport.description}"></label>
+				<div class="col-sm-6">
+					<input th:field="${activityDTO.description}" type="text" id="name"
+						name="name" class="form-control"
+						th:value="${activityDTO.description}" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="creditCostMin" class="col-sm-2 control-label"
+					th:text="#{activity.cost}"></label>
+				<div class="col-sm-6">
+					<input th:field="${activityDTO.creditCostMin}" type="text"
+						id="creditCostMin" name="creditCostMin" class="form-control"
+						th:value="${activityDTO.creditCostMin}" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="creditCostMax" class="col-sm-2 control-label"
+					th:text="#{activity.cost}"></label>
+				<div class="col-sm-6">
+					<input th:field="${activityDTO.creditCostMax}" type="text"
+						id="creditCostMax" name="creditCostMax" class="form-control"
+						th:value="${activityDTO.creditCostMax}" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="disciplineName" class="col-sm-4 control-label"
+					th:text="#{sport.disciplineName}"></label>
+				<div class="col-sm-6">
+					<input th:field="${disciplineDTO.name}" type="text"
+						id="disciplineName" name="disciplineName" class="form-control"
+						th:value="${disciplineDTO.name}" readonly />
+				</div>
+			</div>
 			<br>
-		<div class="form-group">
-		    <div class="col-sm-offset-2 col-sm-5">
-		      <button type="submit" name="activityCreateButton" class="btn btn-primary" th:text="#{new.account.create}">Créer</button>
-		  	</div>
-		 </div>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-5">
+					<button type="submit" name="activityCreateButton"
+						class="btn btn-primary" th:text="#{new.account.create}">Créer</button>
+				</div>
+			</div>
 		</form>
-		<br>
-    
-	<br>
-		<br>
-		<br>
-		<br>
+		<br> <br> <br> <br> <br>
 		<div th:insert="layout/default.html :: footer"></div>
 	</div>
 	<div th:insert="layout/default.html :: scripts"></div>
-	<br><br>
+	<br>
+	<br>
 </html>

@@ -1,6 +1,8 @@
 package com.sport.training.api;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +37,7 @@ public class FindCoachController {
 		final String mname = "findCoachs";
 		LOGGER.debug("entering " + mname);
 
-		List<UserDTO> coachDTOs = null;
+		Set<UserDTO> coachDTOs = null;
 		try {
 			coachDTOs = registryService.findCoachsByDiscipline(disciplineId);
 			

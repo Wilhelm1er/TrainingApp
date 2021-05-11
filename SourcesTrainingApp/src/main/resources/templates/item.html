@@ -6,10 +6,7 @@
 <body>
 	<nav th:insert="layout/default.html :: navbar"></nav>
 	<div class="container">
-		<br>
-		<br>
-		<br>
-		<br>
+		<br> <br> <br> <br>
 		<h3 th:text="${itemDTO.productDTO.name}+' '+#{item.selected}"></h3>
 		<br>
 		<div style="border: 2px solid gray; border-radius: 4px; padding: 5px">
@@ -20,7 +17,7 @@
 					<td width="20%"><img th:src="@{'/img/'+${itemDTO.imagePath} }" /></td>
 					<td><span
 						th:text="#{item.cost}+' '+${itemDTO.unitCost}+' euros'"></span> <br>
-					<br> <a th:if="${username != null}"
+						<br> <a th:if="${username != null}"
 						th:href="@{'/add-to-cart?itemId='+${itemDTO.id}}"
 						th:text="#{cart.add}"></a></td>
 				</tr>
