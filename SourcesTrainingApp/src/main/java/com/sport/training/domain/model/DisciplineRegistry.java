@@ -85,4 +85,22 @@ public class DisciplineRegistry implements Serializable {
 		this.registerDate = registerDate;
 		
 	}
+
+	public User getCoach() {
+		// TODO Auto-generated method stub
+		return coach;
+	}
+
+	public Discipline getDiscipline() {
+		// TODO Auto-generated method stub
+		return discipline;
+	}
+
+	@Override
+	public String toString() {
+		return "DisciplineRegistry [id=" + id + ", registerDate=" + registerDate + ", coach=" + coach + ", discipline="
+				+ discipline + "]";
+	}
+	
+	
 }

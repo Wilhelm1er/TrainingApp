@@ -1,5 +1,6 @@
 package com.sport.training.domain.service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
+import com.sport.training.authentication.domain.dao.UserRepository;
 import com.sport.training.authentication.domain.dto.UserDTO;
 import com.sport.training.authentication.domain.model.User;
 import com.sport.training.authentication.domain.service.UserService;
@@ -21,6 +23,7 @@ import com.sport.training.authentication.domain.service.UserServiceImpl;
 import com.sport.training.domain.dao.DisciplineRegistryRepository;
 import com.sport.training.domain.dao.DisciplineRepository;
 import com.sport.training.domain.dao.EventRegistryRepository;
+import com.sport.training.domain.dto.DisciplineDTO;
 import com.sport.training.domain.dto.DisciplineRegistryDTO;
 import com.sport.training.domain.dto.EventRegistryDTO;
 import com.sport.training.domain.model.Discipline;
@@ -42,51 +45,50 @@ public class RegistryServiceImpl implements RegistryService {
 	// ======================================
 	// = Attributes =
 	// ======================================
-	
+
 	@Autowired
-	private ModelMapper commonModelMapper;
-	
+	private ModelMapper commonModelMapper, userDTOModelMapper;
+
 	@Autowired
 	private DisciplineRegistryRepository disciplineRegistryRepository;
-	
+
 	@Autowired
 	private EventRegistryRepository eventRegistryRepository;
-	
+
 	@Autowired
 	private DisciplineRepository disciplineRepository;
 	
-	
+	@Autowired
+	private UserRepository userRepository;
+
 	@Autowired
 	private UserService userService;
-	
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
 	// =====================================
-		// = Constructors =
-		// =====================================
-		public RegistryServiceImpl() {
-		}
-
-		
+	// = Constructors =
 	// =====================================
-		// =    DisciplineRegistry Business methods    =
-		// =====================================
-	
+	public RegistryServiceImpl() {
+	}
+
+	// =====================================
+	// = DisciplineRegistry Business methods =
+	// =====================================
+
 	@Override
 	@Transactional
 	public DisciplineRegistryDTO createDisciplineRegistry(@Valid DisciplineRegistryDTO disciplineRegistryDTO)
 			throws CreateException {
 		final String mname = "createDisciplineRegistry";
 		LOGGER.debug("entering " + mname);
-		
-		
+
 		if (disciplineRegistryDTO == null)
 			throw new CreateException("DisciplineRegistry object is null");
 
-		if (disciplineRegistryDTO.getDisciplineDTO() == null || disciplineRegistryDTO.getDisciplineDTO().getId() == null || !disciplineRepository.findById(disciplineRegistryDTO.getDisciplineDTO().getId()).isPresent())
+		if (disciplineRegistryDTO.getDisciplineDTO() == null || disciplineRegistryDTO.getDisciplineDTO().getId() == null
+				|| !disciplineRepository.findById(disciplineRegistryDTO.getDisciplineDTO().getId()).isPresent())
 			throw new CreateException("Discipline must exist to create a discipline registry");
-
 
 		try {
 			userService.findUser(disciplineRegistryDTO.getCoachDTO().getUsername());
@@ -142,7 +144,8 @@ public class RegistryServiceImpl implements RegistryService {
 
 	@Override
 	@Transactional
-	public void updateDisciplineRegistry(@Valid final DisciplineRegistryDTO updatedDisciplineRegistryDTO) throws UpdateException {
+	public void updateDisciplineRegistry(@Valid final DisciplineRegistryDTO updatedDisciplineRegistryDTO)
+			throws UpdateException {
 		final String mname = "updateDisciplineRegistry";
 		LOGGER.debug("entering " + mname);
 
@@ -154,7 +157,8 @@ public class RegistryServiceImpl implements RegistryService {
 			throw new UpdateException("Discipline registry must exist to be updated");
 
 		// :::::::::::::::: We change DTO to model ::::::::::::::: //
-		DisciplineRegistry updatedDisciplineRegistry = commonModelMapper.map(updatedDisciplineRegistryDTO, DisciplineRegistry.class);
+		DisciplineRegistry updatedDisciplineRegistry = commonModelMapper.map(updatedDisciplineRegistryDTO,
+				DisciplineRegistry.class);
 		// Updates the object
 		disciplineRegistryRepository.save(updatedDisciplineRegistry);
 		LOGGER.debug("exiting " + mname);
@@ -173,7 +177,8 @@ public class RegistryServiceImpl implements RegistryService {
 			throw new FinderException("No discipline in the database");
 		}
 		List<DisciplineRegistryDTO> disciplineRegistryDTOs = ((List<DisciplineRegistry>) disciplineRegistries).stream()
-				.map(disciplineRegistry -> commonModelMapper.map(disciplineRegistry, DisciplineRegistryDTO.class)).collect(Collectors.toList());
+				.map(disciplineRegistry -> commonModelMapper.map(disciplineRegistry, DisciplineRegistryDTO.class))
+				.collect(Collectors.toList());
 
 		LOGGER.debug("exiting " + mname + " size of collection : " + size);
 		return disciplineRegistryDTOs;
@@ -185,41 +190,88 @@ public class RegistryServiceImpl implements RegistryService {
 		final String mname = "findCoachsDiscipline";
 		LOGGER.debug("entering " + mname);
 
+		checkStringId(disciplineId);
+
+		Discipline discipline = null;
+		if (!disciplineRepository.findById(disciplineId).isPresent())
+			throw new FinderException("Discipline must exist to be found");
+		else
+			discipline = disciplineRepository.findById(disciplineId).get();
+
 		// Finds all the objects
-		final Iterable<User> coachs = disciplineRegistryRepository.findAllByDisciplineId(disciplineId);
+		final Iterable<DisciplineRegistry> disciplineRegistriesByDiscipline = disciplineRegistryRepository
+				.findAllByDiscipline(discipline);
+
 		int size;
-		if ((size = ((Collection<User>) coachs).size()) == 0) {
-			throw new FinderException("No coach in the database");
+		if ((size = ((Collection<DisciplineRegistry>) disciplineRegistriesByDiscipline).size()) == 0) {
+			throw new FinderException("No Coach in the database");
 		}
-		List<UserDTO> userDTOs = ((List<User>) coachs).stream()
-				.map(coach -> commonModelMapper.map(coach, UserDTO.class)).collect(Collectors.toList());
+
+		Collection<User> coachList = new ArrayList<User>();
+
+		for (DisciplineRegistry discReg : disciplineRegistriesByDiscipline) {
+			if(discReg.getCoach().getStatut().equals("VALIDE")) {
+			coachList.add(discReg.getCoach());}
+		}
+		int size2;
+		if ((size2 = ((Collection<User>) coachList).size()) == 0) {
+			throw new FinderException("No Coach in the database");
+		}
+
+		List<UserDTO> coachDTOs = ((List<User>) coachList).stream()
+				.map(coach -> userDTOModelMapper.map(coach, UserDTO.class)).collect(Collectors.toList());
 
 		LOGGER.debug("exiting " + mname + " size of collection : " + size);
-		return userDTOs;
+		return coachDTOs;
 	}
 
 	@Override
-	public Discipline findByDisciplineName(String disciplineName) throws FinderException {
-		// TODO Auto-generated method stub
-		return null;
+	@Transactional(readOnly = true)
+	public List<DisciplineDTO> findDisciplinesByCoach(String coachId) throws FinderException {
+		final String mname = "findDisciplinesByCoach";
+		LOGGER.debug("entering " + mname);
+
+		checkStringId(coachId);
+
+		User coach = null;
+		if (!userRepository.findById(coachId).isPresent())
+			throw new FinderException("Coach must exist to be found");
+		else
+			coach = userRepository.findById(coachId).get();
+
+		// Finds all the objects
+		final Iterable<DisciplineRegistry> disciplineRegistriesByDiscipline = disciplineRegistryRepository.findAllByCoach(coach);
+
+		Collection<Discipline> disciplineList = new ArrayList<Discipline>();
+
+		for (DisciplineRegistry discReg : disciplineRegistriesByDiscipline) {
+			
+				disciplineList.add(discReg.getDiscipline());
+		}
+
+		List<DisciplineDTO> disciplineDTOs = ((List<Discipline>) disciplineList).stream()
+				.map(discipline -> commonModelMapper.map(discipline, DisciplineDTO.class)).collect(Collectors.toList());
+
+		LOGGER.debug("exiting " + mname );
+		return disciplineDTOs;
 	}
-	
+
 	// =====================================
-			// =    EventRegistry Business methods    =
-			// =====================================
+	// = EventRegistry Business methods =
+	// =====================================
 	@Override
 	@Transactional
-	public EventRegistryDTO createEventRegistry(@Valid EventRegistryDTO eventRegistryDTO)
-			throws CreateException {
+	public EventRegistryDTO createEventRegistry(@Valid EventRegistryDTO eventRegistryDTO) throws CreateException {
 		final String mname = "createEventRegistry";
 		LOGGER.debug("entering " + mname);
 
 		if (eventRegistryDTO == null)
 			throw new CreateException("EventRegistryDTO object is null");
 
-		if (eventRegistryDTO.getEventDTO() == null || eventRegistryDTO.getEventDTO().getId() == null || !disciplineRepository.findById(eventRegistryDTO.getEventDTO().getId()).isPresent())
+		if (eventRegistryDTO.getEventDTO() == null || eventRegistryDTO.getEventDTO().getId() == null
+				|| !disciplineRepository.findById(eventRegistryDTO.getEventDTO().getId()).isPresent())
 			throw new CreateException("Discipline must exist to create a discipline registry");
-		
+
 		try {
 			userService.findUser(eventRegistryDTO.getAthleteDTO().getUsername());
 		} catch (NullPointerException | FinderException e) {
@@ -305,21 +357,30 @@ public class RegistryServiceImpl implements RegistryService {
 		if ((size = ((Collection<EventRegistry>) eventRegistries).size()) == 0) {
 			throw new FinderException("No event in the database");
 		}
-		List<EventRegistryDTO> eventRegistryDTOs = ((List<EventRegistry>)eventRegistries).stream()
-				.map(eventRegistry -> commonModelMapper.map(eventRegistry, EventRegistryDTO.class)).collect(Collectors.toList());
+		List<EventRegistryDTO> eventRegistryDTOs = ((List<EventRegistry>) eventRegistries).stream()
+				.map(eventRegistry -> commonModelMapper.map(eventRegistry, EventRegistryDTO.class))
+				.collect(Collectors.toList());
 
 		LOGGER.debug("exiting " + mname + " size of collection : " + size);
 		return eventRegistryDTOs;
 	}
-	
+
 	// ======================================
-    // =          Private Methods           =
-    // ======================================
-	
+	// = Private Methods =
+	// ======================================
 
 	private void checkId(final long l) throws FinderException {
 		if (l == 0)
 			throw new FinderException("Id should not be 0");
+	}
+
+	// ======================================
+	// = Private Methods =
+	// ======================================
+
+	private void checkStringId(final String id) throws FinderException {
+		if (id == null || id.equals(""))
+			throw new FinderException(id + " should not be null or empty");
 	}
 
 }

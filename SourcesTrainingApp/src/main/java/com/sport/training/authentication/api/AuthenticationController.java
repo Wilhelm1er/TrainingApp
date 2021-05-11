@@ -1,5 +1,7 @@
 package com.sport.training.authentication.api;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -15,6 +17,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.sport.training.authentication.domain.dto.UserDTO;
 import com.sport.training.authentication.domain.service.UserService;
+import com.sport.training.domain.dto.DisciplineDTO;
+import com.sport.training.domain.service.RegistryService;
+import com.sport.training.domain.service.SportService;
 import com.sport.training.exception.FinderException;
 import com.sport.training.exception.UpdateException;
 
@@ -26,20 +31,35 @@ public class AuthenticationController {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private RegistryService registryService;
+	
+	@Autowired
+	private SportService sportService;
+	
+	
 	@GetMapping(path = "/update-account/{username}")
 	public String showAccount(Model model, @PathVariable String username) {
 		final String mname = "showAccount";
 		LOGGER.debug("entering "+mname);
 		
 		UserDTO userDTO;
+		List<DisciplineDTO>disciplineDTOs = null;
+		List<DisciplineDTO> disciplineDTOsCoach = null;
 		try {
 			userDTO = userService.findUser(username);
+			disciplineDTOsCoach = registryService.findDisciplinesByCoach(username);
+			disciplineDTOs = sportService.findDisciplines();
 		} catch (FinderException e) {
 			model.addAttribute("exception", e.getClass().getName());
 			return "error";
 		}
 		model.addAttribute("userDTO", userDTO);
+		model.addAttribute("disciplineDTOsCoach", disciplineDTOsCoach);
+		model.addAttribute("disciplineDTOs", disciplineDTOs);
+
 		return "update-account";
+		
 	}
 
 	@PostMapping(path = "/update-account")
@@ -48,7 +68,7 @@ public class AuthenticationController {
 		LOGGER.debug("entering "+mname);
 		try {
 			userService.updateUser(userDTO);
-			 model.addAttribute("message","account updated");
+			model.addAttribute("message","account updated");
 			return "index";
 		} catch (UpdateException e) {
 			model.addAttribute("exception", e.getMessage());

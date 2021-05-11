@@ -38,6 +38,7 @@ public class FindCoachController {
 		List<UserDTO> coachDTOs = null;
 		try {
 			coachDTOs = registryService.findCoachsByDiscipline(disciplineId);
+			
 		} catch (FinderException e) {
 			model.addAttribute("exception", e.getMessage());
 			return "error";

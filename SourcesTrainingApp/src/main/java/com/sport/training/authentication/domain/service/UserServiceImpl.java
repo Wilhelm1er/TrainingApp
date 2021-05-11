@@ -54,7 +54,9 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private RoleService roleService;
 	
-
+	@Autowired
+	private DisciplineRegistryRepository disciplineRegistryRepository;
+	
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 

@@ -84,7 +84,4 @@ public class DisciplineRegistryDTO implements Serializable {
 		return buf.toString();
 	}
 
-
-
-
 }

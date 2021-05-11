@@ -124,46 +124,21 @@
 						th:placeholder="#{user.country}" />
 				</div>
 			</div>
+			
 
-				<h5 th:text="#{user.discipline.information}"></h5>
-				<div id="discipline" class="d-block my-6" style="display:none;">
-					<div class="custom-control custom-radio">
-						<input th:field="${disciplineDTO.Id}" id="boxe"
-							name="disciplineId" type="radio" class="custom-control-input"
-							value="BOXE" checked required> <label
-							class="custom-control-label" for="boxe">Boxe</label>
-					</div>
-					<div class="custom-control custom-radio">
-						<input th:field="${disciplineDTO.Id}" id="cardio"
-							name="disciplineId" type="radio" class="custom-control-input"
-							value="CARDIO" required> <label
-							class="custom-control-label" for="cardio">Cardio-Training</label>
-					</div>
-					<div class="custom-control custom-radio">
-						<input th:field="${disciplineDTO.Id}" id="danse"
-							name="disciplineId" type="radio" class="custom-control-input"
-							value="DANSE" required> <label
-							class="custom-control-label" for="danse">Danse</label>
-					</div>
-					<div class="custom-control custom-radio">
-						<input th:field="${disciplineDTO.Id}" id="gym"
-							name="disciplineId" type="radio" class="custom-control-input"
-							value="GYM" required> <label class="custom-control-label"
-							for="gym">Gym-Pilates</label>
-					</div>
-					<div class="custom-control custom-radio">
-						<input th:field="${disciplineDTO.Id}" id="muscu"
-							name="disciplineId" type="radio" class="custom-control-input"
-							value="MUSCU" required> <label
-							class="custom-control-label" for="muscu">Musculation</label>
-					</div>
-					<div class="custom-control custom-radio">
-						<input th:field="${disciplineDTO.Id}" id="yoga"
-							name="disciplineId" type="radio" class="custom-control-input"
-							value="YOGA" required> <label
-							class="custom-control-label" for="yoga">Yoga</label>
-					</div>
-				</div>
+<h5 th:text="#{user.discipline.information}"></h5>
+<div id="decision" class="row" style="margin-top:1%;">
+    <div class="col-md-4" th:each="disciplineDTO : ${disciplineDTOs}">
+        <div class="checkbox checkbox-custom checkbox-circle">
+            <input type="checkbox"
+                name="discipline.id"
+                th:text="${disciplineDTO.name}" 
+                th:value="${disciplineDTO.id}" 
+            />
+        </div>
+    </div>
+</div>
+
 		
 			<br>
 			<div class="form-group">
