@@ -3,7 +3,6 @@ package com.sport.training.domain.dto;
 import java.io.Serializable;
 
 import com.sport.training.authentication.domain.dto.UserDTO;
-import com.sport.training.authentication.domain.model.User;
 
 /**
  * This class follows the Data Transfert Object design pattern. It is a client

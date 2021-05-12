@@ -70,7 +70,8 @@ public class DisciplineDTO implements Serializable {
  		this.documents = documents;
  	}
 
-    public String toString() {
+    @Override
+	public String toString() {
         final StringBuffer buf = new StringBuffer();
         buf.append("DisciplineDTO{");
         buf.append("id=").append(getId());

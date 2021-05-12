@@ -29,23 +29,28 @@ public class CustomUserDetails implements UserDetails {
 		
 	}
 
+	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {;
 	    return grantedAuthorities;
 	}
 
 
+	@Override
 	public String getPassword() {
 	    return this.password;
 	}
 
+	@Override
 	public String getUsername() {
 	    return this.username;
 	}
 
+	@Override
 	public boolean isAccountNonExpired() {
 	    return true;
 	}
 
+	@Override
 	public boolean isAccountNonLocked() {
 		if(statut.equals("INVALIDE")) {
 			return false;
@@ -53,10 +58,12 @@ public class CustomUserDetails implements UserDetails {
 	    return true;
 	}
 
+	@Override
 	public boolean isCredentialsNonExpired() {
 	    return true;
 	}
 
+	@Override
 	public boolean isEnabled() {
 	    return true;
 	}

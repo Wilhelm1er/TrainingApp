@@ -47,13 +47,15 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
         _shoppingCart = null;
     }
 
-    public Map<String, Integer> getCart() {
+    @Override
+	public Map<String, Integer> getCart() {
     	final String mname = "getCart";
     	LOGGER.debug("entering "+mname);
         return _shoppingCart;
     }
 
-    public Collection<ShoppingCartEventDTO> getEvents() {
+    @Override
+	public Collection<ShoppingCartEventDTO> getEvents() {
     	final String mname = "getEvents";
     	LOGGER.debug("entering "+mname);
     	
@@ -62,7 +64,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
         Iterator<Map.Entry<String, Integer>> it = _shoppingCart.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry<String, Integer> keyValue = it.next();
-            String eventId = (String)keyValue.getKey();
+            String eventId = keyValue.getKey();
             final EventDTO eventDTO;
             try {
             	eventDTO = sportService.findEvent(eventId);
@@ -75,15 +77,18 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
         return  events;
     }
 
-    public void addEvent(String eventId) {
+    @Override
+	public void addEvent(String eventId) {
         _shoppingCart.put(eventId, 1);
     }
 
-    public void removeEvent(String eventId) {
+    @Override
+	public void removeEvent(String eventId) {
         _shoppingCart.remove(eventId);
     }
 
-    public void empty() {
+    @Override
+	public void empty() {
         _shoppingCart.clear();
     }
 

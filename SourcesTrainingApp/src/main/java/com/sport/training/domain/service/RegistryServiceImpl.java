@@ -34,7 +34,6 @@ import com.sport.training.domain.model.Discipline;
 import com.sport.training.domain.model.DisciplineRegistry;
 import com.sport.training.domain.model.EventRegistry;
 import com.sport.training.exception.CreateException;
-import com.sport.training.exception.DuplicateKeyException;
 import com.sport.training.exception.FinderException;
 import com.sport.training.exception.RemoveException;
 import com.sport.training.exception.UpdateException;
@@ -223,7 +222,7 @@ public class RegistryServiceImpl implements RegistryService {
 			throw new FinderException("No Coach in the database");
 		}
 
-		Set<UserDTO> coachDTOs = (((Set<User>) coachList).stream()
+		Set<UserDTO> coachDTOs = (coachList.stream()
 				.map(coach -> userDTOModelMapper.map(coach, UserDTO.class)).collect(Collectors.toSet()));
 
 		LOGGER.debug("exiting " + mname + " size of collection : " + size);

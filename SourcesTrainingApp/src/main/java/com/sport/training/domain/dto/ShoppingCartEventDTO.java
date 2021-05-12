@@ -53,7 +53,8 @@ public class ShoppingCartEventDTO {
         return creditCost;
     }
 
-    public String toString() {
+    @Override
+	public String toString() {
         final StringBuffer buf = new StringBuffer();
         buf.append("EventDTO{");
         buf.append("eventId=").append(getEventId());

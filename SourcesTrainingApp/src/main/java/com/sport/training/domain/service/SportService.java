@@ -11,7 +11,6 @@ import com.sport.training.exception.CreateException;
 import com.sport.training.exception.FinderException;
 import com.sport.training.exception.RemoveException;
 import com.sport.training.exception.UpdateException;
-import com.sport.training.authentication.domain.model.Role;
 import com.sport.training.domain.dto.ActivityDTO;
 
 

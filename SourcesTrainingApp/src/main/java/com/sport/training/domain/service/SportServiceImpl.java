@@ -16,7 +16,6 @@ import org.springframework.validation.annotation.Validated;
 
 import com.sport.training.domain.dao.DisciplineRepository;
 import com.sport.training.domain.dao.EventRepository;
-import com.sport.training.authentication.domain.model.Role;
 import com.sport.training.domain.dao.ActivityRepository;
 import com.sport.training.domain.dto.DisciplineDTO;
 import com.sport.training.domain.dto.EventDTO;

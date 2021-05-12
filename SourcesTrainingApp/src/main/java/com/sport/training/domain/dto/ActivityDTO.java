@@ -66,7 +66,8 @@ public class ActivityDTO implements Serializable {
 		this.disciplineDTO = disciplineDTO;
 	}
 
-    public String toString() {
+    @Override
+	public String toString() {
         final StringBuffer buf = new StringBuffer();
         buf.append("ProductDTO{");
         buf.append("id=").append(getId());

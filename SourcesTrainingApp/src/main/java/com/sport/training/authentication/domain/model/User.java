@@ -14,8 +14,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import com.sport.training.domain.model.Address;
-import com.sport.training.domain.model.CreditCard;
-import com.sport.training.domain.model.Discipline;
 
 
 /**
@@ -199,6 +197,7 @@ public class User implements Serializable {
 		this.role = role;
 	}
 	
+	@Override
 	public String toString() {
         final StringBuffer buf = new StringBuffer();
         buf.append("\n\tUser {");

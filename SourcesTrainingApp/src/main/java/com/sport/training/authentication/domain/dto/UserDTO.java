@@ -3,7 +3,6 @@ package com.sport.training.authentication.domain.dto;
 import java.io.Serializable;
 
 import com.sport.training.domain.dto.AddressDTO;
-import com.sport.training.domain.dto.CreditCardDTO;
 
 /**
  * This class follows the Data Transfert Object design pattern.
@@ -167,7 +166,8 @@ public class UserDTO implements Serializable {
 		this.roleName = roleName;
 	}
 
-    public String toString() {
+    @Override
+	public String toString() {
          StringBuffer buf = new StringBuffer();
         buf.append("UserDTO{");
         buf.append("id=").append(getUsername());

@@ -10,13 +10,11 @@ import com.sport.training.domain.dto.DisciplineDTO;
 import com.sport.training.domain.dto.DisciplineRegistryDTO;
 import com.sport.training.domain.dto.EventRegistryDTO;
 import com.sport.training.domain.dto.NotationDTO;
-import com.sport.training.domain.model.Discipline;
 import com.sport.training.exception.CreateException;
 import com.sport.training.exception.FinderException;
 import com.sport.training.exception.RemoveException;
 import com.sport.training.exception.UpdateException;
 import com.sport.training.authentication.domain.dto.UserDTO;
-import com.sport.training.authentication.domain.model.User;
 
 
 public interface RegistryService  {
