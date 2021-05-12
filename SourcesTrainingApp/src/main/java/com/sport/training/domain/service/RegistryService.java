@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.validation.Valid;
 
+import com.sport.training.domain.dto.BookmarkDTO;
 import com.sport.training.domain.dto.DisciplineDTO;
 import com.sport.training.domain.dto.DisciplineRegistryDTO;
 import com.sport.training.domain.dto.EventRegistryDTO;
@@ -43,10 +44,18 @@ public interface RegistryService  {
     // =   Notation Business methods   =
     // ======================================
 	public NotationDTO createNotation(@Valid final NotationDTO notationDTO) throws CreateException ;
-    public NotationDTO finNotation(final Long notationId) throws FinderException ;
+    public NotationDTO findNotation(final Long notationId) throws FinderException ;
     public void deleteNotation(final Long notationId) throws FinderException, RemoveException ;
-    public void updateNotation(@Valid final EventRegistryDTO notationDTO) throws UpdateException ;
+    public void updateNotation(@Valid final NotationDTO notationDTO) throws UpdateException ;
     public List<NotationDTO> findNotations() throws FinderException ;
 	
-    
+    // ======================================
+    // =   Bookmark Business methods   =
+    // ======================================
+	public BookmarkDTO createBookmark(@Valid final BookmarkDTO bookmarkDTO) throws CreateException ;
+    public BookmarkDTO findBookmark(final Long bookmarkId) throws FinderException ;
+    public void deleteBookmark(final Long bookmarkId) throws FinderException, RemoveException ;
+    public void updateBookmark(@Valid final BookmarkDTO bookmarkDTO) throws UpdateException ;
+    public List<BookmarkDTO> findBookmarks() throws FinderException ;
+	
 }

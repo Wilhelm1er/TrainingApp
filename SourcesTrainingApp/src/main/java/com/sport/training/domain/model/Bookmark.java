@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -25,9 +27,9 @@ public class Bookmark implements Serializable {
 	// ======================================
 	// = Attributes =
 	// ======================================
-	@NotBlank(message = "id must be defined")
 	@Id
-	private String id;
+	@GeneratedValue(strategy = GenerationType.AUTO, generator="book_seq_gen")
+	private Long id;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "COACH_FK")
@@ -45,12 +47,8 @@ public class Bookmark implements Serializable {
 	public Bookmark() {
 	}
 
-	public Bookmark(final String id) {
-		setId(id);
-	}
-
-	public Bookmark(final String id, final User coach) {
-		setId(id);
+	public Bookmark(final User athlete, final User coach) {
+		setAthlete(athlete);
 		setCoach(coach);
 	}
 
@@ -58,11 +56,11 @@ public class Bookmark implements Serializable {
 	// = Getters and Setters =
 	// ======================================
 
-	public String getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(final String id) {
+	public void setId(final Long id) {
 		this.id = id;
 	}
 
@@ -73,15 +71,22 @@ public class Bookmark implements Serializable {
 	public void setCoach(User coach) {
 		this.coach = coach;
 	}
+	
+	public User getAthlete() {
+		return athlete;
+	}
 
+	public void setAthlete(User athlete) {
+		this.athlete = athlete;
+	}
 
 	@Override
 	public String toString() {
 		final StringBuffer buf = new StringBuffer();
 		buf.append("Bookmark{");
 		buf.append("id=").append(getId());
-		buf.append(",coachFirstname=").append(getCoach().getFirstname());
-		buf.append(",coachLastname=").append(getCoach().getLastname());
+		buf.append(",coachUsername=").append(getCoach().getUsername());
+		buf.append(",athleteUsername=").append(getAthlete().getUsername());
 		buf.append('}');
 		return buf.toString();
 	}

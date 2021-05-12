@@ -3,6 +3,7 @@ package com.sport.training.domain.dto;
 import java.io.Serializable;
 
 import com.sport.training.authentication.domain.dto.UserDTO;
+import com.sport.training.authentication.domain.model.User;
 
 /**
  * This class follows the Data Transfert Object design pattern. It is a client
@@ -15,7 +16,7 @@ public class BookmarkDTO implements Serializable {
 	// ======================================
 	// = Attributes =
 	// ======================================
-	private String id;
+	private Long id;
 	private UserDTO coachDTO;
 	private UserDTO athleteDTO;
 
@@ -25,19 +26,19 @@ public class BookmarkDTO implements Serializable {
 	public BookmarkDTO() {
 	}
 
-	public BookmarkDTO(final String id, final UserDTO coach) {
-		setId(id);
-		setCoachDTO(coach);
+	public BookmarkDTO(final UserDTO athleteDTO, final UserDTO coachDTO) {
+		setAthleteDTO(athleteDTO);
+		setCoachDTO(coachDTO);
 	}
 
 	// ======================================
 	// = Getters and Setters =
 	// ======================================
-	public String getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(final String id) {
+	public void setId(final Long id) {
 		this.id = id;
 	}
 

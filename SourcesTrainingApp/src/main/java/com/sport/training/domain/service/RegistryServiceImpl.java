@@ -25,6 +25,7 @@ import com.sport.training.authentication.domain.service.UserServiceImpl;
 import com.sport.training.domain.dao.DisciplineRegistryRepository;
 import com.sport.training.domain.dao.DisciplineRepository;
 import com.sport.training.domain.dao.EventRegistryRepository;
+import com.sport.training.domain.dto.BookmarkDTO;
 import com.sport.training.domain.dto.DisciplineDTO;
 import com.sport.training.domain.dto.DisciplineRegistryDTO;
 import com.sport.training.domain.dto.EventRegistryDTO;
@@ -380,7 +381,7 @@ public class RegistryServiceImpl implements RegistryService {
 	}
 
 	@Override
-	public NotationDTO finNotation(Long notationId) throws FinderException {
+	public NotationDTO findNotation(Long notationId) throws FinderException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -392,7 +393,7 @@ public class RegistryServiceImpl implements RegistryService {
 	}
 
 	@Override
-	public void updateNotation(@Valid EventRegistryDTO notationDTO) throws UpdateException {
+	public void updateNotation(@Valid NotationDTO notationDTO) throws UpdateException {
 		// TODO Auto-generated method stub
 		
 	}
@@ -403,6 +404,40 @@ public class RegistryServiceImpl implements RegistryService {
 		return null;
 	}
 
+    // ======================================
+    // =   Bookmark Business methods   =
+    // ======================================
+	
+	@Override
+	public BookmarkDTO createBookmark(@Valid BookmarkDTO bookmarkDTO) throws CreateException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public BookmarkDTO findBookmark(Long bookmarkId) throws FinderException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deleteBookmark(Long bookmarkId) throws FinderException, RemoveException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void updateBookmark(@Valid BookmarkDTO bookmarkDTO) throws UpdateException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<BookmarkDTO> findBookmarks() throws FinderException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	// ======================================
 	// = Private Methods =
 	// ======================================
@@ -416,7 +451,5 @@ public class RegistryServiceImpl implements RegistryService {
 		if (id == null || id.equals(""))
 			throw new FinderException(id + " should not be null or empty");
 	}
-
-
 
 }
