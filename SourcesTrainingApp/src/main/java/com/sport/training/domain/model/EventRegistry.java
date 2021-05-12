@@ -37,12 +37,6 @@ public class EventRegistry implements Serializable {
 	@Column(name = "REGISTER_DATE")
 	private Date registerDate;
 	
-	@NotBlank(message = "invalid event date")
-	private Date eventDate;
-
-	@Column(name = "CREDITCOST")
-	private int creditcost;
-	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "EVENT_FK")
 	@NotNull(message = "invalid Event")
@@ -60,9 +54,8 @@ public class EventRegistry implements Serializable {
     	this.registerDate=new Date();
     }
 
-	public EventRegistry(final Date eventDate, final Event event,final User athlete) {
+	public EventRegistry(final Event event,final User athlete) {
     	this.registerDate=new Date();
-    	setEventDate(eventDate);
     	setRegisterDate(registerDate);
     	setEvent(event);
         setAthlete(athlete);
@@ -87,14 +80,6 @@ public class EventRegistry implements Serializable {
     public Date getRegisterDate() {
 		return registerDate;
 	}
-	
-	public Date getEventDate() {
-		return eventDate;
-	}
-
-	public void setEventDate(Date eventDate) {
-		this.eventDate = eventDate;
-	}
 
     public Event getEvent() {
 		return event;
@@ -103,15 +88,6 @@ public class EventRegistry implements Serializable {
 	public void setEvent(Event event) {
 		this.event = event;
 	}
-
-	public int getCreditcost() {
-		return creditcost;
-	}
-
-	public void setCreditcost(int creditcost) {
-		this.creditcost = creditcost;
-	}
-
 
     public User getAthlete() {
         return athlete;
@@ -123,10 +99,9 @@ public class EventRegistry implements Serializable {
 
     public String toString() {
         final StringBuffer buf = new StringBuffer();
-        buf.append("Event Register{");
+        buf.append("Event Registry{");
         buf.append("id=").append(getId());
         buf.append(",registerDate=").append(getRegisterDate());
-        buf.append(",eventDate=").append(getEvent().getDate());
         buf.append(",eventID=").append(getId());
         buf.append(",athleteID=").append(getAthlete().getUsername());
         buf.append('}');

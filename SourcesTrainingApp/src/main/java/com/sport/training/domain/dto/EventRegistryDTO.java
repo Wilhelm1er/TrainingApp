@@ -18,19 +18,15 @@ public class EventRegistryDTO implements Serializable {
 	// ======================================
 	private Long id;
 	private Date registerDate;
-	private Date eventDate;
-	private int creditCost;
 	private UserDTO athleteDTO;
 	private EventDTO eventDTO;
 
 	// ======================================
 	// = Constructors =
 	// ======================================
-    public EventRegistryDTO() {
-    }
-
-    public EventRegistryDTO(final Date eventDate) {
-    	setEventDate(eventDate);
+    public EventRegistryDTO(final UserDTO athleteDTO, final EventDTO eventDTO) {
+    	setAthleteDTO(athleteDTO);
+    	setEventDTO(eventDTO);
     }
 
 	// ======================================
@@ -44,20 +40,8 @@ public class EventRegistryDTO implements Serializable {
 		this.id = id;
 	}
 
-    public void setRegisterDate(final Date registerDate) {
-    	this.registerDate = registerDate;
-    }
-    
     public Date getRegisterDate() {
 		return registerDate;
-	}
-
-	public Date getEventDate() {
-		return eventDate;
-	}
-
-	public void setEventDate(Date eventDate) {
-		this.eventDate = eventDate;
 	}
 
     public EventDTO getEventDTO() {
@@ -68,14 +52,6 @@ public class EventRegistryDTO implements Serializable {
 		this.eventDTO = eventDTO;
 	}
 
-	public int getCreditCost() {
-		return creditCost;
-	}
-
-	public void setCreditCost(final int creditCost) {
-		this.creditCost = creditCost;
-	}
-	
 	public UserDTO getAthleteDTO() {
 		return athleteDTO;
 	}
@@ -87,12 +63,11 @@ public class EventRegistryDTO implements Serializable {
 	@Override
 	public String toString() {
 		final StringBuffer buf = new StringBuffer();
-		buf.append("Event RegisterDTO{");
+		buf.append("Event RegistryDTO{");
 		buf.append("id=").append(getId());
 		buf.append(",registerDate=").append(getRegisterDate());
-		 buf.append(",eventDate=").append(getEventDate());
-	        buf.append(",eventID=").append(getId());
-	        buf.append(",athleteID=").append(getAthleteDTO().getUsername());
+	    buf.append(",eventID=").append(getId());
+	    buf.append(",athleteID=").append(getAthleteDTO().getUsername());
 		buf.append('}');
 		return buf.toString();
 	}

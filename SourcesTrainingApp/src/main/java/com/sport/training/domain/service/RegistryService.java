@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import com.sport.training.domain.dto.DisciplineDTO;
 import com.sport.training.domain.dto.DisciplineRegistryDTO;
 import com.sport.training.domain.dto.EventRegistryDTO;
+import com.sport.training.domain.dto.NotationDTO;
 import com.sport.training.domain.model.Discipline;
 import com.sport.training.exception.CreateException;
 import com.sport.training.exception.FinderException;
@@ -37,7 +38,15 @@ public interface RegistryService  {
     public void deleteEventRegistry(final Long eventRegistryId) throws FinderException, RemoveException ;
     public void updateEventRegistry(@Valid final EventRegistryDTO eventRegistryDTO) throws UpdateException ;
     public List<EventRegistryDTO> findEventRegistries() throws FinderException ;
-	
+
+    // ======================================
+    // =   Notation Business methods   =
+    // ======================================
+	public NotationDTO createNotation(@Valid final NotationDTO notationDTO) throws CreateException ;
+    public NotationDTO finNotation(final Long notationId) throws FinderException ;
+    public void deleteNotation(final Long notationId) throws FinderException, RemoveException ;
+    public void updateNotation(@Valid final EventRegistryDTO notationDTO) throws UpdateException ;
+    public List<NotationDTO> findNotations() throws FinderException ;
 	
     
 }

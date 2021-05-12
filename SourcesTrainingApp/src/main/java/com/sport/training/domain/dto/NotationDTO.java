@@ -16,8 +16,8 @@ public class NotationDTO implements Serializable {
 	// ======================================
 	// = Attributes =
 	// ======================================
-	private String id;
-	private Date date;
+	private Long id;
+	private Date notationDate;
 	private int note;
 	private String comments;
 	private EventDTO eventDTO;
@@ -30,24 +30,25 @@ public class NotationDTO implements Serializable {
 	public NotationDTO() {
 	}
 
-	public NotationDTO(final String id, final int note) {
-		setId(id);
+	public NotationDTO( final int note, UserDTO coachDTO, UserDTO athleteDTO, EventDTO eventDTO) {
 		setNote(note);
+		setCoachDTO(coachDTO);
+    	setAthleteDTO(athleteDTO);
+    	setEventDTO(eventDTO);
 	}
 
 	// ======================================
 	// = Getters and Setters =
 	// ======================================
-	public String getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(final String id) {
+	public void setId(final Long id) {
 		this.id = id;
 	}
-
-	public Date getDate() {
-		return date;
+	public Date getNotationDate() {
+		return notationDate;
 	}
 	
 	public double getNote() {
@@ -92,8 +93,8 @@ public class NotationDTO implements Serializable {
 
 	@Override
 	public String toString() {
-		return "NotationDTO [id=" + id + ", date=" + date + ", note=" + note + ", comments=" + comments + ", eventDTO="
-				+ eventDTO + ", coachDTO=" + coachDTO + ", athleteDTO=" + athleteDTO + "]";
+		return "NotationDTO [id=" + id + ", notationDate=" + notationDate + ", note=" + note + ", comments=" + comments
+				+ ", eventDTO=" + eventDTO + ", coachDTO=" + coachDTO + ", athleteDTO=" + athleteDTO + "]";
 	}
 
 }

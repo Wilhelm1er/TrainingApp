@@ -87,12 +87,10 @@ public class DisciplineRegistry implements Serializable {
 	}
 
 	public User getCoach() {
-		// TODO Auto-generated method stub
 		return coach;
 	}
 
 	public Discipline getDiscipline() {
-		// TODO Auto-generated method stub
 		return discipline;
 	}
 

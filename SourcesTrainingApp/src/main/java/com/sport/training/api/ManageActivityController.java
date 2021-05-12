@@ -24,7 +24,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import com.sport.training.domain.dto.DisciplineDTO;
-import com.sport.training.domain.dto.EventDTO;
 import com.sport.training.domain.service.SportService;
 import com.sport.training.exception.CreateException;
 import com.sport.training.exception.FinderException;

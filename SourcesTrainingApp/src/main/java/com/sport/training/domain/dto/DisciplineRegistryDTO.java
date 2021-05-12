@@ -22,14 +22,14 @@ public class DisciplineRegistryDTO implements Serializable {
 
 	private Long id;
 	private Date registerDate;
-	 private UserDTO coachDTO;
-	    private DisciplineDTO disciplineDTO;
+	private UserDTO coachDTO;
+	private DisciplineDTO disciplineDTO;
 
 	// ======================================
     // =            Constructors            =
     // ======================================
-    public DisciplineRegistryDTO(DisciplineDTO disciplineDTO, UserDTO userDTO) {
-    	setCoachDTO(userDTO);
+    public DisciplineRegistryDTO(DisciplineDTO disciplineDTO, UserDTO coachDTO) {
+    	setCoachDTO(coachDTO);
     	setDisciplineDTO(disciplineDTO);
     	
     }
@@ -46,7 +46,7 @@ public class DisciplineRegistryDTO implements Serializable {
 		this.id = id;
 	}
 	
-	public Object getRegisterDate() {
+	public Date getRegisterDate() {
 		return registerDate;
 	}
     
@@ -61,11 +61,6 @@ public class DisciplineRegistryDTO implements Serializable {
 
 	public void setDisciplineDTO(DisciplineDTO disciplineDTO) {
 		this.disciplineDTO = disciplineDTO;
-	}
-
-	public void setRegisterDate(Date registerDate) {
-		this.registerDate = registerDate;
-		
 	}
 	
 	public UserDTO getCoachDTO() {

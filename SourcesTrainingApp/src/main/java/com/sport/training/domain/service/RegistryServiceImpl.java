@@ -28,6 +28,7 @@ import com.sport.training.domain.dao.EventRegistryRepository;
 import com.sport.training.domain.dto.DisciplineDTO;
 import com.sport.training.domain.dto.DisciplineRegistryDTO;
 import com.sport.training.domain.dto.EventRegistryDTO;
+import com.sport.training.domain.dto.NotationDTO;
 import com.sport.training.domain.model.Discipline;
 import com.sport.training.domain.model.DisciplineRegistry;
 import com.sport.training.domain.model.EventRegistry;
@@ -367,6 +368,40 @@ public class RegistryServiceImpl implements RegistryService {
 		LOGGER.debug("exiting " + mname + " size of collection : " + size);
 		return eventRegistryDTOs;
 	}
+	
+    // ======================================
+    // =   Notation Business methods   =
+    // ======================================
+
+	@Override
+	public NotationDTO createNotation(@Valid NotationDTO notationDTO) throws CreateException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public NotationDTO finNotation(Long notationId) throws FinderException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deleteNotation(Long notationId) throws FinderException, RemoveException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void updateNotation(@Valid EventRegistryDTO notationDTO) throws UpdateException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<NotationDTO> findNotations() throws FinderException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	// ======================================
 	// = Private Methods =
@@ -377,13 +412,11 @@ public class RegistryServiceImpl implements RegistryService {
 			throw new FinderException("Id should not be 0");
 	}
 
-	// ======================================
-	// = Private Methods =
-	// ======================================
-
 	private void checkStringId(final String id) throws FinderException {
 		if (id == null || id.equals(""))
 			throw new FinderException(id + " should not be null or empty");
 	}
+
+
 
 }
