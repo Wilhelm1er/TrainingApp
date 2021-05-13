@@ -40,10 +40,10 @@ public interface SportService  {
     // ======================================
     public List<EventDTO> searchEvents(String keyword) throws FinderException ;
     public EventDTO createEvent(@Valid final EventDTO eventDTO) throws CreateException ;
-    public EventDTO findEvent(final String eventId) throws FinderException ;
-    public void deleteEvent(final String eventId) throws FinderException, RemoveException;
+    public EventDTO findEvent(final Long eventId) throws FinderException ;
+    public void deleteEvent(final Long eventId) throws FinderException, RemoveException;
     public void updateEvent(@Valid final EventDTO eventDTO) throws UpdateException ;
     public List<EventDTO> findEvents() throws FinderException ;
-    public List<EventDTO> findEvents(String activityId) throws FinderException ;
+    public List<EventDTO> findEvents(String username) throws FinderException ;
 
 }

@@ -16,12 +16,13 @@ public class EventDTO implements Serializable {
 	// ======================================
 	// = Attributes =
 	// ======================================
-	private String id;
+	private Long id;
 	private String name;
 	private Date date;
 	private int creditCost;
 	private int duration;
-	private String intensity;
+	private int intensity;
+	private String description;
 	private String equipment;
 	private UserDTO coachDTO;
 	private ActivityDTO activityDTO;
@@ -32,20 +33,22 @@ public class EventDTO implements Serializable {
 	public EventDTO() {
 	}
 
-	public EventDTO(final String id, final String name, final int creditCost) {
-		setId(id);
+	public EventDTO(final String name, final Date date, final int creditCost, final UserDTO coachDTO, final ActivityDTO activityDTO) {
 		setName(name);
+		setDate(date);
 		setCreditCost(creditCost);
+		setCoachDTO(coachDTO);
+		setActivityDTO(activityDTO);
 	}
 
 	// ======================================
 	// = Getters and Setters =
 	// ======================================
-	public String getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(final String id) {
+	public void setId(final Long id) {
 		this.id = id;
 	}
 
@@ -73,11 +76,11 @@ public class EventDTO implements Serializable {
 		this.duration = duration;
 	}
 	
-	public String getIntensity() {
+	public int getIntensity() {
 		return intensity;
 	}
 
-	public void setIntensity(String intensity) {
+	public void setIntensity(int intensity) {
 		this.intensity = intensity;
 	}
 
@@ -96,6 +99,15 @@ public class EventDTO implements Serializable {
 	public void setCreditCost(final int creditCost) {
 		this.creditCost = creditCost;
 	}
+	
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	
 	public UserDTO getCoachDTO() {
 		return coachDTO;

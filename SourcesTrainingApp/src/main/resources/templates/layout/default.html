@@ -65,8 +65,11 @@
 							th:href="@{'/update-account/'+${#authentication.getPrincipal().getUsername()}}"
 							th:text="#{menu.edit.account}"
 							sec:authorize="hasAnyRole('ATHLETE','COACH')"></a><a
-							class="dropdown-item" th:href="@{/gestion-coach}"
-							th:text="#{coachs.gestion}" sec:authorize="hasAnyRole('COACH')"></a>
+							class="dropdown-item" th:href="@{'/create-event/'+${#authentication.getPrincipal().getUsername()}}"
+							th:text="#{coachs.event}" sec:authorize="hasAnyRole('COACH')"></a>
+							<a
+							class="dropdown-item" th:href="@{'/events/'+${#authentication.getPrincipal().getUsername()}}"
+							th:text="#{coachs.event.list}" sec:authorize="hasAnyRole('COACH')"></a>
 						<a class="dropdown-item" id="logout"
 							href="javascript:document.logoutForm.submit()"
 							th:text="#{menu.logout}">Logout</a>

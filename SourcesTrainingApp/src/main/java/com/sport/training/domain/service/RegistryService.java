@@ -27,7 +27,7 @@ public interface RegistryService  {
     public void updateDisciplineRegistry(@Valid final DisciplineRegistryDTO disciplineRegistryDTO) throws UpdateException ;
     public List<DisciplineRegistryDTO> findDisciplineRegistries() throws FinderException ;
     public Set<UserDTO> findCoachsByDiscipline(final String disciplineId) throws FinderException ;
-    public List<DisciplineDTO> findDisciplinesByCoach(String coachId) throws FinderException;
+    public Set<DisciplineDTO> findDisciplinesByCoach(final String coachId) throws FinderException;
     
     // ======================================
     // =   EventRegistry Business methods   =

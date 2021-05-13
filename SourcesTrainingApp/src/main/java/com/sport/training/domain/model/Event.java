@@ -6,6 +6,8 @@ import java.sql.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -29,9 +31,9 @@ public class Event implements Serializable {
 	// ======================================
 	// = Attributes =
 	// ======================================
-	@NotBlank(message = "id must be defined")
 	@Id
-	private String id;
+	@GeneratedValue(strategy = GenerationType.AUTO, generator="event_seq_gen")
+	private Long id;
 
 	@NotBlank(message = "invalid Name")
 	private String name;
@@ -51,7 +53,7 @@ public class Event implements Serializable {
 	private String description;
 	
 	@Column(name = "INTENSITY")
-	private String intensity;
+	private int intensity;
 	
 	@Column(name = "EQUIPMENT")
 	private String equipment;
@@ -71,23 +73,9 @@ public class Event implements Serializable {
 	// ======================================
 	public Event() {
 	}
-
-	public Event(final String id) {
-		setId(id);
-	}
 	
-	public Event(final String id, final String name,  final int creditCost, final User coach,
+	public Event(final String name, final Date date, final int creditCost, final User coach,
 			final Activity activity) {
-		setId(id);
-		setName(name);
-		setCreditCost(creditCost);
-		setCoach(coach);
-		setActivity(activity);
-	}
-
-	public Event(final String id, final String name, final Date date, final int creditCost, final User coach,
-			final Activity activity) {
-		setId(id);
 		setName(name);
 		setDate(date);
 		setCreditCost(creditCost);
@@ -99,11 +87,11 @@ public class Event implements Serializable {
 	// = Getters and Setters =
 	// ======================================
 
-	public String getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(final String id) {
+	public void setId(final Long id) {
 		this.id = id;
 	}
 
@@ -147,11 +135,11 @@ public class Event implements Serializable {
 		this.description = description;
 	}
 	
-	public String getIntensity() {
+	public int getIntensity() {
 		return intensity;
 	}
 
-	public void setIntensity(String intensity) {
+	public void setIntensity(int intensity) {
 		this.intensity = intensity;
 	}
 

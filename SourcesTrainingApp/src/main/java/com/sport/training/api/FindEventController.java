@@ -34,7 +34,7 @@ public class FindEventController {
 	private UserService userService;
 
     @GetMapping("/find-event")
-    protected String findEvent(Model model, @RequestParam String eventId, Authentication authentication) {
+    protected String findEvent(Model model, @RequestParam Long eventId, Authentication authentication) {
         final String mname = "findEvent";
         LOGGER.debug("entering "+mname);
         try {

@@ -16,6 +16,8 @@ import org.springframework.validation.annotation.Validated;
 
 import com.sport.training.domain.dao.DisciplineRepository;
 import com.sport.training.domain.dao.EventRepository;
+import com.sport.training.authentication.domain.dao.UserRepository;
+import com.sport.training.authentication.domain.model.User;
 import com.sport.training.domain.dao.ActivityRepository;
 import com.sport.training.domain.dto.DisciplineDTO;
 import com.sport.training.domain.dto.EventDTO;
@@ -49,6 +51,9 @@ public class SportServiceImpl implements SportService {
 
 	@Autowired
 	private EventRepository eventRepository;
+	
+	@Autowired
+	private UserRepository userRepository;
 
 	@Autowired
 	private ModelMapper commonModelMapper, activityModelMapper, eventModelMapper;
@@ -93,7 +98,7 @@ public class SportServiceImpl implements SportService {
 		final String mname = "findDiscipline";
 		LOGGER.debug("entering " + mname + " for id " + disciplineId);
 
-		checkId(disciplineId);
+		checkStringId(disciplineId);
 
 		Discipline discipline = null;
 		if (!disciplineRepository.findById(disciplineId).isPresent())
@@ -119,7 +124,7 @@ public class SportServiceImpl implements SportService {
 		final String mname = "deleteDiscipline";
 		LOGGER.debug("entering " + mname + " for id " + disciplineId);
 
-		checkId(disciplineId);
+		checkStringId(disciplineId);
 
 		Discipline discipline = null;
 		if (!disciplineRepository.findById(disciplineId).isPresent())
@@ -212,7 +217,7 @@ public class SportServiceImpl implements SportService {
 		final String mname = "findActivity";
 		LOGGER.debug("entering : " + mname + " for id " + activityId);
 
-		checkId(activityId);
+		checkStringId(activityId);
 
 		Activity activity = null;
 		if (!activityRepository.findById(activityId).isPresent())
@@ -230,7 +235,7 @@ public class SportServiceImpl implements SportService {
 		final String mname = "deleteActivity";
 		LOGGER.debug("entering : " + mname + " with id" + activityId);
 
-		checkId(activityId);
+		checkStringId(activityId);
 
 		Activity activity = null;
 		if (!activityRepository.findById(activityId).isPresent())
@@ -289,7 +294,7 @@ public class SportServiceImpl implements SportService {
 		final String mname = "findActivitiesByDiscipline";
 		LOGGER.debug("entering " + mname);
 
-		checkId(disciplineId);
+		checkStringId(disciplineId);
 
 		Discipline discipline = null;
 		if (!disciplineRepository.findById(disciplineId).isPresent())
@@ -323,19 +328,13 @@ public class SportServiceImpl implements SportService {
 		final String mname = "createEvent";
 		LOGGER.debug("entering " + mname);
 
-		if (eventDTO == null || eventDTO.getId()==null || eventDTO.getId().equals("") || eventDTO.getActivityDTO()==null)
+		if (eventDTO == null ||  eventDTO.getActivityDTO()==null)
 			throw new CreateException("Event object is invalid");
 
 		try {
 			findActivity(eventDTO.getActivityDTO().getId());
 		} catch (FinderException e) {
-			throw new CreateException("Activity must exist to create an Item");
-		}
-
-		try {
-			if (findEvent(eventDTO.getId()) != null)
-				throw new DuplicateKeyException();
-		} catch (FinderException e) {
+			throw new CreateException("Activity must exist to create an Event");
 		}
 
 		// Finds the linked object
@@ -354,7 +353,7 @@ public class SportServiceImpl implements SportService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public EventDTO findEvent(final String eventId) throws FinderException {
+	public EventDTO findEvent(final Long eventId) throws FinderException {
 		final String mname = "findEvent";
 		LOGGER.debug("entering : " + mname + " for id" + eventId);
 
@@ -372,7 +371,7 @@ public class SportServiceImpl implements SportService {
 
 	@Override
 	@Transactional
-	public void deleteEvent(final String eventId) throws FinderException, RemoveException {
+	public void deleteEvent(final Long eventId) throws FinderException, RemoveException {
 		final String mname = "deleteEvent";
 		LOGGER.debug("entering : " + mname + " with id" + eventId);
 
@@ -432,27 +431,27 @@ public class SportServiceImpl implements SportService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<EventDTO> findEvents(String activityId) throws FinderException {
-		final String mname = "findEventsByActivity";
+	public List<EventDTO> findEvents(String coachId) throws FinderException {
+		final String mname = "findEventsByCoach";
 		LOGGER.debug("entering " + mname);
 
-		checkId(activityId);
+		checkStringId(coachId);
 
-		Activity activity = null;
-		if (!activityRepository.findById(activityId).isPresent())
-			throw new FinderException("Activity must exist to be found");
+		User coach = null;
+		if (!userRepository.findById(coachId).isPresent())
+			throw new FinderException("Coach must exist to be found");
 		else
-			activity = activityRepository.findById(activityId).get();
+			coach = userRepository.findById(coachId).get();
 
 		// Finds all the objects
-		final Iterable<Event> eventsByActivity = eventRepository.findAllByActivity(activity);
+		final Iterable<Event> eventsByCoach = eventRepository.findAllByCoach(coach);
 		
 		int size;
-		if ((size = ((Collection<Event>) eventsByActivity).size()) == 0) {
+		if ((size = ((Collection<Event>) eventsByCoach).size()) == 0) {
 			throw new FinderException("No Event in the database");
 		}
 		
-		List<EventDTO> eventDTOs = ((List<Event>) eventsByActivity)
+		List<EventDTO> eventDTOs = ((List<Event>) eventsByCoach)
 									.stream()
 									.map(event -> eventModelMapper.map(event, EventDTO.class))
 									.collect(Collectors.toList());
@@ -489,9 +488,13 @@ public class SportServiceImpl implements SportService {
     // ======================================
 	
 
-	private void checkId(final String id) throws FinderException {
+	private void checkStringId(final String id) throws FinderException {
 		if (id == null || id.equals(""))
 			throw new FinderException(id + " should not be null or empty");
+	}
+	private void checkId(final long l) throws FinderException {
+		if (l == 0)
+			throw new FinderException("Id should not be 0");
 	}
 
 }

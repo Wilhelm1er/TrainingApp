@@ -1,74 +1,73 @@
-<!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-<th:block th:insert="layout/default.html :: header"></th:block>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
+<head th:replace="layout/default.html :: header">
 </head>
 <body>
 	<nav th:insert="layout/default.html :: navbar"></nav>
-	<div class="container">
-		<br>
-		<br>
-		<br>
-		<h3 th:text="#{create.event.title}"></h3>
-		<hr />
-		<br>
-		<form class="form-horizontal" name="eventCreateForm" method="post"
+	<br>
+	<br>
+	<br>
+	<br>
+	<div class="container" sec:authorize="hasRole('COACH')">
+		<form class="form-horizontal" name="gestionCoachForm" method="post"
 			th:action="@{/create-event}" th:object="${eventDTO}">
-			<div class="form-group">
-				<label for="id" class="col-sm-2 control-label"
-					th:text="#{catalog.id}"></label>
-				<div class="col-sm-5">
-					<input th:field="${eventDTO.id}" type="text" id="id"
-						class="form-control" />
+			<h5 th:text="#{user.discipline.information}"></h5>
+
+			<div id="decision" class="row" style="margin-top: 1%;">
+				<div class="col-md-4"
+					th:each="element : ${activityByDisciplinesCoach}">
+					<div class="checkbox checkbox-custom checkbox-circle">
+					<span th:text="${element.key}"></span>
+					</div>
+					<br>
+					<h5 th:text="#{user.activity.information}"></h5>
+					<div class="checkbox checkbox-custom checkbox-circle"
+						th:each="activityDTO: ${element.value}">
+						<input type="checkbox" name="activityDTO.id"
+							th:text="${activityDTO.name}" th:value="${activityDTO.id}" />
+					</div>
+					<h5 th:text="#{events.name}"></h5>
+					<input type="text" th:value="${eventDTO.name}"
+						class="form-control mb-4 col-4" placeholder="Name">
+					<br>
+					<h5 th:text="#{events.date}"></h5>
+					<input type="date" th:value="${eventDTO.date}">  <br> <br>
+					<h5 th:text="#{events.cost}"></h5>
+					<input type="number" step="0.1" min="${activityDTO.creditcostmin}"
+						max="${activityDTO.creditcostmax}" th:value="${eventDTO.creditCost}"
+						class="form-control mb-4 col-4" placeholder="Credit">
+
+					<h5 th:text="#{events.duration}"></h5>
+					<input type="number" step="1" min="0" max="200"
+						th:value="${eventDTO.duration}" class="form-control mb-4 col-4"
+						placeholder="Duration">
+
+					<h5 th:text="#{events.description}"></h5>
+					<input type="text" th:value="${eventDTO.description}"
+						class="form-control mb-4 col-4" placeholder="Description">
+
+					<h5 th:text="#{events.intensity}"></h5>
+					<input type="number" step="1" min="0" max="200"
+						th:value="${eventDTO.intensity}" class="form-control mb-4 col-4"
+						placeholder="Intensity">
+
+					<h5 th:text="#{events.equipment}"></h5>
+					<input type="text" th:value="${eventDTO.equipment}"
+						class="form-control mb-4 col-4" placeholder="Equipment"> <br>
+					<div class="form-group">
+						<div class="col-sm-offset-2 col-sm-5">
+							<button type="submit" name="activityCreateButton"
+								class="btn btn-primary" th:text="#{new.account.create}">Créer</button>
+						</div>
+					</div>
 				</div>
 			</div>
-			<div class="form-group">
-				<label for="name" class="col-sm-2 control-label"
-					th:text="#{catalog.name}"></label>
-				<div class="col-sm-5">
-					<input th:field="${eventDTO.name}" type="text" id="name"
-						name="name" class="form-control" th:value="${eventDTO.name}" />
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="eventDate" class="col-sm-6 control-label"
-					th:text="#{event.eventDate}"></label>
-				<div class="col-sm-5">
-					<input th:field="${eventDTO.eventDate}" type="text" id="eventDate"
-						name="eventDate" class="form-control"
-						th:value="${eventDTO.eventDate}" />
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="creditCost" class="col-sm-2 control-label"
-					th:text="#{event.cost}"></label>
-				<div class="col-sm-5">
-					<input th:field="${eventDTO.creditCost}" type="text"
-						id="creditCost" name="creditCost" class="form-control"
-						th:value="${eventDTO.creditCost}" />
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="activityName" class="col-sm-4 control-label"
-					th:text="#{catalog.activityName}"></label>
-				<div class="col-sm-5">
-					<input th:field="${activityDTO.name}" type="text" id="activityName"
-						name="activityName" class="form-control"
-						th:value="${activityDTO.name}" readonly />
-				</div>
-			</div>
-			<br>
-			<div class="form-group">
-				<div class="col-sm-offset-2 col-sm-5">
-					<button type="submit" name="eventCreateButton"
-						class="btn btn-primary" th:text="#{new.account.create}">Créer</button>
-				</div>
-			</div>
+
 		</form>
-		<br>
+		<br> <br> <br> <br>
+		<div th:insert="layout/default.html :: footer"></div>
 	</div>
-	<th:block th:insert="layout/default.html :: footer"></th:block>
-	<th:block th:insert="layout/default.html :: scripts"></th:block>
-	<br>
-	<br>
+	<div th:insert="layout/default.html :: scripts"></div>
+</body>
 </html>

@@ -1,6 +1,7 @@
 package com.sport.training.authentication.api;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.validation.Valid;
 
@@ -47,7 +48,7 @@ public class AuthenticationController {
 		
 		UserDTO userDTO;
 		List<DisciplineDTO>disciplineDTOs = null;
-		List<DisciplineDTO> disciplineDTOsCoach = null;
+		Set<DisciplineDTO> disciplineDTOsCoach = null;
 		try {
 			userDTO = userService.findUser(username);
 			disciplineDTOsCoach = registryService.findDisciplinesByCoach(username);
