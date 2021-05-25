@@ -1,6 +1,8 @@
 package com.sport.training.api;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.sport.training.authentication.domain.dto.UserDTO;
@@ -20,7 +23,7 @@ import com.sport.training.exception.FinderException;
 import com.sport.training.domain.dto.ActivityDTO;
 
 /**
- * These servlets returns the selected item / items.
+ * These servlets returns the selected event / events.
  */
 @Controller
 public class FindEventController {
@@ -28,7 +31,7 @@ public class FindEventController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FindEventController.class);
     
     @Autowired
-	private SportService catalogService;
+	private SportService sportService;
     
     @Autowired
 	private UserService userService;
@@ -38,7 +41,7 @@ public class FindEventController {
         final String mname = "findEvent";
         LOGGER.debug("entering "+mname);
         try {
-        	EventDTO eventDTO = catalogService.findEvent(eventId);
+        	EventDTO eventDTO = sportService.findEvent(eventId);
         	if(authentication != null) {
     			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
     			UserDTO userDTO = userService.findUser(userDetails.getUsername());
@@ -58,34 +61,43 @@ public class FindEventController {
         }     
     }
     
-    @GetMapping("/find-events")
-    protected String findEvents(Model model, @RequestParam String activityId, Authentication authentication) {
-        final String mname = "findEvents";
-        LOGGER.debug("entering "+mname);
-        try {
-        	List<EventDTO> eventDTOs = catalogService.findEvents(activityId);         
-        	ActivityDTO activityDTO = catalogService.findActivity(activityId);
-            if(authentication != null) {
-    			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-    			UserDTO userDTO = userService.findUser(userDetails.getUsername());
-    			if(userDTO.getRoleName().equals("ROLE_ATHLETE"))
-    				model.addAttribute("username", userDetails.getUsername());
-    		}
-            model.addAttribute("activityDTO", activityDTO);
-            model.addAttribute("eventDTOs", eventDTOs);
-            return "events";
-        } catch (FinderException e) {
-        	if(e.getMessage().equals("No Event in the database")) {
-        		model.addAttribute("message", "No Event for this activity");
-        		return "index";
-        	}
-        	LOGGER.error("exception in "+mname+" : "+e.getMessage());
-            model.addAttribute("exception", e.getClass().getName());
+	@GetMapping(path = "/find-events/{username}")
+	public String showEventsByCoach(Model model, @PathVariable String username) throws FinderException {
+		final String mname = "showEventsByCoach";
+		LOGGER.debug("entering "+mname);
+		
+		UserDTO userDTO;
+		
+		List<EventDTO> eventDTOs = null;
+		
+		try {
+			userDTO = userService.findUser(username);
+			eventDTOs = sportService.findEvents(username);
+		} catch (FinderException e) {
+			model.addAttribute("exception", e.getClass().getName());
 			return "error";
-        } catch (Exception e) {
-        	LOGGER.error("exception in "+mname+" : "+e.getMessage());
-            model.addAttribute("exception", e.getMessage());
+		}
+		model.addAttribute("userDTO", userDTO);
+		model.addAttribute("eventDTOs", eventDTOs);
+
+		return "events";
+	}
+	
+	@GetMapping(path = "/find-events")
+	public String showEventsByActivity(Model model, @RequestParam String activityId) throws FinderException {
+		final String mname = "showEventsByActivity";
+		LOGGER.debug("entering "+mname);
+		
+		List<EventDTO> eventDTOs = null;
+		
+		try {
+			eventDTOs = sportService.findEventsByActivity(activityId);
+		} catch (FinderException e) {
+			model.addAttribute("exception", e.getClass().getName());
 			return "error";
-        }
-    }
+		}
+		model.addAttribute("eventDTOs", eventDTOs);
+
+		return "events";
+	}
 }

@@ -178,6 +178,7 @@ public class Event implements Serializable {
 		buf.append(",intensity=").append(getIntensity());
 		buf.append(",equipment=").append(getEquipment());
 		buf.append(",creditCost=").append(getCreditCost());
+		buf.append(",coachUsername=").append(getCoach().getUsername());
 		buf.append(",coachFirstname=").append(getCoach().getFirstname());
 		buf.append(",coachLastname=").append(getCoach().getLastname());
 		buf.append(",activityId=").append(getActivity().getId());

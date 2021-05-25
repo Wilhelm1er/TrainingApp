@@ -460,6 +460,38 @@ public class SportServiceImpl implements SportService {
 		return eventDTOs;
 	}
 	
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<EventDTO> findEventsByActivity(String activityId) throws FinderException {
+		final String mname = "findEventsByActivity";
+		LOGGER.debug("entering " + mname);
+
+		checkStringId(activityId);
+
+		Activity activity = null;
+		if (!activityRepository.findById(activityId).isPresent())
+			throw new FinderException("Activity must exist to be found");
+		else
+			activity = activityRepository.findById(activityId).get();
+
+		// Finds all the objects
+		final Iterable<Event> eventsByActivity = eventRepository.findAllByActivity(activity);
+		
+		int size;
+		if ((size = ((Collection<Event>) eventsByActivity).size()) == 0) {
+			throw new FinderException("No Event in the database");
+		}
+		
+		List<EventDTO> eventDTOs = ((List<Event>) eventsByActivity)
+									.stream()
+									.map(event -> eventModelMapper.map(event, EventDTO.class))
+									.collect(Collectors.toList());
+
+		LOGGER.debug("exiting " + mname + " size of collection : " + size);
+		return eventDTOs;
+	}
+	
 	@Override
     @Transactional(readOnly=true)
     public List<EventDTO> searchEvents(String keyword) throws FinderException {

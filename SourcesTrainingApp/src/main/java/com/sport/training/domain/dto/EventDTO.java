@@ -136,6 +136,7 @@ public class EventDTO implements Serializable {
 		buf.append(",intensity=").append(getIntensity());
 		buf.append(",equipment=").append(getEquipment());
 		buf.append(",creditCost=").append(getCreditCost());
+		buf.append(",coachUsername=").append(getCoachDTO().getUsername());
 		buf.append(",coachFirstname=").append(getCoachDTO().getFirstname());
 		buf.append(",coachLastname=").append(getCoachDTO().getLastname());
 		buf.append(",activityId=").append(getActivityDTO().getId());

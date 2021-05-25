@@ -120,19 +120,28 @@
 						name="country" class="form-control" th:value="${userDTO.country}" />
 				</div>
 			</div>
-			<div class="form-group">
+			<div class="form-group" sec:authorize="hasAnyRole('ATHLETE','COACH')">
 				<label for="statut" class="col-sm-2 control-label"
 					th:text="#{user.statut}"></label>
 				<div class="col-sm-5">
 					<input th:field="${userDTO.statut}" type="text" id="statut"
-						name="statut" class="form-control" th:value="${userDTO.statut}" />
+						name="statut" class="form-control" th:value="${userDTO.statut}" readonly/>
+				</div>
+			</div>
+			<div class="form-group" sec:authorize="hasAnyRole('ADMIN')">
+				<label for="statut" class="col-sm-2 control-label"
+					th:text="#{user.statut}"></label>
+				<div class="col-sm-5">
+					<input th:field="${userDTO.statut}" type="text" id="statut"
+						name="statut" class="form-control" th:value="${userDTO.statut}"/>
 				</div>
 			</div>
 			<br>
-
+			
+			<div th:if="${userDTO.roleName == 'ROLE_COACH'}">
 			<h5 th:text="#{user.discipline.information}"></h5>
 
-			<div id="decision" class="row" style="margin-top: 1%;">
+			<div id="decision" class="row" style="margin-top: 1%;" >
 				<div class="col-md-4" th:each="disciplineDTO : ${disciplineDTOs}">
 					<div class="checkbox checkbox-custom checkbox-circle">
 						<input type="checkbox" name="discipline.id"
@@ -140,7 +149,7 @@
 							th:text="${disciplineDTO.name}" th:value="${disciplineDTO.id}" />
 					</div>
 				</div>
-			</div>
+			</div></div>
 
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-5">

@@ -170,7 +170,7 @@ public class UserDTO implements Serializable {
 	public String toString() {
          StringBuffer buf = new StringBuffer();
         buf.append("UserDTO{");
-        buf.append("id=").append(getUsername());
+        buf.append("username=").append(getUsername());
         buf.append(",firstname=").append(getFirstname());
         buf.append(",lastname=").append(getLastname());
         buf.append(",telephone=").append(getTelephone());

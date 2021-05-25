@@ -69,7 +69,7 @@ public class ActivityDTO implements Serializable {
     @Override
 	public String toString() {
         final StringBuffer buf = new StringBuffer();
-        buf.append("ProductDTO{");
+        buf.append("ActivityDTO{");
         buf.append("id=").append(getId());
         buf.append(",name=").append(getName());
         buf.append(",description=").append(getDescription());

@@ -2,8 +2,11 @@ package com.sport.training.domain.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -22,14 +25,18 @@ import com.sport.training.authentication.domain.dto.UserDTO;
 import com.sport.training.authentication.domain.model.User;
 import com.sport.training.authentication.domain.service.UserService;
 import com.sport.training.authentication.domain.service.UserServiceImpl;
+import com.sport.training.domain.dao.BookmarkRepository;
+import com.sport.training.domain.dao.CreditRegistryRepository;
 import com.sport.training.domain.dao.DisciplineRegistryRepository;
 import com.sport.training.domain.dao.DisciplineRepository;
 import com.sport.training.domain.dao.EventRegistryRepository;
-import com.sport.training.domain.dto.BookmarkDTO;
+import com.sport.training.domain.dao.EventRepository;
+import com.sport.training.domain.dao.NotationRepository;
+import com.sport.training.domain.dto.CreditRegistryDTO;
 import com.sport.training.domain.dto.DisciplineDTO;
 import com.sport.training.domain.dto.DisciplineRegistryDTO;
 import com.sport.training.domain.dto.EventRegistryDTO;
-import com.sport.training.domain.dto.NotationDTO;
+import com.sport.training.domain.model.CreditRegistry;
 import com.sport.training.domain.model.Discipline;
 import com.sport.training.domain.model.DisciplineRegistry;
 import com.sport.training.domain.model.EventRegistry;
@@ -47,7 +54,7 @@ import com.sport.training.exception.UpdateException;
 public class RegistryServiceImpl implements RegistryService {
 
 	// ======================================
-	// = Attributes =
+	// =            Attributes              =
 	// ======================================
 
 	@Autowired
@@ -58,6 +65,9 @@ public class RegistryServiceImpl implements RegistryService {
 
 	@Autowired
 	private EventRegistryRepository eventRegistryRepository;
+	
+	@Autowired
+	private CreditRegistryRepository creditRegistryRepository;
 
 	@Autowired
 	private DisciplineRepository disciplineRepository;
@@ -290,7 +300,6 @@ public class RegistryServiceImpl implements RegistryService {
 
 		LOGGER.debug("exiting " + mname);
 		return eventRegistryDTO;
-
 	}
 
 	@Override
@@ -302,7 +311,7 @@ public class RegistryServiceImpl implements RegistryService {
 		checkId(eventRegistryId);
 
 		EventRegistry eventRegistry = null;
-		if (!disciplineRegistryRepository.findById(eventRegistryId).isPresent())
+		if (!eventRegistryRepository.findById(eventRegistryId).isPresent())
 			throw new FinderException("Event must exist to be found");
 		else
 			eventRegistry = eventRegistryRepository.findById(eventRegistryId).get();
@@ -370,73 +379,138 @@ public class RegistryServiceImpl implements RegistryService {
 	}
 	
     // ======================================
-    // =   Notation Business methods   =
+    // =   Credit Business methods   =
     // ======================================
 
 	@Override
-	public NotationDTO createNotation(@Valid NotationDTO notationDTO) throws CreateException {
-		// TODO Auto-generated method stub
-		return null;
+	@Transactional
+	public CreditRegistryDTO createCreditRegistry(@Valid CreditRegistryDTO creditRegistryDTO) throws CreateException {
+		final String mname = "createCreditRegistry";
+		LOGGER.debug("entering " + mname);
+
+		if (creditRegistryDTO == null)
+			throw new CreateException("CreditRegistryDTO object is null");
+
+		try {
+			userService.findUser(creditRegistryDTO.getUserDTO().getUsername());
+		} catch (NullPointerException | FinderException e) {
+			throw new CreateException("User must exist to create a CreditRegistry");
+		}
+
+		// :::::::::::::::: We change DTO to model ::::::::::::::: //
+		CreditRegistry creditRegistry = commonModelMapper.map(creditRegistryDTO, CreditRegistry.class);
+
+		// Creates the object
+		creditRegistryRepository.save(creditRegistry);
+
+		LOGGER.debug("exiting " + mname);
+		return creditRegistryDTO;
 	}
 
 	@Override
-	public NotationDTO findNotation(Long notationId) throws FinderException {
-		// TODO Auto-generated method stub
-		return null;
+	@Transactional(readOnly = true)
+	public CreditRegistryDTO findCreditRegistry(Long creditRegistryId) throws FinderException {
+		final String mname = "findCreditRegistry";
+		LOGGER.debug("entering " + mname + " for id " + creditRegistryId);
+
+		checkId(creditRegistryId);
+
+		CreditRegistry creditRegistry = null;
+		if (!creditRegistryRepository.findById(creditRegistryId).isPresent())
+			throw new FinderException("Credit must exist to be found");
+		else
+			creditRegistry = creditRegistryRepository.findById(creditRegistryId).get();
+
+		LOGGER.debug("exiting " + mname);
+		return commonModelMapper.map(creditRegistry, CreditRegistryDTO.class);
 	}
 
 	@Override
-	public void deleteNotation(Long notationId) throws FinderException, RemoveException {
-		// TODO Auto-generated method stub
+	@Transactional
+	public void deleteCreditRegistry(Long creditRegistryId) throws FinderException, RemoveException {
+		final String mname = "deleteCreditRegistry";
+		LOGGER.debug("entering " + mname + " for id " + creditRegistryId);
+
+		checkId(creditRegistryId);
+
+		CreditRegistry creditRegistry = null;
+		if (!creditRegistryRepository.findById(creditRegistryId).isPresent())
+			throw new RemoveException("Credit registry must exist to be deleted");
+		else
+			creditRegistry = creditRegistryRepository.findById(creditRegistryId).get();
+		// Deletes the object
+		creditRegistryRepository.delete(creditRegistry);
+		LOGGER.debug("exiting " + mname);
 		
 	}
 
 	@Override
-	public void updateNotation(@Valid NotationDTO notationDTO) throws UpdateException {
-		// TODO Auto-generated method stub
-		
+	@Transactional
+	public void updateCreditRegistry(@Valid CreditRegistryDTO updatedCreditRegistryDTO) throws UpdateException {
+		final String mname = "updateCreditRegistry";
+		LOGGER.debug("entering " + mname);
+
+		if (updatedCreditRegistryDTO == null)
+			throw new UpdateException("Credit registry object is null");
+
+		// Checks if the object exists
+		if (!creditRegistryRepository.findById(updatedCreditRegistryDTO.getId()).isPresent())
+			throw new UpdateException("Credit registry must exist to be updated");
+
+		// :::::::::::::::: We change DTO to model ::::::::::::::: //
+		CreditRegistry updatedCreditRegistry = commonModelMapper.map(updatedCreditRegistryDTO, CreditRegistry.class);
+		// Updates the object
+		creditRegistryRepository.save(updatedCreditRegistry);
+		LOGGER.debug("exiting " + mname);
 	}
 
 	@Override
-	public List<NotationDTO> findNotations() throws FinderException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	@Transactional(readOnly = true)
+	public List<CreditRegistryDTO> findCreditRegistries() throws FinderException {
+		final String mname = "findCreditRegistries";
+		LOGGER.debug("entering " + mname);
 
-    // ======================================
-    // =   Bookmark Business methods   =
-    // ======================================
+		// Finds all the objects
+		final Iterable<CreditRegistry> creditRegistries = creditRegistryRepository.findAll();
+		int size;
+		if ((size = ((Collection<CreditRegistry>) creditRegistries).size()) == 0) {
+			throw new FinderException("No credit in the database");
+		}
+		List<CreditRegistryDTO> creditRegistryDTOs = ((List<CreditRegistry>) creditRegistries).stream()
+				.map(creditRegistry -> commonModelMapper.map(creditRegistry, CreditRegistryDTO.class))
+				.collect(Collectors.toList());
+
+		LOGGER.debug("exiting " + mname + " size of collection : " + size);
+		return creditRegistryDTOs;
+	}
 	
 	@Override
-	public BookmarkDTO createBookmark(@Valid BookmarkDTO bookmarkDTO) throws CreateException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	@Transactional(readOnly = true)
+	public Map<Date, Integer> findDateAndCreditByUser(String userId) throws FinderException {
+		final String mname = "findDateAndCreditByUser";
+		LOGGER.debug("entering " + mname);
 
-	@Override
-	public BookmarkDTO findBookmark(Long bookmarkId) throws FinderException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		checkStringId(userId);
 
-	@Override
-	public void deleteBookmark(Long bookmarkId) throws FinderException, RemoveException {
-		// TODO Auto-generated method stub
-		
-	}
+		User user = null;
+		if (!userRepository.findById(userId).isPresent())
+			throw new FinderException("User must exist to be found");
+		else
+			user = userRepository.findById(userId).get();
 
-	@Override
-	public void updateBookmark(@Valid BookmarkDTO bookmarkDTO) throws UpdateException {
-		// TODO Auto-generated method stub
-		
-	}
+		// Finds all the objects
+		final Iterable<CreditRegistry> creditRegistriesByUser = creditRegistryRepository.findAllByUser(user);
 
-	@Override
-	public List<BookmarkDTO> findBookmarks() throws FinderException {
-		// TODO Auto-generated method stub
-		return null;
+		Map<Date, Integer> creditRegistryList = new HashMap<Date,Integer>();
+
+		for (CreditRegistry creditReg : creditRegistriesByUser) {
+			
+				creditRegistryList.put(creditReg.getMouvementDate(),creditReg.getCredit());
+		}
+
+		LOGGER.debug("exiting " + mname );
+		return creditRegistryList;
 	}
-	
 	// ======================================
 	// = Private Methods =
 	// ======================================
@@ -450,5 +524,6 @@ public class RegistryServiceImpl implements RegistryService {
 		if (id == null || id.equals(""))
 			throw new FinderException(id + " should not be null or empty");
 	}
+
 
 }

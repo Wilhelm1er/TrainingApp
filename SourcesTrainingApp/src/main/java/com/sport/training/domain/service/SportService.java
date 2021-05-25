@@ -45,5 +45,6 @@ public interface SportService  {
     public void updateEvent(@Valid final EventDTO eventDTO) throws UpdateException ;
     public List<EventDTO> findEvents() throws FinderException ;
     public List<EventDTO> findEvents(String username) throws FinderException ;
+    public List<EventDTO> findEventsByActivity(String activityId) throws FinderException ;
 
 }

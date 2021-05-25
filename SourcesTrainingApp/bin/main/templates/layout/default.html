@@ -88,7 +88,8 @@
 						th:text="'Solde: '+${#authentication.getPrincipal().getCredit()}+ ' Cr'"></span></a>
 					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 						<a class="nav-item dropdown-item"></a> <a class="dropdown-item"
-							th:href="@{/credit}" th:text="#{credit.gestion}">Credit</a>
+							th:href="@{'/credit/'+${#authentication.getPrincipal().getUsername()}}" th:text="#{credit.gestion}">Credit</a>
+							
 					</div>
 				</li>
 
