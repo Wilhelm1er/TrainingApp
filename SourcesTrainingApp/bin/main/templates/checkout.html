@@ -4,22 +4,20 @@
 <th:block th:insert="layout/default.html :: headerfiles"></th:block>
 </head>
 <body>
-	<nav th:insert="layout/default.html :: navbar"></nav>
-	<div class="container">
-		<br> <br> <br> <br>
-		<h3 th:text="#{order.complete}"></h3>
-		<br>
+<nav th:insert="layout/default.html :: navbar"></nav>
+<div class="container">
+<br><br><br><br>
+	<h3 th:text="#{order.complete}"></h3>
+	<br>
 
-		<p th:text="#{order.id}+' '+${orderId}" style="font-weight: bold" />
-		<p th:text="#{Thanks.for.shopping}" />
-
-		<br>
-		<div th:insert="layout/default.html :: footer"></div>
-	</div>
-	<br>
-	<br>
-	<br>
-	<nav th:insert="layout/default.html :: footernavbar"></nav>
-	<div th:insert="layout/default.html :: scripts"></div>
+	<p th:text="#{order.id}+' '+${orderId}" style="font-weight:bold"/>
+	<p th:text="#{Thanks.for.shopping}" />
+	
+<br>
+<div th:insert="layout/default.html :: footer"></div>
+</div>
+<br><br><br>
+<nav th:insert="layout/default.html :: footernavbar"></nav>
+<div th:insert="layout/default.html :: scripts"></div>
 </body>
 </html>

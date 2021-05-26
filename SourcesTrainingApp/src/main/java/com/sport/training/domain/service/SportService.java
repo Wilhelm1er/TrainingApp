@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import com.sport.training.domain.dto.DisciplineDTO;
 import com.sport.training.domain.dto.EventDTO;
+import com.sport.training.domain.model.Activity;
 import com.sport.training.domain.model.Discipline;
 import com.sport.training.exception.CreateException;
 import com.sport.training.exception.FinderException;
@@ -46,5 +47,6 @@ public interface SportService  {
     public List<EventDTO> findEvents() throws FinderException ;
     public List<EventDTO> findEvents(String username) throws FinderException ;
     public List<EventDTO> findEventsByActivity(String activityId) throws FinderException ;
+	
 
 }

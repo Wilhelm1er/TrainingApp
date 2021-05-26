@@ -12,10 +12,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.sport.training.authentication.domain.dto.UserDTO;
 import com.sport.training.authentication.domain.service.UserService;
 import com.sport.training.domain.dto.ActivityDTO;
@@ -42,6 +45,55 @@ public class GestionCoachController {
 	@Autowired
 	private SportService sportService;
 	
+	@GetMapping(path = "/select-activity/{username}")
+	public String showSelectActivity(Model model, @PathVariable String username) {
+		final String mname = "showSelectActivity";
+		LOGGER.debug("entering "+mname);
+		
+		UserDTO userDTO;
+		Set<DisciplineDTO> disciplineDTOsCoach = null;
+		HashMap<String,List<ActivityDTO>> activityByDisciplinesCoach=new HashMap<String,List<ActivityDTO>>();
+		try {
+			userDTO = userService.findUser(username);
+			disciplineDTOsCoach = registryService.findDisciplinesByCoach(username);
+			if(disciplineDTOsCoach!=null) {
+			for(DisciplineDTO disciplineDTO: disciplineDTOsCoach) {
+				List<ActivityDTO>list=new ArrayList<ActivityDTO>(sportService.findActivities(disciplineDTO.getId()));
+				activityByDisciplinesCoach.put(disciplineDTO.getName(),list);
+			}}
+		} catch (FinderException e) {
+			LOGGER.error("exception in " + mname + " : " + e.getMessage());
+			model.addAttribute("exception", e.getClass().getName());
+			return "error";
+		}
+		model.addAttribute("userDTO", userDTO);
+		model.addAttribute("activityDTO", new ActivityDTO());
+		model.addAttribute("disciplineDTOsCoach", disciplineDTOsCoach);
+		model.addAttribute("activityByDisciplinesCoach", activityByDisciplinesCoach);
+
+		return "select-activity";
+	}
+	
+	@PostMapping("/select-activity")
+	public String showCreateEvent(@ModelAttribute("activityDTO") ActivityDTO activityDTO,@ModelAttribute UserDTO userDTO, Model model) {
+		final String mname = "showCreateEvent";
+		LOGGER.debug("entering " + mname);
+		
+		ActivityDTO sActivityDTO;
+		try {
+			sActivityDTO=sportService.findActivity(activityDTO.getId());
+			model.addAttribute("eventDTO", new EventDTO());
+			model.addAttribute("activityDTO", sActivityDTO);
+			model.addAttribute("userDTO", userDTO);
+			return "create-event";
+		
+		} catch (Exception e) {
+			LOGGER.error("exception in " + mname + " : " + e.getMessage());
+			model.addAttribute("exception", e.getMessage());
+			return "error";
+		}
+	}
+	
 	@GetMapping(path = "/create-event/{username}")
 	public String showGestionCoach(Model model, @PathVariable String username) {
 		final String mname = "showGestionCoach";
@@ -59,6 +111,7 @@ public class GestionCoachController {
 				activityByDisciplinesCoach.put(disciplineDTO.getName(),list);
 			}}
 		} catch (FinderException e) {
+			LOGGER.error("exception in " + mname + " : " + e.getMessage());
 			model.addAttribute("exception", e.getClass().getName());
 			return "error";
 		}
@@ -71,7 +124,7 @@ public class GestionCoachController {
 	}
 	
 	@PostMapping("/create-event")
-	public String createItem(@Valid @ModelAttribute EventDTO eventDTO, Model model) {
+	public String createEvent(@Valid @ModelAttribute EventDTO eventDTO, Model model) {
 		final String mname = "createEvent";
 		LOGGER.debug("entering " + mname);
 		try {

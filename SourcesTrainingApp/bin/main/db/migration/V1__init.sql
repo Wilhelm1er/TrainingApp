@@ -16,6 +16,15 @@ CONSTRAINT `PK_T_DISCIPLINE` PRIMARY KEY (`ID`)
 )  ENGINE=InnoDB
 ;
 
+CREATE TABLE `T_DISCIPLINE_REGISTRY` ( 
+  `ID`                            BIGINT NOT NULL,
+  `REGISTER_DATE`                 TIMESTAMP(2) NOT NULL,
+  `COACH_FK`                   	  VARCHAR(10),
+  `DISCIPLINE_FK`                 VARCHAR(10),
+CONSTRAINT `PK_T_DISCIPLINE_REGISTRY` PRIMARY KEY (`ID`)
+)  ENGINE=InnoDB
+;
+
 CREATE TABLE `T_ACTIVITY` ( 
   `ID`         VARCHAR(10) NOT NULL,
   `NAME`       VARCHAR(40),
@@ -28,28 +37,37 @@ CONSTRAINT `PK_T_ACTIVITY` PRIMARY KEY (`ID`)
 ;
 
 CREATE TABLE `T_EVENT` ( 
-  `ID`         VARCHAR(10) NOT NULL,
+  `ID`         BIGINT NOT NULL,
   `NAME`       VARCHAR(40),
   `DATE` 	DATE,
   `CREDITCOST`  INT(10), 
   `DURATION` INT(10),  
   `DESCRIPTION` VARCHAR(255),
-  `INTENSITY` VARCHAR(40),
+  `INTENSITY` INT(10),
   `EQUIPMENT` VARCHAR(255), 
-  `USER_FK` VARCHAR(10),      
+  `COACH_FK` VARCHAR(10),      
   `ACTIVITY_FK` VARCHAR(10),
 CONSTRAINT `PK_T_EVENT` PRIMARY KEY (`ID`)
 )  ENGINE=InnoDB
 ;
 
+CREATE TABLE `T_EVENT_REGISTRY` ( 
+  `ID`                            BIGINT NOT NULL,
+  `REGISTER_DATE`                 TIMESTAMP(2) NOT NULL,
+  `USER_FK`                   	  VARCHAR(10),
+  `EVENT_FK`          	          BIGINT,
+CONSTRAINT `PK_T_EVENT_REGISTRY` PRIMARY KEY (`ID`)
+)  ENGINE=InnoDB
+;
+
 CREATE TABLE `T_NOTATION` ( 
-  `ID`         VARCHAR(10) NOT NULL,
-  `DATE` DATE,
-  `NOTE` INT(10),  
-  `COMMENTS` VARCHAR(255), 
-  `ATHLETE_FK` VARCHAR(10), 
-  `COACH_FK` VARCHAR(10),      
-  `EVENT_FK` VARCHAR(10),
+  `ID`         	BIGINT NOT NULL,
+  `NOTATION_DATE` 		DATE,
+  `NOTE` 		INT(10),  
+  `COMMENTS` 	VARCHAR(255), 
+  `ATHLETE_FK` 	VARCHAR(10), 
+  `COACH_FK` 	VARCHAR(10),      
+  `EVENT_FK` 	BIGINT,
 CONSTRAINT `PK_T_NOTATION` PRIMARY KEY (`ID`)
 )  ENGINE=InnoDB
 ;
@@ -77,13 +95,29 @@ CONSTRAINT `PK_T_USER` PRIMARY KEY (`ID`)
 )  ENGINE=InnoDB
 ;
 
+CREATE TABLE `T_CREDIT_REGISTRY` ( 
+  `ID`                            BIGINT NOT NULL,
+  `MOUVEMENT_DATE`                TIMESTAMP(2) NOT NULL,
+  `CREDIT`          	          INT(10),
+  `USER_FK`                   	  VARCHAR(10),
+CONSTRAINT `PK_T_CREDIT_REGISTRY` PRIMARY KEY (`ID`)
+)  ENGINE=InnoDB
+;
+
+CREATE TABLE `T_BOOKMARK` ( 
+  `ID`                            BIGINT NOT NULL,
+  `ATHLETE_FK`          	      VARCHAR(10),
+  `COACH_FK`                   	  VARCHAR(10),
+CONSTRAINT `PK_T_BOOKMARK` PRIMARY KEY (`ID`)
+)  ENGINE=InnoDB
+;
+
 CREATE TABLE `T_COUNTER` ( 
   `NAME`       VARCHAR(10) NOT NULL,
   `VALUE`      INT,
 CONSTRAINT `PK_T_COUNTER` PRIMARY KEY (`NAME`)
 )  ENGINE=InnoDB
 ;
-
 
 CREATE TABLE `T_ROLE` ( 
   `ID`         INT NOT NULL,
@@ -101,16 +135,28 @@ ALTER TABLE `T_ACTIVITY`
             REFERENCES `T_DISCIPLINE` (`ID`)
  ;
  
+ ALTER TABLE `T_BOOKMARK`
+    ADD CONSTRAINT `FK_ATHLETE_FK`
+        FOREIGN KEY (`ATHLETE_FK`)
+            REFERENCES `T_USER` (`ID`)
+ ;
+ 
+ ALTER TABLE `T_BOOKMARK`
+    ADD CONSTRAINT `FK_COACH_FK`
+        FOREIGN KEY (`COACH_FK`)
+            REFERENCES `T_USER` (`ID`)
+ ;
+ 
+ ALTER TABLE `T_CREDIT_REGISTRY`
+    ADD CONSTRAINT `FK_USER_FK`
+        FOREIGN KEY (`USER_FK`)
+            REFERENCES `T_USER` (`ID`)
+ ;
+ 
 ALTER TABLE `T_EVENT`
     ADD CONSTRAINT `FK_ACTIVITY_FK`
         FOREIGN KEY (`ACTIVITY_FK`)
             REFERENCES `T_ACTIVITY` (`ID`)
- ;
- 
-ALTER TABLE `T_EVENT`
-  ADD CONSTRAINT `FK_USER_FK`
-        FOREIGN KEY (`USER_FK`)
-            REFERENCES `T_USER` (`ID`)
  ;
 
 ALTER TABLE `T_USER`
@@ -124,16 +170,21 @@ DELETE FROM T_USER;
 DELETE FROM T_EVENT;
 DELETE FROM T_ACTIVITY;
 DELETE FROM T_DISCIPLINE;
+DELETE FROM T_DISCIPLINE_REGISTRY;
+DELETE FROM T_EVENT_REGISTRY;
+DELETE FROM T_CREDIT_REGISTRY;
+DELETE FROM T_BOOKMARK;
+DELETE FROM T_NOTATION;
 DELETE FROM T_COUNTER;
 DELETE FROM T_ROLE;
 
 -- Load
 INSERT INTO T_DISCIPLINE VALUES ('BOXE', 'Boxe', 'Renforcement du corps, canaliser son énergie et se surpasser', 'Brevet professionnel de la jeunesse, de l\'éducation populaire et du sport. Spécialité educateur sportif, mention Boxe' ),
-('CARDIO', 'Cardio', 'Description', 'Documents' ),
-('DANSE', 'Danse', 'Description', 'Documents' ),
-('GYM', 'Gym', ' Description', 'Documents' ),
-('YOGA', 'Yoga', 'Description ', 'Documents' ),
-('MUSCU', 'Musculation', 'Description', 'Documents' );
+('CARDIO', 'Cardio', 'Transpirer, se défouler, perdre du poids ou améliorer vos performances en augmentant votre fréquence cardiaque', 'Documents' ),
+('DANSE', 'Danse', 'Laissez libre cours à votre fibre artistique dans vos expressions corporelles et émotions', 'Diplôme d\'état ou certificat d\'aptitude aux fonctions de professeur de danse' ),
+('GYM', 'Gym', ' Entretenez votre forme physique par des assouplissements, des étirements et des exercices de tonicité musculaire pour assurer l\'équilibre parfait du corps', 'Brevet d\’Etat AGFF - Activités Gymniques de la Forme et de la Force' ),
+('YOGA', 'Yoga', 'Différents cours et exercices qui vous permettront de vous déconnecter du monde extérieur pour vous connecter à votre pratique', 'Professeurs de Yoga Certifiés (PYC)' ),
+('MUSCU', 'Musculation', 'Exercices et cours élaborés par nos coachs professionnels qui mixent le travail musculaire et l\'entraînement cardio', 'Brevet professionnel de la jeunesse, de l\'éducation populaire et du sport. Option cours collectif ou haltérophilie-musculation' );
 
 INSERT INTO T_ACTIVITY VALUES ('COMB', 'Combat training', 'Mouvement de boxe, corde à sauter et travail de la silhouette ', '0', '2', 'BOXE'),
 ('BODY', 'Bodysculpt', 'Tonifier sa silhouette, decharger son stress et perdre du poids', '0', '2', 'BOXE'),
@@ -170,4 +221,33 @@ INSERT INTO T_ROLE VALUES('1','ROLE_ADMIN'),
 ('2','ROLE_COACH'),
 ('3','ROLE_ATHLETE');
 
-INSERT INTO T_USER VALUES('MrRobot','Elliot', 'Alderson', '','','','','','','','100','VALIDE','','','','elliotalderson@protonmail.com','$2a$10$id93M61FLpdk9sXOBzZlsuhNETXn7YsjyBZs3X09Ll7f5S3lqpee2','1');
+INSERT INTO T_USER VALUES('MrRobot','Elliot', 'Alderson', '','','','','','','','100','VALIDE','','','','elliotalderson@protonmail.com','$2a$10$id93M61FLpdk9sXOBzZlsuhNETXn7YsjyBZs3X09Ll7f5S3lqpee2','1'),
+('athlete1','nick', 'alberts', '','','','','','','','30','VALIDE','','','','nick@gmail.com','$2a$10$id93M61FLpdk9sXOBzZlsuhNETXn7YsjyBZs3X09Ll7f5S3lqpee2','3'),
+('athlete2','sam', 'dupont', '','','','','','','','12','VALIDE','','','','samd@hotmail.com','$2a$10$id93M61FLpdk9sXOBzZlsuhNETXn7YsjyBZs3X09Ll7f5S3lqpee2','3'),
+('athlete3','peter', 'parker', '','','','','','','','52','INVALIDE','','','','peter@yopmail.com','$2a$10$id93M61FLpdk9sXOBzZlsuhNETXn7YsjyBZs3X09Ll7f5S3lqpee2','3'),
+('coach1','andrew', 'wiggin', '','','','','','','','34','VALIDE','','','','andy@protonmail.com','$2a$10$id93M61FLpdk9sXOBzZlsuhNETXn7YsjyBZs3X09Ll7f5S3lqpee2','2'),
+('coach2','chuck', 'norris', '','','','','','','','45','VALIDE','','','','chucky@hotmail.com','$2a$10$id93M61FLpdk9sXOBzZlsuhNETXn7YsjyBZs3X09Ll7f5S3lqpee2','2'),
+('coach3','jean claude', 'vandamme', '','','','','','','','18','INVALIDE','','','','jcvd@gmail.com','$2a$10$id93M61FLpdk9sXOBzZlsuhNETXn7YsjyBZs3X09Ll7f5S3lqpee2','2')
+;
+
+INSERT INTO T_BOOKMARK VALUES ('1','athlete1','coach1'),
+('2','athlete1','coach2'),
+('3','athlete2','coach3'),
+('4','athlete3','coach1');
+
+INSERT INTO T_CREDIT_REGISTRY VALUES ('1','2021-05-25 22:40:06','100','athlete1'),
+('2','2021-05-12 16:30:12','100','athlete2'),
+('3','2021-05-22 12:45:00','100','athlete3'),
+('4','2021-05-20 22:40:06','100','coach1');
+
+INSERT INTO T_DISCIPLINE_REGISTRY VALUES ('1','2021-05-25 22:40:06','coach1','BOXE'),
+('2','2021-05-12 16:30:12','coach1','CARDIO'),
+('3','2021-05-22 02:45:00','coach2','GYM'),
+('4','2021-05-20 10:40:06','coach3','MUSCU'),
+('5','2021-05-12 17:30:12','coach1','YOGA'),
+('6','2021-05-22 16:45:00','coach2','BOXE'),
+('7','2021-05-20 22:40:06','coach3','DANSE');
+
+
+
+

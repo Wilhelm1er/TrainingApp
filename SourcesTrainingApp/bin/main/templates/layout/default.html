@@ -9,6 +9,7 @@
 <title th:text="#{title}"></title>
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+	<link th:rel="stylesheet" th:href="@{assets/bootstrap-select-1.13.9/dist/css/bootstrap-select.css}"/>
 
 <title>TrainingApp</title>
 </head>
@@ -65,7 +66,7 @@
 							th:href="@{'/update-account/'+${#authentication.getPrincipal().getUsername()}}"
 							th:text="#{menu.edit.account}"
 							sec:authorize="hasAnyRole('ATHLETE','COACH')"></a><a
-							class="dropdown-item" th:href="@{'/create-event/'+${#authentication.getPrincipal().getUsername()}}"
+							class="dropdown-item" th:href="@{'/select-activity/'+${#authentication.getPrincipal().getUsername()}}"
 							th:text="#{coachs.event}" sec:authorize="hasAnyRole('COACH')"></a>
 							<a
 							class="dropdown-item" th:href="@{'/events/'+${#authentication.getPrincipal().getUsername()}}"

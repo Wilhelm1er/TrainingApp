@@ -111,6 +111,7 @@ public class SportServiceImpl implements SportService {
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
 	public Discipline findByDisciplineName(String disciplineName) throws FinderException {
 		Discipline discipline;
 		if( (discipline=disciplineRepository.findByName(disciplineName))==null)

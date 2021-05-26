@@ -59,7 +59,7 @@ public class Event implements Serializable {
 	private String equipment;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "USER_FK")
+	@JoinColumn(name = "COACH_FK")
 	@NotNull(message = "invalid Coach")
 	private User coach;
 

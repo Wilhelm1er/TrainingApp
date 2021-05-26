@@ -20,8 +20,9 @@
       <h5 class="my-0 mr-md-auto font-weight-normal" sec:authentication="name">Username</h5>
       
       <nav class="my-2 my-md-0 mr-md-3">
-        <a class="p-2 text-dark" href="#">Ajouter</a>
-        <a class="p-2 text-dark" href="#">Transférer</a>
+        <a class="p-2 text-dark" th:href="@{'/credit/'+${#authentication.getPrincipal().getUsername()}}">Mouvement</a>
+        <a class="p-2 text-dark" th:href="@{'/add-credit/'+${#authentication.getPrincipal().getUsername()}}">Ajouter</a>
+        <a class="p-2 text-dark" th:href="@{'/withdraw-credit/'+${#authentication.getPrincipal().getUsername()}}">Transférer</a>
       </nav>
     </div>
 

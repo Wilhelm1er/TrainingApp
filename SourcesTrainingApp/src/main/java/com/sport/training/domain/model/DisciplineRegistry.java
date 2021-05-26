@@ -36,7 +36,7 @@ public class DisciplineRegistry implements Serializable {
 	private Date registerDate;
     
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name ="USER_FK", nullable = false)
+    @JoinColumn(name ="COACH_FK", nullable = false)
     @NotNull(message = "invalid Athlete")
     private User coach;
 	

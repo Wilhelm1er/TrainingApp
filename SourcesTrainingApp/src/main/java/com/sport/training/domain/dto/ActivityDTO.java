@@ -16,6 +16,8 @@ public class ActivityDTO implements Serializable {
     private String id;
     private String name;
     private String description;
+    private int creditcostMin;
+    private int creditcostMax;
     private DisciplineDTO disciplineDTO;
 
     // ======================================
@@ -24,6 +26,10 @@ public class ActivityDTO implements Serializable {
     public ActivityDTO() {
     }
 
+    public ActivityDTO(final String id) {
+    	this.id = id;
+    }
+    
     public ActivityDTO(final String id, final String name, final String description) {
         setId(id);
         setName(name);
@@ -57,6 +63,22 @@ public class ActivityDTO implements Serializable {
     public void setDescription(final String documents) {
     	this.description = documents;
     }
+    
+    public int getCreditcostMin() {
+		return creditcostMin;
+	}
+
+	public void setCreditcostMin(int creditcostMin) {
+		this.creditcostMin = creditcostMin;
+	}
+	
+	public int getCreditcostMax() {
+		return creditcostMax;
+	}
+
+	public void setCreditcostMax(int creditcostMax) {
+		this.creditcostMax = creditcostMax;
+	}
 
     public DisciplineDTO getDisciplineDTO() {
 		return disciplineDTO;
@@ -66,16 +88,12 @@ public class ActivityDTO implements Serializable {
 		this.disciplineDTO = disciplineDTO;
 	}
 
-    @Override
+	@Override
 	public String toString() {
-        final StringBuffer buf = new StringBuffer();
-        buf.append("ActivityDTO{");
-        buf.append("id=").append(getId());
-        buf.append(",name=").append(getName());
-        buf.append(",description=").append(getDescription());
-        buf.append(",disciplineId=").append(getDisciplineDTO().getId());
-        buf.append(",disciplineName=").append(getDisciplineDTO().getName());
-        buf.append('}');
-        return buf.toString();
-    }
+		return "ActivityDTO [id=" + id + ", name=" + name + ", description=" + description + ", creditcostMin="
+				+ creditcostMin + ", creditcostMax=" + creditcostMax + ", disciplineDTO=" + disciplineDTO + "]";
+	}
+
+
+
 }

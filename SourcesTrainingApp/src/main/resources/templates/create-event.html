@@ -12,21 +12,13 @@
 	<div class="container" sec:authorize="hasRole('COACH')">
 		<form class="form-horizontal" name="gestionCoachForm" method="post"
 			th:action="@{/create-event}" th:object="${eventDTO}">
-			<h5 th:text="#{user.discipline.information}"></h5>
 
 			<div id="decision" class="row" style="margin-top: 1%;">
-				<div class="col-md-4"
-					th:each="element : ${activityByDisciplinesCoach}">
-					<div class="checkbox checkbox-custom checkbox-circle">
-					<span th:text="${element.key}"></span>
-					</div>
+				<div class="col-md-8">
+					
 					<br>
-					<h5 th:text="#{user.activity.information}"></h5>
-					<div class="checkbox checkbox-custom checkbox-circle"
-						th:each="activityDTO: ${element.value}">
-						<input type="checkbox" name="activityDTO.id"
-							th:text="${activityDTO.name}" th:value="${activityDTO.id}" />
-					</div>
+					<h5 th:text="'Création d\'un évênement pour l\'activité: '+${activityDTO.name}"></h5>
+					
 					<br>
 					<h5 th:text="#{events.name}"></h5>
 					<input type="text" th:value="${eventDTO.name}"
@@ -35,8 +27,8 @@
 					<h5 th:text="#{events.date}"></h5>
 					<input type="date" th:value="${eventDTO.date}">  <br> <br>
 					<h5 th:text="#{events.cost}"></h5>
-					<input type="number" step="0.1" min="${activityDTO.creditcostmin}"
-						max="${activityDTO.creditcostmax}" th:value="${eventDTO.creditCost}"
+					<input type="number" step="0.1" min="${activityDTO.creditcostMin}"
+						max="${activityDTO.creditcostMax}" th:value="${eventDTO.creditCost}"
 						class="form-control mb-4 col-4" placeholder="Credit">
 
 					<h5 th:text="#{events.duration}"></h5>
