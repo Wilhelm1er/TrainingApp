@@ -1,7 +1,10 @@
 package com.sport.training.domain.service;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -18,6 +21,7 @@ import com.sport.training.domain.dao.DisciplineRepository;
 import com.sport.training.domain.dao.EventRepository;
 import com.sport.training.authentication.domain.dao.UserRepository;
 import com.sport.training.authentication.domain.model.User;
+import com.sport.training.authentication.domain.service.UserService;
 import com.sport.training.domain.dao.ActivityRepository;
 import com.sport.training.domain.dto.DisciplineDTO;
 import com.sport.training.domain.dto.EventDTO;
@@ -29,6 +33,7 @@ import com.sport.training.exception.DuplicateKeyException;
 import com.sport.training.exception.FinderException;
 import com.sport.training.exception.RemoveException;
 import com.sport.training.exception.UpdateException;
+import com.sport.training.authentication.domain.dto.UserDTO;
 import com.sport.training.domain.model.Activity;
 
 /**
@@ -54,9 +59,12 @@ public class SportServiceImpl implements SportService {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private UserService userService;
 
 	@Autowired
-	private ModelMapper commonModelMapper, activityModelMapper, eventModelMapper;
+	private ModelMapper commonModelMapper, activityModelMapper, eventModelMapper,userDTOModelMapper;
 
 	// =====================================
 	// = Constructors =
@@ -328,16 +336,23 @@ public class SportServiceImpl implements SportService {
 	public EventDTO createEvent(@Valid final EventDTO eventDTO) throws CreateException {
 		final String mname = "createEvent";
 		LOGGER.debug("entering " + mname);
-
+		
+		System.out.println("event: "+eventDTO);
 		if (eventDTO == null ||  eventDTO.getActivityDTO()==null)
 			throw new CreateException("Event object is invalid");
 
 		try {
+			System.out.println("activity Id: "+eventDTO.getActivityDTO().getId());
 			findActivity(eventDTO.getActivityDTO().getId());
 		} catch (FinderException e) {
 			throw new CreateException("Activity must exist to create an Event");
 		}
 
+		try {
+			userService.findUser(eventDTO.getCoachDTO().getUsername());
+		} catch (NullPointerException | FinderException e) {
+			throw new CreateException("Coach must exist to create an Event");
+		}
 		// Finds the linked object
 		if (!activityRepository.findById(eventDTO.getActivityDTO().getId()).isPresent())
 			throw new CreateException("Activity must exist to create an event");
@@ -347,7 +362,7 @@ public class SportServiceImpl implements SportService {
 
 		// Creates the object
 		eventRepository.save(event);
-
+		
 		LOGGER.debug("exiting " + mname);
 		return eventDTO;
 	}

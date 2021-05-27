@@ -75,16 +75,20 @@ public class GestionCoachController {
 	}
 	
 	@PostMapping("/select-activity")
-	public String showCreateEvent(@ModelAttribute("activityDTO") ActivityDTO activityDTO,@ModelAttribute UserDTO userDTO, Model model) {
+	public String showCreateEvent(@ModelAttribute("activityDTO") ActivityDTO activityDTO,@RequestParam String userId, Model model) {
 		final String mname = "showCreateEvent";
 		LOGGER.debug("entering " + mname);
 		
 		ActivityDTO sActivityDTO;
+		UserDTO userDTO;
 		try {
+			userDTO = userService.findUser(userId);
 			sActivityDTO=sportService.findActivity(activityDTO.getId());
 			model.addAttribute("eventDTO", new EventDTO());
 			model.addAttribute("activityDTO", sActivityDTO);
 			model.addAttribute("userDTO", userDTO);
+			System.out.println("activity: "+sActivityDTO);
+			System.out.println("user: "+userDTO);
 			return "create-event";
 		
 		} catch (Exception e) {
@@ -94,43 +98,13 @@ public class GestionCoachController {
 		}
 	}
 	
-	@GetMapping(path = "/create-event/{username}")
-	public String showGestionCoach(Model model, @PathVariable String username) {
-		final String mname = "showGestionCoach";
-		LOGGER.debug("entering "+mname);
-		
-		UserDTO userDTO;
-		Set<DisciplineDTO> disciplineDTOsCoach = null;
-		HashMap<String,List<ActivityDTO>> activityByDisciplinesCoach=new HashMap<String,List<ActivityDTO>>();
-		try {
-			userDTO = userService.findUser(username);
-			disciplineDTOsCoach = registryService.findDisciplinesByCoach(username);
-			if(disciplineDTOsCoach!=null) {
-			for(DisciplineDTO disciplineDTO: disciplineDTOsCoach) {
-				List<ActivityDTO>list=new ArrayList<ActivityDTO>(sportService.findActivities(disciplineDTO.getId()));
-				activityByDisciplinesCoach.put(disciplineDTO.getName(),list);
-			}}
-		} catch (FinderException e) {
-			LOGGER.error("exception in " + mname + " : " + e.getMessage());
-			model.addAttribute("exception", e.getClass().getName());
-			return "error";
-		}
-		model.addAttribute("eventDTO", new EventDTO());
-		model.addAttribute("userDTO", userDTO);
-		model.addAttribute("disciplineDTOsCoach", disciplineDTOsCoach);
-		model.addAttribute("activityByDisciplinesCoach", activityByDisciplinesCoach);
-
-		return "create-event";
-	}
-	
 	@PostMapping("/create-event")
 	public String createEvent(@Valid @ModelAttribute EventDTO eventDTO, Model model) {
 		final String mname = "createEvent";
 		LOGGER.debug("entering " + mname);
+		
 		try {
 			sportService.createEvent(eventDTO);
-			List<DisciplineDTO> disciplineDTOs = sportService.findDisciplines();
-			model.addAttribute("disciplineDTOs", disciplineDTOs);
 			model.addAttribute("eventDTO", eventDTO);
 			return "create-event";
 		} catch (CreateException e) {

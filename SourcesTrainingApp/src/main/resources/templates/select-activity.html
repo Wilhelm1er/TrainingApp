@@ -10,33 +10,35 @@
 	<br>
 	<br>
 	<div class="container" sec:authorize="hasRole('COACH')">
-		
-			<h5 th:text="#{user.discipline.information}"></h5>
 
-			<div id="decision" class="row" style="margin-top: 1%;">
-				<div class="col-md-4"
-					th:each="element : ${activityByDisciplinesCoach}">
-					<span th:text="${element.key}"></span>
-					
-					<br>
-					<form class="form-horizontal" name="selectActivityForm" method="post"
-			th:action="@{/select-activity}" th:object="${activityDTO}">
+		<h5 th:text="#{user.discipline.information}"></h5>
+
+		<div id="decision" class="row" style="margin-top: 1%;">
+			<div class="col-md-4"
+				th:each="element : ${activityByDisciplinesCoach}">
+				<span th:text="${element.key}"></span> <br>
+				<form class="form-horizontal" name="selectActivityForm"
+					method="post"
+					th:action="@{'/select-activity?userId='+${userDTO.username}}"
+					th:object="${activityDTO}">
 					<h5 th:text="#{user.activity.information}"></h5>
 					<select class="form-control selectpicker" th:field="*{id}" id="id">
 						<option th:each="activityDTO : ${element.value}"
-						
 							th:text="${activityDTO.name}" th:value="${activityDTO.id}" />
-							</select>
-					
+					</select>
+
 					<div class="form-group">
 						<div class="col-sm-offset-2 col-sm-5">
 							<button type="submit" name="eventCreateButton"
 								class="btn btn-primary" th:text="#{new.account.create}">Créer</button>
 						</div>
-					</div></form></div>
-					<br></div>
+					</div>
+				</form>
+			</div>
+			<br>
+		</div>
 
-		
+
 		<br> <br> <br> <br>
 		<div th:insert="layout/default.html :: footer"></div>
 	</div>

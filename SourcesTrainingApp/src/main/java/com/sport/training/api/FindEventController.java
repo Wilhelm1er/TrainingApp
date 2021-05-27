@@ -74,6 +74,7 @@ public class FindEventController {
 			userDTO = userService.findUser(username);
 			eventDTOs = sportService.findEvents(username);
 		} catch (FinderException e) {
+			LOGGER.error("exception in "+mname+" : "+e.getMessage());
 			model.addAttribute("exception", e.getClass().getName());
 			return "error";
 		}
@@ -93,6 +94,7 @@ public class FindEventController {
 		try {
 			eventDTOs = sportService.findEventsByActivity(activityId);
 		} catch (FinderException e) {
+			LOGGER.error("exception in "+mname+" : "+e.getMessage());
 			model.addAttribute("exception", e.getClass().getName());
 			return "error";
 		}

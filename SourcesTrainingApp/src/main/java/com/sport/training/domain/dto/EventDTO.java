@@ -127,22 +127,10 @@ public class EventDTO implements Serializable {
 
 	@Override
 	public String toString() {
-		final StringBuffer buf = new StringBuffer();
-		buf.append("EventDTO{");
-		buf.append("id=").append(getId());
-		buf.append(",name=").append(getName());
-		buf.append(",duration=").append(getDuration());
-		buf.append(",date=").append(getDate());
-		buf.append(",intensity=").append(getIntensity());
-		buf.append(",equipment=").append(getEquipment());
-		buf.append(",creditCost=").append(getCreditCost());
-		buf.append(",coachUsername=").append(getCoachDTO().getUsername());
-		buf.append(",coachFirstname=").append(getCoachDTO().getFirstname());
-		buf.append(",coachLastname=").append(getCoachDTO().getLastname());
-		buf.append(",activityId=").append(getActivityDTO().getId());
-		buf.append(",activityName=").append(getActivityDTO().getName());
-		buf.append(",activityDescription=").append(getActivityDTO().getDescription());
-		buf.append('}');
-		return buf.toString();
+		return "EventDTO [id=" + id + ", name=" + name + ", date=" + date + ", creditCost=" + creditCost + ", duration="
+				+ duration + ", intensity=" + intensity + ", description=" + description + ", equipment=" + equipment
+				+ ", coachDTO=" + coachDTO + ", activityDTO=" + activityDTO + "]";
 	}
+
+
 }

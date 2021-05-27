@@ -169,22 +169,9 @@ public class Event implements Serializable {
 
 	@Override
 	public String toString() {
-		final StringBuffer buf = new StringBuffer();
-		buf.append("Event{");
-		buf.append("id=").append(getId());
-		buf.append(",name=").append(getName());
-		buf.append(",duration=").append(getDuration());
-		buf.append(",date=").append(getDate());
-		buf.append(",intensity=").append(getIntensity());
-		buf.append(",equipment=").append(getEquipment());
-		buf.append(",creditCost=").append(getCreditCost());
-		buf.append(",coachUsername=").append(getCoach().getUsername());
-		buf.append(",coachFirstname=").append(getCoach().getFirstname());
-		buf.append(",coachLastname=").append(getCoach().getLastname());
-		buf.append(",activityId=").append(getActivity().getId());
-		buf.append(",activityName=").append(getActivity().getName());
-		buf.append(",activityDescription=").append(getActivity().getDescription());
-		buf.append('}');
-		return buf.toString();
+		return "Event [id=" + id + ", name=" + name + ", date=" + date + ", creditCost=" + creditCost + ", duration="
+				+ duration + ", description=" + description + ", intensity=" + intensity + ", equipment=" + equipment
+				+ ", coach=" + coach + ", activity=" + activity + "]";
 	}
+
 }

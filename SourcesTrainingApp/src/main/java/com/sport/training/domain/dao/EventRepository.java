@@ -1,5 +1,7 @@
 package com.sport.training.domain.dao;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -16,4 +18,7 @@ public interface EventRepository extends CrudRepository<Event, Long> {
 	Iterable<Event> findByIdOrNameContaining(@Param("keyword") String keyword);
 
 	Iterable<Event> findAllByCoach(User coach);
+	
+	@Query("select MAX(id) from Event e")
+	public Optional<Long> findLastId();	
 }
