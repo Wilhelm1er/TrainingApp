@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.sport.training.authentication.domain.dto.UserDTO;
 import com.sport.training.authentication.domain.service.UserService;
+import com.sport.training.domain.dao.EventRepository;
 import com.sport.training.domain.dto.ActivityDTO;
 import com.sport.training.domain.dto.DisciplineDTO;
 import com.sport.training.domain.dto.EventDTO;
@@ -41,6 +42,9 @@ public class GestionCoachController {
 	
 	@Autowired
 	private RegistryService registryService;
+	
+	@Autowired
+	private EventRepository eventRepository;
 	
 	@Autowired
 	private SportService sportService;
@@ -81,14 +85,19 @@ public class GestionCoachController {
 		
 		ActivityDTO sActivityDTO;
 		UserDTO userDTO;
+		Long eventId=null;
+		System.out.println("eventId: "+eventRepository.findLastId().get().longValue());
 		try {
+			eventId=eventRepository.findLastId().get().longValue()+1;
 			userDTO = userService.findUser(userId);
 			sActivityDTO=sportService.findActivity(activityDTO.getId());
 			model.addAttribute("eventDTO", new EventDTO());
 			model.addAttribute("activityDTO", sActivityDTO);
 			model.addAttribute("userDTO", userDTO);
+			model.addAttribute("eventId", eventId.toString());
 			System.out.println("activity: "+sActivityDTO);
 			System.out.println("user: "+userDTO);
+			System.out.println("eventId: "+eventId);
 			return "create-event";
 		
 		} catch (Exception e) {
@@ -98,15 +107,28 @@ public class GestionCoachController {
 		}
 	}
 	
+	@GetMapping(path = "/event")
+	public String showEventcreated(Model model, @RequestParam EventDTO eventDTO) throws FinderException {
+		final String mname = "showEventcreated";
+		LOGGER.debug("entering "+mname);
+		
+		
+		model.addAttribute("eventDTO", eventDTO);
+
+		return "event";
+	}
+	
 	@PostMapping("/create-event")
-	public String createEvent(@Valid @ModelAttribute EventDTO eventDTO, Model model) {
+	public String createEvent(@Valid @ModelAttribute EventDTO eventDTO, @ModelAttribute UserDTO userDTO, @ModelAttribute ActivityDTO activityDTO,Model model) {
 		final String mname = "createEvent";
 		LOGGER.debug("entering " + mname);
 		
-		try {
+		try {eventDTO.setActivityDTO(activityDTO);
+		eventDTO.setCoachDTO(userDTO);
+			System.out.println("eventDTO: "+eventDTO);
 			sportService.createEvent(eventDTO);
 			model.addAttribute("eventDTO", eventDTO);
-			return "create-event";
+			return "event";
 		} catch (CreateException e) {
 			LOGGER.error("exception in " + mname + " : " + e.getMessage());
 			model.addAttribute("exception", e.getClass().getName());

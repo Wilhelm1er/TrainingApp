@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
+<head th:replace="layout/default.html :: header">
+</head>
+<body>
+	<nav th:insert="layout/default.html :: navbar"></nav>
+	<br>
+	<br>
+	<br>
+	<br>
+	
+
+
+<br> <br> <br> <br>
+
+<div>
+		<table>
+		<tr style="border-bottom:0.5px solid grey">
+		<td style="padding-right:1em;padding-bottom:0.5em">
+		<a th:href="@{'/find-event?eventId='+${eventDTO.id}}" th:text="${eventDTO.name}" ></a> <span th:text="${eventDTO.date}"></span>
+		<br>
+		<span th:text="${eventDTO.activityDTO.description}"></span>
+    	</td>
+    	<td style="padding-right:1em;padding-bottom:0.5em">
+    	<span th:text="${eventDTO.creditCost}+' crédits'"></span>
+    	<br>
+    	</td>
+    	</tr>
+		</table>
+	</div>
+
+
+
+
+		<br> <br> <br> <br>
+		<div th:insert="layout/default.html :: footer"></div>
+	
+	<div th:insert="layout/default.html :: scripts"></div>
+</body>
+</html>
