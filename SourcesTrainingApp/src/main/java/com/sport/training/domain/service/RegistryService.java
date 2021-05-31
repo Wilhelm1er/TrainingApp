@@ -17,36 +17,56 @@ import com.sport.training.exception.RemoveException;
 import com.sport.training.exception.UpdateException;
 import com.sport.training.authentication.domain.dto.UserDTO;
 
-
-public interface RegistryService  {
+public interface RegistryService {
 	// ======================================
-    // = DisciplineRegistry Business methods=
-    // ======================================
-	public DisciplineRegistryDTO createDisciplineRegistry(@Valid final DisciplineRegistryDTO disciplineRegistryDTO) throws CreateException, FinderException ;
-    public DisciplineRegistryDTO findDisciplineRegistry(final Long disciplineRegistryId) throws FinderException ;
-    public void deleteDisciplineRegistry(final Long disciplineRegistryId) throws FinderException, RemoveException ;
-    public void updateDisciplineRegistry(@Valid final DisciplineRegistryDTO disciplineRegistryDTO) throws UpdateException ;
-    public List<DisciplineRegistryDTO> findDisciplineRegistries() throws FinderException ;
-    public Set<UserDTO> findCoachsByDiscipline(final String disciplineId) throws FinderException ;
-    public Set<DisciplineDTO> findDisciplinesByCoach(final String coachId) throws FinderException;
-    
-    // ======================================
-    // =   EventRegistry Business methods   =
-    // ======================================
-	public EventRegistryDTO createEventRegistry(@Valid final EventRegistryDTO eventRegistryDTO) throws CreateException ;
-    public EventRegistryDTO findEventRegistry(final Long eventRegistryId) throws FinderException ;
-    public void deleteEventRegistry(final Long eventRegistryId) throws FinderException, RemoveException ;
-    public void updateEventRegistry(@Valid final EventRegistryDTO eventRegistryDTO) throws UpdateException ;
-    public List<EventRegistryDTO> findEventRegistries() throws FinderException ;
-    
-    // ======================================
-    // =      Credit Business methods       =
-    // ======================================
-	public CreditRegistryDTO createCreditRegistry(@Valid final CreditRegistryDTO creditRegistryDTO) throws CreateException ;
-    public CreditRegistryDTO findCreditRegistry(final Long creditRegistryId) throws FinderException ;
-    public void deleteCreditRegistry(final Long creditRegistryId) throws FinderException, RemoveException ;
-    public void updateCreditRegistry(@Valid final CreditRegistryDTO creditRegistryDTO) throws UpdateException ;
-    public List<CreditRegistryDTO> findCreditRegistries() throws FinderException ;
-    public Map<Date, Integer> findDateAndCreditByUser(final String userId) throws FinderException ;
+	// = DisciplineRegistry Business methods=
+	// ======================================
+	public DisciplineRegistryDTO createDisciplineRegistry(@Valid final DisciplineRegistryDTO disciplineRegistryDTO)
+			throws CreateException, FinderException;
+
+	public DisciplineRegistryDTO findDisciplineRegistry(final Long disciplineRegistryId) throws FinderException;
+
+	public void deleteDisciplineRegistry(final Long disciplineRegistryId) throws FinderException, RemoveException;
+
+	public void updateDisciplineRegistry(@Valid final DisciplineRegistryDTO disciplineRegistryDTO)
+			throws UpdateException;
+
+	public List<DisciplineRegistryDTO> findDisciplineRegistries() throws FinderException;
+
+	public Set<UserDTO> findCoachsByDiscipline(final String disciplineId) throws FinderException;
+
+	public Set<DisciplineDTO> findDisciplinesByCoach(final String coachId) throws FinderException;
+
+	// ======================================
+	// = EventRegistry Business methods =
+	// ======================================
+	public EventRegistryDTO createEventRegistry(@Valid final EventRegistryDTO eventRegistryDTO) throws CreateException;
+
+	public EventRegistryDTO findEventRegistry(final Long eventRegistryId) throws FinderException;
+
+	public void deleteEventRegistry(final Long eventRegistryId) throws FinderException, RemoveException;
+
+	public void updateEventRegistry(@Valid final EventRegistryDTO eventRegistryDTO) throws UpdateException;
+
+	public List<EventRegistryDTO> findEventRegistries() throws FinderException;
 	
+	public List<EventRegistryDTO> findEventRegistriesByAthlete(final String athleteId) throws FinderException;
+	
+
+	// ======================================
+	// = Credit Business methods =
+	// ======================================
+	public CreditRegistryDTO createCreditRegistry(@Valid final CreditRegistryDTO creditRegistryDTO)
+			throws CreateException;
+
+	public CreditRegistryDTO findCreditRegistry(final Long creditRegistryId) throws FinderException;
+
+	public void deleteCreditRegistry(final Long creditRegistryId) throws FinderException, RemoveException;
+
+	public void updateCreditRegistry(@Valid final CreditRegistryDTO creditRegistryDTO) throws UpdateException;
+
+	public List<CreditRegistryDTO> findCreditRegistries() throws FinderException;
+
+	public Map<Date, Integer> findDateAndCreditByUser(final String userId) throws FinderException;
+
 }

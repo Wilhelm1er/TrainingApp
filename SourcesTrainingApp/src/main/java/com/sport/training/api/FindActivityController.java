@@ -20,40 +20,37 @@ import com.sport.training.domain.dto.ActivityDTO;
  */
 @Controller
 public class FindActivityController {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(FindActivityController.class);
-    
+
 	@Autowired
 	private WebClient webClient;
-	
+
 	@GetMapping("/find-activities")
-    protected String findActivities(Model model,@RequestParam String disciplineId) {
-        final String mname = "findActivities";
-        LOGGER.debug("entering "+mname);
-        try {
-        List<ActivityDTO> activityDTOs = retrieveActivities(disciplineId);
-        model.addAttribute("disciplineId", disciplineId);
-        model.addAttribute("activityDTOs", activityDTOs);
-        } catch (WebClientResponseException e) {
-			if(e.getMessage().contains("404 Not Found")) {
-				LOGGER.error("exception in "+mname+" : "+e.getMessage());
-        		model.addAttribute("message", "No activity for discipline "+disciplineId);
-        		return "index";
+	protected String findActivities(Model model, @RequestParam String disciplineId) {
+		final String mname = "findActivities";
+		LOGGER.debug("entering " + mname);
+		try {
+			List<ActivityDTO> activityDTOs = retrieveActivities(disciplineId);
+			model.addAttribute("disciplineId", disciplineId);
+			model.addAttribute("activityDTOs", activityDTOs);
+		} catch (WebClientResponseException e) {
+			if (e.getMessage().contains("404 Not Found")) {
+				LOGGER.error("exception in " + mname + " : " + e.getMessage());
+				model.addAttribute("message", "No activity for discipline " + disciplineId);
+				return "index";
 			}
-			LOGGER.error("exception in "+mname+" : "+e.getMessage());
+			LOGGER.error("exception in " + mname + " : " + e.getMessage());
 			model.addAttribute("exception", e.getClass().getName());
 			return "error";
-		}	
-        return "activities";
-    }
- 
- private List<ActivityDTO> retrieveActivities(String disciplineId) {
-		return this.webClient
-					.get()
-					.uri("/activities/"+ disciplineId)
-					.retrieve()
-					.bodyToMono(new ParameterizedTypeReference<List<ActivityDTO>>() {})
-					.block();
+		}
+		return "activities";
+	}
+
+	private List<ActivityDTO> retrieveActivities(String disciplineId) {
+		return this.webClient.get().uri("/activities/" + disciplineId).retrieve()
+				.bodyToMono(new ParameterizedTypeReference<List<ActivityDTO>>() {
+				}).block();
 	}
 
 }

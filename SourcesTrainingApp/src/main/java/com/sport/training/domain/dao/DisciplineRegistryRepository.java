@@ -1,5 +1,8 @@
 package com.sport.training.domain.dao;
 
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import com.sport.training.authentication.domain.model.User;
@@ -13,5 +16,8 @@ public interface DisciplineRegistryRepository extends CrudRepository<DisciplineR
 	Iterable<DisciplineRegistry> findAllByCoach(User coach);
 	
 	Iterable<DisciplineRegistry> findAllByCoachAndDiscipline(User user, Discipline discipline);
+	
+	@Query("select MAX(id) from Event e")
+	public Optional<Long> findLastId();	
 
 }

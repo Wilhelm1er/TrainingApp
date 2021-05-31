@@ -20,26 +20,26 @@ import com.sport.training.domain.service.SportService;
 public class SearchEventController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SearchEventController.class);
-    
-    @Autowired
+
+	@Autowired
 	private SportService cs;
-   
-    @PostMapping("/search-events")
-    protected String searchEvents(Model model, @RequestParam String keyword) {
-        final String mname = "searchEvents";
-        LOGGER.debug("entering "+mname);
-        final List<EventDTO> eventDTOs;
-        try {
-        	eventDTOs = cs.searchEvents(keyword);
-            model.addAttribute("keyword", keyword);
-            model.addAttribute("eventDTOs", eventDTOs);
-            LOGGER.debug("exiting "+mname);
-            return "events";
-        } catch (Exception e) {
-        	 LOGGER.error("exception "+mname+" - "+e.getMessage());
-            model.addAttribute("exception", e.getMessage());
+
+	@PostMapping("/search-events")
+	protected String searchEvents(Model model, @RequestParam String keyword) {
+		final String mname = "searchEvents";
+		LOGGER.debug("entering " + mname);
+		final List<EventDTO> eventDTOs;
+		try {
+			eventDTOs = cs.searchEvents(keyword);
+			model.addAttribute("keyword", keyword);
+			model.addAttribute("eventDTOs", eventDTOs);
+			LOGGER.debug("exiting " + mname);
+			return "events";
+		} catch (Exception e) {
+			LOGGER.error("exception " + mname + " - " + e.getMessage());
+			model.addAttribute("exception", e.getMessage());
 			return "error";
-        }
-    }
-    
+		}
+	}
+
 }

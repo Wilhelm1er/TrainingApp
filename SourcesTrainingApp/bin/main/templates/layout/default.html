@@ -64,7 +64,16 @@
 						<a class="dropdown-item"
 							th:href="@{'/update-account/'+${#authentication.getPrincipal().getUsername()}}"
 							th:text="#{menu.edit.account}"
-							sec:authorize="hasAnyRole('ATHLETE','COACH')"></a><a
+							sec:authorize="hasAnyRole('ATHLETE','COACH')"></a>
+							<a class="dropdown-item"
+							th:href="@{'/bookmark/'+${#authentication.getPrincipal().getUsername()}}"
+							th:text="#{menu.bookmark}"
+							sec:authorize="hasAnyRole('ATHLETE')"></a>
+							<a class="dropdown-item"
+							th:href="@{'/sessions/'+${#authentication.getPrincipal().getUsername()}}"
+							th:text="#{menu.sessions}"
+							sec:authorize="hasAnyRole('ATHLETE')"></a>
+							<a
 							class="dropdown-item" th:href="@{'/select-activity/'+${#authentication.getPrincipal().getUsername()}}"
 							th:text="#{coachs.event}" sec:authorize="hasAnyRole('COACH')"></a>
 							<a
@@ -100,6 +109,9 @@
 			<input type="search" class="form-control form-control-dark"
 				placeholder="Rechercher...">
 		</form>
+		<div class="nav-item active" sec:authorize="hasRole('ATHLETE')"><a
+					class="nav-link" th:href="@{/view-cart}" th:text="#{cart}"></a></div>
+		
 
 
 		<form class="nav-item active" sec:authorize="isAnonymous()">

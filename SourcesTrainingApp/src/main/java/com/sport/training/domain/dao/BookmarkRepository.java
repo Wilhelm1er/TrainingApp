@@ -7,5 +7,5 @@ import com.sport.training.domain.model.Bookmark;
 
 public interface BookmarkRepository extends CrudRepository<Bookmark, Long> {
 
-	Iterable<Bookmark> findBookmarkByAthlete(User athlete);
+	Iterable<Bookmark> findAllByAthlete(User athlete);
 }

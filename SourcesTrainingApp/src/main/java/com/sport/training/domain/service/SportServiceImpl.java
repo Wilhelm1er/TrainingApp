@@ -1,10 +1,7 @@
 package com.sport.training.domain.service;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -33,7 +30,6 @@ import com.sport.training.exception.DuplicateKeyException;
 import com.sport.training.exception.FinderException;
 import com.sport.training.exception.RemoveException;
 import com.sport.training.exception.UpdateException;
-import com.sport.training.authentication.domain.dto.UserDTO;
 import com.sport.training.domain.model.Activity;
 
 /**
@@ -56,15 +52,15 @@ public class SportServiceImpl implements SportService {
 
 	@Autowired
 	private EventRepository eventRepository;
-	
+
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Autowired
 	private UserService userService;
 
 	@Autowired
-	private ModelMapper commonModelMapper, activityModelMapper, eventModelMapper,userDTOModelMapper;
+	private ModelMapper commonModelMapper, activityModelMapper, eventModelMapper, userDTOModelMapper;
 
 	// =====================================
 	// = Constructors =
@@ -73,7 +69,7 @@ public class SportServiceImpl implements SportService {
 	}
 
 	// =====================================
-	// =    Discipline Business methods    =
+	// = Discipline Business methods =
 	// =====================================
 	@Override
 	@Transactional
@@ -117,12 +113,12 @@ public class SportServiceImpl implements SportService {
 		LOGGER.debug("exiting " + mname);
 		return commonModelMapper.map(discipline, DisciplineDTO.class);
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	public Discipline findByDisciplineName(String disciplineName) throws FinderException {
 		Discipline discipline;
-		if( (discipline=disciplineRepository.findByName(disciplineName))==null)
+		if ((discipline = disciplineRepository.findByName(disciplineName)) == null)
 			throw new FinderException("discipline unknown");
 		return discipline;
 	}
@@ -185,7 +181,7 @@ public class SportServiceImpl implements SportService {
 	}
 
 	// =====================================
-	// =     Activity Business methods     =
+	// = Activity Business methods =
 	// =====================================
 	@Override
 	@Transactional
@@ -193,7 +189,8 @@ public class SportServiceImpl implements SportService {
 		final String mname = "createActivity";
 		LOGGER.debug("entering " + mname);
 
-		if (activityDTO == null || activityDTO.getId()==null || activityDTO.getId().equals("") || activityDTO.getDisciplineDTO()==null)
+		if (activityDTO == null || activityDTO.getId() == null || activityDTO.getId().equals("")
+				|| activityDTO.getDisciplineDTO() == null)
 			throw new CreateException("Activity object is invalid");
 
 		try {
@@ -288,10 +285,8 @@ public class SportServiceImpl implements SportService {
 		if ((size = ((Collection<Activity>) activities).size()) == 0) {
 			throw new FinderException("No Activity in the database");
 		}
-		List<ActivityDTO> activityDTOs = ((List<Activity>) activities)
-										.stream()
-										.map(activity -> activityModelMapper.map(activity, ActivityDTO.class))
-										.collect(Collectors.toList());
+		List<ActivityDTO> activityDTOs = ((List<Activity>) activities).stream()
+				.map(activity -> activityModelMapper.map(activity, ActivityDTO.class)).collect(Collectors.toList());
 
 		LOGGER.debug("exiting " + mname + " size of collection : " + size);
 		return activityDTOs;
@@ -313,36 +308,34 @@ public class SportServiceImpl implements SportService {
 
 		// Finds all the objects
 		final Iterable<Activity> activitiesByDiscipline = activityRepository.findAllByDiscipline(discipline);
-		
+
 		int size;
 		if ((size = ((Collection<Activity>) activitiesByDiscipline).size()) == 0) {
 			throw new FinderException("No Activity in the database");
 		}
 
-		List<ActivityDTO> activityDTOs = ((List<Activity>) activitiesByDiscipline)
-										.stream()
-										.map(activity -> activityModelMapper.map(activity, ActivityDTO.class))
-										.collect(Collectors.toList());
+		List<ActivityDTO> activityDTOs = ((List<Activity>) activitiesByDiscipline).stream()
+				.map(activity -> activityModelMapper.map(activity, ActivityDTO.class)).collect(Collectors.toList());
 
 		LOGGER.debug("exiting " + mname + " size of collection : " + size);
 		return activityDTOs;
 	}
 
 	// ======================================
-	// =       Event Business methods       =
+	// = Event Business methods =
 	// ======================================
 	@Override
 	@Transactional
 	public EventDTO createEvent(@Valid final EventDTO eventDTO) throws CreateException {
 		final String mname = "createEvent";
 		LOGGER.debug("entering " + mname);
-		
-		System.out.println("event: "+eventDTO);
-		if (eventDTO == null ||  eventDTO.getActivityDTO()==null)
+
+		System.out.println("event: " + eventDTO);
+		if (eventDTO == null || eventDTO.getActivityDTO() == null)
 			throw new CreateException("Event object is invalid");
 
 		try {
-			System.out.println("activity Id: "+eventDTO.getActivityDTO().getId());
+			System.out.println("activity Id: " + eventDTO.getActivityDTO().getId());
 			findActivity(eventDTO.getActivityDTO().getId());
 		} catch (FinderException e) {
 			throw new CreateException("Activity must exist to create an Event");
@@ -362,7 +355,7 @@ public class SportServiceImpl implements SportService {
 
 		// Creates the object
 		eventRepository.save(event);
-		
+
 		LOGGER.debug("exiting " + mname);
 		return eventDTO;
 	}
@@ -436,10 +429,8 @@ public class SportServiceImpl implements SportService {
 		if ((size = ((Collection<Event>) events).size()) == 0) {
 			throw new FinderException("No Event in the database");
 		}
-		List<EventDTO> eventDTOs = ((List<Event>) events)
-								.stream()
-								.map(event -> eventModelMapper.map(event, EventDTO.class))
-								.collect(Collectors.toList());
+		List<EventDTO> eventDTOs = ((List<Event>) events).stream()
+				.map(event -> eventModelMapper.map(event, EventDTO.class)).collect(Collectors.toList());
 
 		LOGGER.debug("exiting " + mname + " size of collection : " + size);
 		return eventDTOs;
@@ -461,21 +452,18 @@ public class SportServiceImpl implements SportService {
 
 		// Finds all the objects
 		final Iterable<Event> eventsByCoach = eventRepository.findAllByCoach(coach);
-		
+
 		int size;
 		if ((size = ((Collection<Event>) eventsByCoach).size()) == 0) {
 			throw new FinderException("No Event in the database");
 		}
-		
-		List<EventDTO> eventDTOs = ((List<Event>) eventsByCoach)
-									.stream()
-									.map(event -> eventModelMapper.map(event, EventDTO.class))
-									.collect(Collectors.toList());
+
+		List<EventDTO> eventDTOs = ((List<Event>) eventsByCoach).stream()
+				.map(event -> eventModelMapper.map(event, EventDTO.class)).collect(Collectors.toList());
 
 		LOGGER.debug("exiting " + mname + " size of collection : " + size);
 		return eventDTOs;
 	}
-	
 
 	@Override
 	@Transactional(readOnly = true)
@@ -493,53 +481,49 @@ public class SportServiceImpl implements SportService {
 
 		// Finds all the objects
 		final Iterable<Event> eventsByActivity = eventRepository.findAllByActivity(activity);
-		
+
 		int size;
 		if ((size = ((Collection<Event>) eventsByActivity).size()) == 0) {
 			throw new FinderException("No Event in the database");
 		}
-		
-		List<EventDTO> eventDTOs = ((List<Event>) eventsByActivity)
-									.stream()
-									.map(event -> eventModelMapper.map(event, EventDTO.class))
-									.collect(Collectors.toList());
+
+		List<EventDTO> eventDTOs = ((List<Event>) eventsByActivity).stream()
+				.map(event -> eventModelMapper.map(event, EventDTO.class)).collect(Collectors.toList());
 
 		LOGGER.debug("exiting " + mname + " size of collection : " + size);
 		return eventDTOs;
 	}
-	
-	@Override
-    @Transactional(readOnly=true)
-    public List<EventDTO> searchEvents(String keyword) throws FinderException {
-    	final String mname = "searchItems";
-    	LOGGER.debug("entering "+mname);
-        
-     // retrieves the objects from the database
-        Iterable<Event> eventsSearchedFor = eventRepository.findByIdOrNameContaining(keyword);    
 
-        int size;
+	@Override
+	@Transactional(readOnly = true)
+	public List<EventDTO> searchEvents(String keyword) throws FinderException {
+		final String mname = "searchItems";
+		LOGGER.debug("entering " + mname);
+
+		// retrieves the objects from the database
+		Iterable<Event> eventsSearchedFor = eventRepository.findByIdOrNameContaining(keyword);
+
+		int size;
 		if ((size = ((Collection<Event>) eventsSearchedFor).size()) == 0) {
 			throw new FinderException("No Item for this search");
 		}
 		// model to DTO
-		List<EventDTO> eventDTOsSearchedFor = ((List<Event>) eventsSearchedFor)
-									.stream()
-									.map(event -> eventModelMapper.map(event, EventDTO.class))
-									.collect(Collectors.toList());
+		List<EventDTO> eventDTOsSearchedFor = ((List<Event>) eventsSearchedFor).stream()
+				.map(event -> eventModelMapper.map(event, EventDTO.class)).collect(Collectors.toList());
 
 		LOGGER.debug("exiting " + mname + " size of the search : " + size);
-        return eventDTOsSearchedFor;
-    }
-    
+		return eventDTOsSearchedFor;
+	}
+
 	// ======================================
-    // =          Private Methods           =
-    // ======================================
-	
+	// = Private Methods =
+	// ======================================
 
 	private void checkStringId(final String id) throws FinderException {
 		if (id == null || id.equals(""))
 			throw new FinderException(id + " should not be null or empty");
 	}
+
 	private void checkId(final long l) throws FinderException {
 		if (l == 0)
 			throw new FinderException("Id should not be 0");

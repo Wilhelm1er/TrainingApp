@@ -39,7 +39,7 @@ public class ManageActivityController {
 
 	@Autowired
 	private WebClient webClient;
-	
+
 	@Autowired
 	private SportService sportService;
 
@@ -48,21 +48,21 @@ public class ManageActivityController {
 		final String mname = "manageActivities";
 		LOGGER.debug("entering " + mname);
 		try {
-		List<ActivityDTO> activityDTOs = retrieveActivities(disciplineId);
-		model.addAttribute("activityDTOs", activityDTOs);
+			List<ActivityDTO> activityDTOs = retrieveActivities(disciplineId);
+			model.addAttribute("activityDTOs", activityDTOs);
 		} catch (WebClientResponseException e) {
-			if(e.getMessage().contains("404 Not Found")) {
-				LOGGER.error("exception in "+mname+" : "+e.getMessage());
-        		model.addAttribute("message", "No product for category "+disciplineId);
-        		return "index";
+			if (e.getMessage().contains("404 Not Found")) {
+				LOGGER.error("exception in " + mname + " : " + e.getMessage());
+				model.addAttribute("message", "No product for category " + disciplineId);
+				return "index";
 			}
-			LOGGER.error("exception in "+mname+" : "+e.getMessage());
+			LOGGER.error("exception in " + mname + " : " + e.getMessage());
 			model.addAttribute("exception", e.getClass().getName());
 			return "error";
-		}		
+		}
 		return "manage-sport";
 	}
-	
+
 	@GetMapping("/create-activity/{disciplineId}")
 	public String showCreateActivity(@PathVariable String disciplineId, Model model) {
 		final String mname = "showCreateActivity";
@@ -109,13 +109,13 @@ public class ManageActivityController {
 		final String mname = "showActivity";
 		LOGGER.debug("entering " + mname);
 		try {
-		ActivityDTO activityDTO = retrieveActivity(activityId);
-		model.addAttribute("activityDTO", activityDTO);
+			ActivityDTO activityDTO = retrieveActivity(activityId);
+			model.addAttribute("activityDTO", activityDTO);
 		} catch (WebClientResponseException e) {
-			LOGGER.error("exception in "+mname+" : "+e.getMessage());
+			LOGGER.error("exception in " + mname + " : " + e.getMessage());
 			model.addAttribute("exception", e.getClass().getName());
 			return "error";
-		}		
+		}
 		return "update-activity";
 	}
 
@@ -125,13 +125,13 @@ public class ManageActivityController {
 		final String mname = "updateActivity";
 		LOGGER.debug("entering " + mname);
 		try {
-		String JsonProd = restUpdateActivity(activityDTO, request, cookie);
-		LOGGER.debug("updatedActivity : " + JsonProd);
-		List<DisciplineDTO> disciplineDTOs = retrieveDisciplines();
-		model.addAttribute("disciplineDTOs", disciplineDTOs);
-		model.addAttribute("activityUpdated", activityDTO.getId());
+			String JsonProd = restUpdateActivity(activityDTO, request, cookie);
+			LOGGER.debug("updatedActivity : " + JsonProd);
+			List<DisciplineDTO> disciplineDTOs = retrieveDisciplines();
+			model.addAttribute("disciplineDTOs", disciplineDTOs);
+			model.addAttribute("activityUpdated", activityDTO.getId());
 		} catch (WebClientResponseException e) {
-			LOGGER.error("exception in "+mname+" : "+e.getMessage());
+			LOGGER.error("exception in " + mname + " : " + e.getMessage());
 			model.addAttribute("exception", e.getClass().getName());
 			return "error";
 		}
@@ -139,17 +139,18 @@ public class ManageActivityController {
 	}
 
 	@GetMapping("/delete-activity/{activityId}")
-	public String deleteActivity(@PathVariable String activityId, Model model, HttpServletRequest request, @CookieValue("JSESSIONID") String cookie) {
+	public String deleteActivity(@PathVariable String activityId, Model model, HttpServletRequest request,
+			@CookieValue("JSESSIONID") String cookie) {
 		final String mname = "deleteActivity";
 		LOGGER.debug("entering " + mname);
 		try {
-		restDeleteActivity(activityId, request, cookie);
-		LOGGER.debug("deletedActivity id : " + activityId);
-		List<DisciplineDTO> disciplineDTOs = retrieveDisciplines();
-		model.addAttribute("disciplineDTOs", disciplineDTOs);
-		model.addAttribute("activityDeleted", activityId);
+			restDeleteActivity(activityId, request, cookie);
+			LOGGER.debug("deletedActivity id : " + activityId);
+			List<DisciplineDTO> disciplineDTOs = retrieveDisciplines();
+			model.addAttribute("disciplineDTOs", disciplineDTOs);
+			model.addAttribute("activityDeleted", activityId);
 		} catch (WebClientResponseException e) {
-			LOGGER.error("exception in "+mname+" : "+e.getMessage());
+			LOGGER.error("exception in " + mname + " : " + e.getMessage());
 			model.addAttribute("exception", e.getClass().getName());
 			return "error";
 		}
@@ -157,51 +158,45 @@ public class ManageActivityController {
 	}
 
 	private List<DisciplineDTO> retrieveDisciplines() {
-		return this.webClient
-				.get()
-				.uri("/disciplines")
-				.retrieve()
-				.bodyToMono(new ParameterizedTypeReference<List<DisciplineDTO>>() {})
-				.block();
+		return this.webClient.get().uri("/disciplines").retrieve()
+				.bodyToMono(new ParameterizedTypeReference<List<DisciplineDTO>>() {
+				}).block();
 	}
 
 	private List<ActivityDTO> retrieveActivities(String disciplineId) {
-		return this.webClient
-				.get()
-				.uri("/activities/" + disciplineId)
-				.retrieve()
-				.bodyToMono(new ParameterizedTypeReference<List<ActivityDTO>>() {})
-				.block();
+		return this.webClient.get().uri("/activities/" + disciplineId).retrieve()
+				.bodyToMono(new ParameterizedTypeReference<List<ActivityDTO>>() {
+				}).block();
 	}
 
 	private ActivityDTO retrieveActivity(String activityId) {
-		return this.webClient
-				.get()
-				.uri("/activity/" + activityId)
-				.retrieve()
-				.bodyToMono(ActivityDTO.class)
-				.block();
+		return this.webClient.get().uri("/activity/" + activityId).retrieve().bodyToMono(ActivityDTO.class).block();
 	}
 
 	private String restUpdateActivity(ActivityDTO activityDTO, HttpServletRequest request, String cookie) {
 		final String mname = "restUpdateActivity";
 		LOGGER.debug("entering " + mname);
 
-		final String DEFAULT_CSRF_TOKEN_ATTR_NAME = HttpSessionCsrfTokenRepository.class.getName().concat(".CSRF_TOKEN");
+		final String DEFAULT_CSRF_TOKEN_ATTR_NAME = HttpSessionCsrfTokenRepository.class.getName()
+				.concat(".CSRF_TOKEN");
 		CsrfToken sessionToken = (CsrfToken) request.getSession().getAttribute(DEFAULT_CSRF_TOKEN_ATTR_NAME);
-		return this.webClient
-				.put()
-				.uri("/activity/" + activityDTO.getId())
+		return this.webClient.put().uri("/activity/" + activityDTO.getId())
 				.header("X-CSRF-TOKEN", sessionToken.getToken()) // oubli => 403 FORBIDDEN
 				.cookie("JSESSIONID", cookie) // oubli => 302 FOUND
 				.body(Mono.just(activityDTO), ActivityDTO.class).retrieve()
 				// Facilitateur de deboggage
-				.onStatus(HttpStatus::isError, clientResponse -> Mono.error(new Exception("error : " + clientResponse.statusCode())))
-				.onStatus(HttpStatus::is3xxRedirection,clientResponse -> Mono.error(new Exception("is3xxRedirection : " + clientResponse.statusCode())))
-				.onStatus(HttpStatus::is4xxClientError,clientResponse -> Mono.error(new Exception("is4xxClientError : " + clientResponse.statusCode())))
-				.onStatus(HttpStatus::is5xxServerError,clientResponse -> Mono.error(new Exception("is5xxServerError : " + clientResponse.statusCode())))
-				.bodyToMono(String.class)
-				.block();
+				.onStatus(HttpStatus::isError,
+						clientResponse -> Mono.error(new Exception("error : " + clientResponse.statusCode())))
+				.onStatus(HttpStatus::is3xxRedirection,
+						clientResponse -> Mono
+								.error(new Exception("is3xxRedirection : " + clientResponse.statusCode())))
+				.onStatus(HttpStatus::is4xxClientError,
+						clientResponse -> Mono
+								.error(new Exception("is4xxClientError : " + clientResponse.statusCode())))
+				.onStatus(HttpStatus::is5xxServerError,
+						clientResponse -> Mono
+								.error(new Exception("is5xxServerError : " + clientResponse.statusCode())))
+				.bodyToMono(String.class).block();
 	}
 
 	private void restDeleteActivity(String activityId, HttpServletRequest request, String cookie) {
@@ -209,18 +204,20 @@ public class ManageActivityController {
 		LOGGER.debug("entering " + mname);
 //		LOGGER.debug("productId to delete : " + productId);
 		CsrfToken sessionToken = (CsrfToken) request.getAttribute("_csrf");
-		this.webClient
-				.delete()
-				.uri("/activity/" + activityId)
-				.header("X-CSRF-TOKEN", sessionToken.getToken())
-				.cookie("JSESSIONID", cookie)
-				.retrieve()
+		this.webClient.delete().uri("/activity/" + activityId).header("X-CSRF-TOKEN", sessionToken.getToken())
+				.cookie("JSESSIONID", cookie).retrieve()
 				// Facilitateur de deboggage
-				.onStatus(HttpStatus::isError,clientResponse -> Mono.error(new Exception("error : " + clientResponse.statusCode())))
-				.onStatus(HttpStatus::is3xxRedirection,clientResponse -> Mono.error(new Exception("is3xxRedirection : " + clientResponse.statusCode())))
-				.onStatus(HttpStatus::is4xxClientError,clientResponse -> Mono.error(new Exception("is4xxClientError : " + clientResponse.statusCode())))
-				.onStatus(HttpStatus::is5xxServerError,clientResponse -> Mono.error(new Exception("is5xxServerError : " + clientResponse.statusCode())))
-				.bodyToMono(Void.class)
-				.block();
+				.onStatus(HttpStatus::isError,
+						clientResponse -> Mono.error(new Exception("error : " + clientResponse.statusCode())))
+				.onStatus(HttpStatus::is3xxRedirection,
+						clientResponse -> Mono
+								.error(new Exception("is3xxRedirection : " + clientResponse.statusCode())))
+				.onStatus(HttpStatus::is4xxClientError,
+						clientResponse -> Mono
+								.error(new Exception("is4xxClientError : " + clientResponse.statusCode())))
+				.onStatus(HttpStatus::is5xxServerError,
+						clientResponse -> Mono
+								.error(new Exception("is5xxServerError : " + clientResponse.statusCode())))
+				.bodyToMono(Void.class).block();
 	}
 }

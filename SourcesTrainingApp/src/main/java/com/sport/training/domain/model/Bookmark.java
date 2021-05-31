@@ -81,12 +81,8 @@ public class Bookmark implements Serializable {
 
 	@Override
 	public String toString() {
-		final StringBuffer buf = new StringBuffer();
-		buf.append("Bookmark{");
-		buf.append("id=").append(getId());
-		buf.append(",coachUsername=").append(getCoach().getUsername());
-		buf.append(",athleteUsername=").append(getAthlete().getUsername());
-		buf.append('}');
-		return buf.toString();
+		return "Bookmark [id=" + id + ", coach=" + coach + ", athlete=" + athlete + "]";
 	}
+
+
 }

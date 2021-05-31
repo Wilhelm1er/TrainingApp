@@ -1,7 +1,7 @@
 package com.sport.training.domain.model;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
@@ -38,8 +40,11 @@ public class Event implements Serializable {
 	@NotBlank(message = "invalid Name")
 	private String name;
  
-	@Column(name = "DATE")
+	@Temporal(TemporalType.DATE)
 	private Date date;
+	
+	@Temporal(TemporalType.TIME)
+	private Date time;
 
 	@Column(name = "CREDITCOST")
 	@Positive(message = "invalid Creditcost")
@@ -74,10 +79,11 @@ public class Event implements Serializable {
 	public Event() {
 	}
 	
-	public Event(final String name, final Date date, final int creditCost, final User coach,
+	public Event(final String name, final Date date, final Date time, final int creditCost, final User coach,
 			final Activity activity) {
 		setName(name);
 		setDate(date);
+		setTime(time);
 		setCreditCost(creditCost);
 		setCoach(coach);
 		setActivity(activity);
@@ -110,6 +116,15 @@ public class Event implements Serializable {
 	public void setDate(Date date) {
 		this.date = date;
 	}
+
+	public Date getTime() {
+		return time;
+	}
+
+	public void setTime(Date time) {
+		this.time = time;
+	}
+
 
 	public int getCreditCost() {
 		return creditCost;
@@ -169,9 +184,10 @@ public class Event implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Event [id=" + id + ", name=" + name + ", date=" + date + ", creditCost=" + creditCost + ", duration="
-				+ duration + ", description=" + description + ", intensity=" + intensity + ", equipment=" + equipment
-				+ ", coach=" + coach + ", activity=" + activity + "]";
+		return "Event [id=" + id + ", name=" + name + ", date=" + date + ", time=" + time + ", creditCost=" + creditCost
+				+ ", duration=" + duration + ", description=" + description + ", intensity=" + intensity
+				+ ", equipment=" + equipment + ", coach=" + coach + ", activity=" + activity + "]";
 	}
+
 
 }

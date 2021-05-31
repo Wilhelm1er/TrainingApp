@@ -59,7 +59,7 @@ public class BookmarkDTO implements Serializable {
 
 	@Override
 	public String toString() {
-		return "NotationDTO [id=" + id + ", coachDTO=" + coachDTO + ", athleteDTO=" + athleteDTO + "]";
+		return "BookmarkDTO [id=" + id + ", coachDTO=" + coachDTO + ", athleteDTO=" + athleteDTO + "]";
 	}
 
 }

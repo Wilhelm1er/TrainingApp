@@ -1,10 +1,13 @@
-<!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-<th:block th:insert="layout/default.html :: headerfiles"></th:block>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
+<head th:replace="layout/default.html :: header">
 </head>
 <body>
-<nav th:insert="layout/default.html :: navbar"></nav>
+	<nav th:insert="layout/default.html :: navbar"></nav>
+	<br>
+	<br>
+	<br>
 <div class="container">
 <br><br><br><br>
 	<h3 th:text="#{cart}"></h3>
@@ -12,28 +15,24 @@
 	<div style="border: 2px solid gray;border-radius: 4px;padding:5px">
 	
 	<div th:if="${cart !=null and cart.size()>0}" >
-	<div th:each="cartItem : ${cart}">
+	<div th:each="cartEvent : ${cart}">
 	<form method="post" name="updateCartForm" th:action="@{/update-cart}" >
 	<table >
 		<tr>
 		<td style="width:50%"> 
-			<a th:href="@{'/find-item?itemId='+${cartItem.itemId}}" th:text="${cartItem.itemName}"></a>
-			<p th:text="${cartItem.productDescription}"/>
-            <input type="hidden" name="itemId" th:value="${cartItem.itemId}">
+			<a th:href="@{'/find-event?eventId='+${cartEvent.eventId}}" th:text="${cartEvent.eventName}"></a>
+			<p th:text="${cartEvent.eventDescription}"/>
+			<p th:text="${cartEvent.eventDate}"/>
+            <input type="hidden" name="eventId" th:value="${cartEvent.eventId}">
 		</td>
 		<td style="padding-right:0.5em">
-            <a th:href="@{'/remove-from-cart?itemId='+${cartItem.itemId}}" th:text="#{cart.remove}">Remove</a>
+            <a th:href="@{'/remove-from-cart?eventId='+${cartEvent.eventId}}" th:text="#{cart.remove}">Remove</a>
         </td>
-        <td style="padding-right:0.5em">
-        	<input type="submit" th:value="#{cart.update}">
-        </td>
-        <td style="padding-right:0.5em">
-            <input type="text" name="quantity" size="3" maxlength="3" th:value="${cartItem.quantity}">
-        </td>
-        <td align="center">x</td>
-        <td align="right" th:text="${cartItem.unitCost}"></td>
+       
+        
+       
         <td align="center">=</td>
-        <td align="right" th:text="${cartItem.totalCost}"></td>
+        <td align="right" th:text="${cartEvent.creditCost}"></td>
 		</tr>
 	</table>
 	</form>
@@ -54,8 +53,9 @@
 <br>
 <div th:insert="layout/default.html :: footer"></div>
 </div>
-<br><br><br>
-<nav th:insert="layout/default.html :: footernavbar"></nav>
-<div th:insert="layout/default.html :: scripts"></div>
+	<br> <br> <br> <br>
+		<div th:insert="layout/default.html :: footer"></div>
+	
+	<div th:insert="layout/default.html :: scripts"></div>
 </body>
 </html>

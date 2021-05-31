@@ -28,26 +28,25 @@ import com.sport.training.exception.UpdateException;
 
 @Controller
 public class AuthenticationController {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationController.class);
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private RegistryService registryService;
-	
+
 	@Autowired
 	private SportService sportService;
-	
-	
+
 	@GetMapping(path = "/update-account/{username}")
 	public String showAccount(Model model, @PathVariable String username) {
 		final String mname = "showAccount";
-		LOGGER.debug("entering "+mname);
-		
+		LOGGER.debug("entering " + mname);
+
 		UserDTO userDTO;
-		List<DisciplineDTO>disciplineDTOs = null;
+		List<DisciplineDTO> disciplineDTOs = null;
 		Set<DisciplineDTO> disciplineDTOsCoach = null;
 		try {
 			userDTO = userService.findUser(username);
@@ -65,21 +64,23 @@ public class AuthenticationController {
 	}
 
 	@PostMapping(path = "/update-account")
-	public String updateAccount(@Valid @ModelAttribute UserDTO userDTO, 
-			@RequestParam(value = "discipline.id" , required = false) String[] disciplineId , BindingResult bindingResult ,Model model) {
+	public String updateAccount(@Valid @ModelAttribute UserDTO userDTO,
+			@RequestParam(value = "discipline.id", required = false) String[] disciplineId, BindingResult bindingResult,
+			Model model) {
 		final String mname = "updateAccount";
-		LOGGER.debug("entering "+mname);
+		LOGGER.debug("entering " + mname);
 		try {
 			userService.updateUser(userDTO);
-			for(String disciplineIdChecked: disciplineId) {
-				registryService.createDisciplineRegistry(new DisciplineRegistryDTO(sportService.findDiscipline(disciplineIdChecked),userDTO));
+			for (String disciplineIdChecked : disciplineId) {
+				registryService.createDisciplineRegistry(
+						new DisciplineRegistryDTO(sportService.findDiscipline(disciplineIdChecked), userDTO));
 			}
-			model.addAttribute("message","account updated");
+			model.addAttribute("message", "account updated");
 			return "index";
 		} catch (UpdateException e) {
 			model.addAttribute("exception", e.getMessage());
 			return "error";
-		} catch(Exception exc) {
+		} catch (Exception exc) {
 			model.addAttribute("exception", exc.getMessage());
 			return "error";
 		}

@@ -14,82 +14,93 @@ import com.sport.training.domain.dto.EventDTO;
 import com.sport.training.domain.dto.ShoppingCartEventDTO;
 import com.sport.training.exception.FinderException;
 
-
 //@Scope("session")
 //@Service
-public class ShoppingCartServiceImpl implements ShoppingCartService{
-	
+public class ShoppingCartServiceImpl implements ShoppingCartService {
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(ShoppingCartServiceImpl.class);
-	
+
 	// ======================================
-    // =             Attributes             =
-    // ======================================
-    private Map<String,Integer> _shoppingCart;
+	// = Attributes =
+	// ======================================
+	private Map<Long, Integer> _shoppingCart;
 
-    @Autowired
-    private SportService sportService;
-    
-    // ======================================
-    // =            Constructor            =
-    // ======================================
-    public ShoppingCartServiceImpl() {
-    	_shoppingCart =  new HashMap<>();
-    }
+	@Autowired
+	private SportService sportService;
 
-    // ======================================
-    // =     Lifecycle Callback methods     =
-    // ======================================
+	// ======================================
+	// = Constructor =
+	// ======================================
+	public ShoppingCartServiceImpl() {
+		_shoppingCart = new HashMap<>();
+	}
 
-    
-    public void clear() {
-    	final String mname = "clear";
-    	LOGGER.debug("entering "+mname);
-        _shoppingCart = null;
-    }
+	// ======================================
+	// = Lifecycle Callback methods =
+	// ======================================
 
-    @Override
-	public Map<String, Integer> getCart() {
-    	final String mname = "getCart";
-    	LOGGER.debug("entering "+mname);
-        return _shoppingCart;
-    }
+	public void clear() {
+		final String mname = "clear";
+		LOGGER.debug("entering " + mname);
+		_shoppingCart = null;
+	}
 
-    @Override
+	@Override
+	public Map<Long, Integer> getCart() {
+		final String mname = "getCart";
+		LOGGER.debug("entering " + mname);
+		return _shoppingCart;
+	}
+
+	@Override
 	public Collection<ShoppingCartEventDTO> getEvents() {
-    	final String mname = "getEvents";
-    	LOGGER.debug("entering "+mname);
-    	
-        final Collection<ShoppingCartEventDTO>  events = new ArrayList<>();
+		final String mname = "getEvents";
+		LOGGER.debug("entering " + mname);
 
-        Iterator<Map.Entry<String, Integer>> it = _shoppingCart.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<String, Integer> keyValue = it.next();
-            String eventId = keyValue.getKey();
-            final EventDTO eventDTO;
-            try {
-            	eventDTO = sportService.findEvent(eventId);
-                ShoppingCartEventDTO ShoppingCartEventDTO = new ShoppingCartEventDTO(eventId, eventDTO.getDate(), eventDTO.getActivityDTO().getDescription(), eventDTO.getCreditCost());
-                 events.add(ShoppingCartEventDTO);
-            } catch (FinderException e) {
-            	LOGGER.error(mname+" - eventId : "+ eventId+" => "+e.getMessage());
-            }
-        }
-        return  events;
-    }
+		final Collection<ShoppingCartEventDTO> events = new ArrayList<>();
 
-    @Override
-	public void addEvent(String eventId) {
-        _shoppingCart.put(eventId, 1);
-    }
+		Iterator<Map.Entry<Long, Integer>> it = _shoppingCart.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry<Long, Integer> keyValue = it.next();
+			Long eventId = keyValue.getKey();
+			final EventDTO eventDTO;
+			try {
+				eventDTO = sportService.findEvent(eventId);
+				ShoppingCartEventDTO ShoppingCartEventDTO = new ShoppingCartEventDTO(eventId, eventDTO.getName(),
+						eventDTO.getDate(), eventDTO.getDescription(), eventDTO.getCreditCost());
+				events.add(ShoppingCartEventDTO);
+			} catch (FinderException e) {
+				LOGGER.error(mname + " - eventId : " + eventId + " => " + e.getMessage());
+			}
+		}
+		return events;
+	}
 
-    @Override
-	public void removeEvent(String eventId) {
-        _shoppingCart.remove(eventId);
-    }
+	@Override
+	public void addEvent(Long eventId) {
+		_shoppingCart.put(eventId, 1);
+	}
 
-    @Override
+	@Override
+	public void removeEvent(Long eventId) {
+		_shoppingCart.remove(eventId);
+	}
+
+	@Override
+	public Double getTotal() {
+		double total = 0.0;
+		Collection<ShoppingCartEventDTO> cartEvents = getEvents();
+		Iterator<ShoppingCartEventDTO> it = cartEvents.iterator();
+		while (it.hasNext()) {
+			ShoppingCartEventDTO ShoppingCartEventDTO = it.next();
+			total += ShoppingCartEventDTO.getCreditCost();
+		}
+		return total;
+	}
+
+	@Override
 	public void empty() {
-        _shoppingCart.clear();
-    }
+		_shoppingCart.clear();
+	}
 
 }

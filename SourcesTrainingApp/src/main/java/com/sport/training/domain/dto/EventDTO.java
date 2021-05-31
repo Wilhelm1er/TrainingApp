@@ -1,7 +1,7 @@
 package com.sport.training.domain.dto;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 
 import com.sport.training.authentication.domain.dto.UserDTO;
 
@@ -19,6 +19,7 @@ public class EventDTO implements Serializable {
 	private Long id;
 	private String name;
 	private Date date;
+	private Date time;
 	private int creditCost;
 	private int duration;
 	private int intensity;
@@ -33,9 +34,10 @@ public class EventDTO implements Serializable {
 	public EventDTO() {
 	}
 
-	public EventDTO(final String name, final Date date, final int creditCost, final UserDTO coachDTO, final ActivityDTO activityDTO) {
+	public EventDTO(final String name, final Date date, final Date time, final int creditCost, final UserDTO coachDTO, final ActivityDTO activityDTO) {
 		setName(name);
 		setDate(date);
+		setTime(time);
 		setCreditCost(creditCost);
 		setCoachDTO(coachDTO);
 		setActivityDTO(activityDTO);
@@ -64,8 +66,16 @@ public class EventDTO implements Serializable {
 		return date;
 	}
 
-	public void setDate(Date timetable) {
-		this.date = timetable;
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+	public Date getTime() {
+		return time;
+	}
+
+	public void setTime(Date time) {
+		this.time = time;
 	}
 
 	public int getDuration() {
@@ -127,10 +137,8 @@ public class EventDTO implements Serializable {
 
 	@Override
 	public String toString() {
-		return "EventDTO [id=" + id + ", name=" + name + ", date=" + date + ", creditCost=" + creditCost + ", duration="
-				+ duration + ", intensity=" + intensity + ", description=" + description + ", equipment=" + equipment
-				+ ", coachDTO=" + coachDTO + ", activityDTO=" + activityDTO + "]";
+		return "EventDTO [id=" + id + ", name=" + name + ", date=" + date + ", time=" + time + ", creditCost="
+				+ creditCost + ", duration=" + duration + ", intensity=" + intensity + ", description=" + description
+				+ ", equipment=" + equipment + ", coachDTO=" + coachDTO + ", activityDTO=" + activityDTO + "]";
 	}
-
-
 }

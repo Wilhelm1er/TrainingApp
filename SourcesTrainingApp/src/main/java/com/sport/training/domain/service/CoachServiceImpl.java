@@ -14,14 +14,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
+import com.sport.training.authentication.domain.dao.UserRepository;
+import com.sport.training.authentication.domain.model.User;
 import com.sport.training.authentication.domain.service.UserService;
 import com.sport.training.authentication.domain.service.UserServiceImpl;
 import com.sport.training.domain.dao.BookmarkRepository;
 import com.sport.training.domain.dao.EventRepository;
 import com.sport.training.domain.dao.NotationRepository;
 import com.sport.training.domain.dto.BookmarkDTO;
+import com.sport.training.domain.dto.DisciplineRegistryDTO;
 import com.sport.training.domain.dto.NotationDTO;
 import com.sport.training.domain.model.Bookmark;
+import com.sport.training.domain.model.DisciplineRegistry;
 import com.sport.training.domain.model.Notation;
 import com.sport.training.exception.CreateException;
 import com.sport.training.exception.FinderException;
@@ -37,24 +41,27 @@ import com.sport.training.exception.UpdateException;
 public class CoachServiceImpl implements CoachService {
 
 	// ======================================
-	// =            Attributes              =
+	// = Attributes =
 	// ======================================
 
 	@Autowired
-	private ModelMapper commonModelMapper;
+	private ModelMapper commonModelMapper,bookmarkModelMapper;
 
-	
 	@Autowired
 	private EventRepository eventRepository;
-	
+
 	@Autowired
 	private NotationRepository notationRepository;
-	
+
 	@Autowired
 	private BookmarkRepository bookmarkRepository;
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private UserRepository userRepository;
+	
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
@@ -64,9 +71,9 @@ public class CoachServiceImpl implements CoachService {
 	public CoachServiceImpl() {
 	}
 
-    // ======================================
-    // =   Notation Business methods   =
-    // ======================================
+	// ======================================
+	// = Notation Business methods =
+	// ======================================
 
 	@Override
 	@Transactional
@@ -86,7 +93,7 @@ public class CoachServiceImpl implements CoachService {
 		} catch (NullPointerException | FinderException e) {
 			throw new CreateException("Coach must exist to create a Notation");
 		}
-		
+
 		try {
 			userService.findUser(notationDTO.getAthleteDTO().getUsername());
 		} catch (NullPointerException | FinderException e) {
@@ -153,8 +160,7 @@ public class CoachServiceImpl implements CoachService {
 			throw new UpdateException("Notation must exist to be updated");
 
 		// :::::::::::::::: We change DTO to model ::::::::::::::: //
-		Notation updatedNotation = commonModelMapper.map(updatedNotationDTO,
-				Notation.class);
+		Notation updatedNotation = commonModelMapper.map(updatedNotationDTO, Notation.class);
 		// Updates the object
 		notationRepository.save(updatedNotation);
 		LOGGER.debug("exiting " + mname);
@@ -173,17 +179,16 @@ public class CoachServiceImpl implements CoachService {
 			throw new FinderException("No notation in the database");
 		}
 		List<NotationDTO> notationDTOs = ((List<Notation>) notations).stream()
-				.map(notation -> commonModelMapper.map(notation, NotationDTO.class))
-				.collect(Collectors.toList());
+				.map(notation -> commonModelMapper.map(notation, NotationDTO.class)).collect(Collectors.toList());
 
 		LOGGER.debug("exiting " + mname + " size of collection : " + size);
 		return notationDTOs;
 	}
 
-    // ======================================
-    // =   Bookmark Business methods   =
-    // ======================================
-	
+	// ======================================
+	// = Bookmark Business methods =
+	// ======================================
+
 	@Override
 	@Transactional
 	public BookmarkDTO createBookmark(@Valid BookmarkDTO bookmarkDTO) throws CreateException {
@@ -198,7 +203,7 @@ public class CoachServiceImpl implements CoachService {
 		} catch (NullPointerException | FinderException e) {
 			throw new CreateException("Coach must exist to create a Notation");
 		}
-		
+
 		try {
 			userService.findUser(bookmarkDTO.getAthleteDTO().getUsername());
 		} catch (NullPointerException | FinderException e) {
@@ -265,8 +270,7 @@ public class CoachServiceImpl implements CoachService {
 			throw new UpdateException("Bookmark must exist to be updated");
 
 		// :::::::::::::::: We change DTO to model ::::::::::::::: //
-		Bookmark updatedBookmark = commonModelMapper.map(updatedBookmarkDTO,
-				Bookmark.class);
+		Bookmark updatedBookmark = commonModelMapper.map(updatedBookmarkDTO, Bookmark.class);
 		// Updates the object
 		bookmarkRepository.save(updatedBookmark);
 		LOGGER.debug("exiting " + mname);
@@ -285,13 +289,39 @@ public class CoachServiceImpl implements CoachService {
 			throw new FinderException("No bookmark in the database");
 		}
 		List<BookmarkDTO> bookmarkDTOs = ((List<Bookmark>) bookmarks).stream()
-				.map(bookmark -> commonModelMapper.map(bookmark, BookmarkDTO.class))
-				.collect(Collectors.toList());
+				.map(bookmark -> commonModelMapper.map(bookmark, BookmarkDTO.class)).collect(Collectors.toList());
 
 		LOGGER.debug("exiting " + mname + " size of collection : " + size);
 		return bookmarkDTOs;
 	}
-	
+
+	@Override
+	public List<BookmarkDTO> findBookmarksByAthlete(String athleteId) throws FinderException {
+		final String mname = "findBookmarksByAthlete";
+		LOGGER.debug("entering " + mname);
+
+		checkStringId(athleteId);
+
+		User athlete = null;
+		if (!userRepository.findById(athleteId).isPresent())
+			throw new FinderException("Coach must exist to be found");
+		else
+			athlete = userRepository.findById(athleteId).get();
+		
+		// Finds all the objects
+		final Iterable<Bookmark> bookmarks = bookmarkRepository.findAllByAthlete(athlete);
+		int size;
+		if ((size = ((Collection<Bookmark>) bookmarks).size()) == 0) {
+			throw new FinderException("No bookmark in the database");
+		}
+
+		List<BookmarkDTO> bookmarkDTOs = ((List<Bookmark>) bookmarks).stream()
+				.map(bookmark -> bookmarkModelMapper.map(bookmark, BookmarkDTO.class)).collect(Collectors.toList());
+		
+		LOGGER.debug("exiting " + mname + " size of collection : " + size);
+		return bookmarkDTOs;
+	}
+
 	// ======================================
 	// = Private Methods =
 	// ======================================
@@ -299,6 +329,11 @@ public class CoachServiceImpl implements CoachService {
 	private void checkId(final long l) throws FinderException {
 		if (l == 0)
 			throw new FinderException("Id should not be 0");
+	}
+	
+	private void checkStringId(final String id) throws FinderException {
+		if (id == null || id.equals(""))
+			throw new FinderException(id + " should not be null or empty");
 	}
 
 }

@@ -3,6 +3,7 @@ package com.sport.training.api;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.validation.Valid;
@@ -12,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,37 +34,39 @@ import com.sport.training.exception.UpdateException;
 
 @Controller
 public class GestionCoachController {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(GestionCoachController.class);
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private RegistryService registryService;
-	
+
 	@Autowired
 	private EventRepository eventRepository;
-	
+
 	@Autowired
 	private SportService sportService;
-	
+
 	@GetMapping(path = "/select-activity/{username}")
 	public String showSelectActivity(Model model, @PathVariable String username) {
 		final String mname = "showSelectActivity";
-		LOGGER.debug("entering "+mname);
-		
+		LOGGER.debug("entering " + mname);
+
 		UserDTO userDTO;
 		Set<DisciplineDTO> disciplineDTOsCoach = null;
-		HashMap<String,List<ActivityDTO>> activityByDisciplinesCoach=new HashMap<String,List<ActivityDTO>>();
+		HashMap<String, List<ActivityDTO>> activityByDisciplinesCoach = new HashMap<String, List<ActivityDTO>>();
 		try {
 			userDTO = userService.findUser(username);
 			disciplineDTOsCoach = registryService.findDisciplinesByCoach(username);
-			if(disciplineDTOsCoach!=null) {
-			for(DisciplineDTO disciplineDTO: disciplineDTOsCoach) {
-				List<ActivityDTO>list=new ArrayList<ActivityDTO>(sportService.findActivities(disciplineDTO.getId()));
-				activityByDisciplinesCoach.put(disciplineDTO.getName(),list);
-			}}
+			if (disciplineDTOsCoach != null) {
+				for (DisciplineDTO disciplineDTO : disciplineDTOsCoach) {
+					List<ActivityDTO> list = new ArrayList<ActivityDTO>(
+							sportService.findActivities(disciplineDTO.getId()));
+					activityByDisciplinesCoach.put(disciplineDTO.getName(), list);
+				}
+			}
 		} catch (FinderException e) {
 			LOGGER.error("exception in " + mname + " : " + e.getMessage());
 			model.addAttribute("exception", e.getClass().getName());
@@ -77,55 +79,49 @@ public class GestionCoachController {
 
 		return "select-activity";
 	}
-	
+
 	@PostMapping("/select-activity")
-	public String showCreateEvent(@ModelAttribute("activityDTO") ActivityDTO activityDTO,@RequestParam String userId, Model model) {
+	public String showCreateEvent(@ModelAttribute("activityDTO") ActivityDTO activityDTO, @RequestParam String userId,
+			Model model) {
 		final String mname = "showCreateEvent";
 		LOGGER.debug("entering " + mname);
-		
+
 		ActivityDTO sActivityDTO;
 		UserDTO userDTO;
-		Long eventId=null;
-		System.out.println("eventId: "+eventRepository.findLastId().get().longValue());
+		Long eventId = null;
+		System.out.println("eventId: " + eventRepository.findLastId().get().longValue());
 		try {
-			eventId=eventRepository.findLastId().get().longValue()+1;
+			if (Objects.isNull(eventRepository.findLastId().get().longValue())) {
+				eventId = 1L;
+			}
+			eventId = eventRepository.findLastId().get().longValue() + 1;
 			userDTO = userService.findUser(userId);
-			sActivityDTO=sportService.findActivity(activityDTO.getId());
+			sActivityDTO = sportService.findActivity(activityDTO.getId());
 			model.addAttribute("eventDTO", new EventDTO());
 			model.addAttribute("activityDTO", sActivityDTO);
 			model.addAttribute("userDTO", userDTO);
 			model.addAttribute("eventId", eventId.toString());
-			System.out.println("activity: "+sActivityDTO);
-			System.out.println("user: "+userDTO);
-			System.out.println("eventId: "+eventId);
+			System.out.println("activity: " + sActivityDTO);
+			System.out.println("user: " + userDTO);
+			System.out.println("eventId: " + eventId);
 			return "create-event";
-		
+
 		} catch (Exception e) {
 			LOGGER.error("exception in " + mname + " : " + e.getMessage());
 			model.addAttribute("exception", e.getMessage());
 			return "error";
 		}
 	}
-	
-	@GetMapping(path = "/event")
-	public String showEventcreated(Model model, @RequestParam EventDTO eventDTO) throws FinderException {
-		final String mname = "showEventcreated";
-		LOGGER.debug("entering "+mname);
-		
-		
-		model.addAttribute("eventDTO", eventDTO);
 
-		return "event";
-	}
-	
 	@PostMapping("/create-event")
-	public String createEvent(@Valid @ModelAttribute EventDTO eventDTO, @ModelAttribute UserDTO userDTO, @ModelAttribute ActivityDTO activityDTO,Model model) {
+	public String createEvent(@Valid @ModelAttribute EventDTO eventDTO, @ModelAttribute UserDTO userDTO,
+			@ModelAttribute ActivityDTO activityDTO, Model model) {
 		final String mname = "createEvent";
 		LOGGER.debug("entering " + mname);
-		
-		try {eventDTO.setActivityDTO(activityDTO);
-		eventDTO.setCoachDTO(userDTO);
-			System.out.println("eventDTO: "+eventDTO);
+
+		try {
+			eventDTO.setActivityDTO(activityDTO);
+			eventDTO.setCoachDTO(userDTO);
 			sportService.createEvent(eventDTO);
 			model.addAttribute("eventDTO", eventDTO);
 			return "event";
@@ -160,7 +156,7 @@ public class GestionCoachController {
 		}
 		return "manage-sport";
 	}
-	
+
 	@PostMapping("/update-event")
 	public String updateEvent(@Valid @ModelAttribute EventDTO eventDTO, Model model) {
 		final String mname = "updateEvent";
@@ -181,7 +177,7 @@ public class GestionCoachController {
 			return "error";
 		}
 	}
-	
+
 	@GetMapping("/update-event/{eventId}")
 	public String showEvent(@PathVariable Long eventId, Model model) {
 		final String mname = "showEvent";
@@ -200,7 +196,7 @@ public class GestionCoachController {
 		}
 		return "update-event";
 	}
-	
+
 	@GetMapping("/events/{username}")
 	public String showEvents(@PathVariable String username, Model model) {
 		final String mname = "manageEvents";
@@ -209,10 +205,10 @@ public class GestionCoachController {
 			List<EventDTO> eventDTOs = sportService.findEvents(username);
 			model.addAttribute("eventDTOs", eventDTOs);
 		} catch (FinderException e) {
-			if(e.getMessage().equals("No Event in the database")) {
-        		model.addAttribute("message", "No Event for this activity");
-        		return "events";
-        	}
+			if (e.getMessage().equals("No Event in the database")) {
+				model.addAttribute("message", "No Event for this activity");
+				return "events";
+			}
 			LOGGER.error("exception in " + mname + " : " + e.getMessage());
 			model.addAttribute("exception", e.getClass().getName());
 			return "error";
@@ -223,6 +219,5 @@ public class GestionCoachController {
 		}
 		return "events";
 	}
-	
 
 }

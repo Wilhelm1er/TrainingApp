@@ -13,7 +13,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import com.sport.training.authentication.domain.dto.UserDTO;
 import com.sport.training.authentication.domain.service.UserService;
 import com.sport.training.domain.dto.DisciplineDTO;
@@ -26,23 +25,25 @@ import com.sport.training.exception.FinderException;
 
 @Controller
 public class NewAccountController {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(NewAccountController.class);
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private RegistryService registryService;
-	
+
 	@Autowired
 	private SportService sportService;
-	
+
+	private final String UPLOAD_DIR = "./uploads/";
+
 	@GetMapping(path = "/new-athlete")
 	public String newAthlete(Model model) {
 		final String mname = "newAthlete";
-		LOGGER.debug("entering "+mname);
-		
+		LOGGER.debug("entering " + mname);
+
 		model.addAttribute("userDTO", new UserDTO());
 		return "new-athlete";
 	}
@@ -50,19 +51,19 @@ public class NewAccountController {
 	@PostMapping(path = "/new-athlete")
 	public String createAthlete(@Valid UserDTO userDTO, Model model) {
 		final String mname = "createAthlete";
-		LOGGER.debug("entering "+mname);
+		LOGGER.debug("entering " + mname);
 		try {
 			userDTO.setRoleName("ROLE_ATHLETE");
 			userService.createUser(userDTO);
-			model.addAttribute("message","Athlete account created");
+			model.addAttribute("message", "Athlete account created");
 			return "index";
 		} catch (CreateException e) {
-			if(e instanceof DuplicateKeyException)
+			if (e instanceof DuplicateKeyException)
 				model.addAttribute("exception", "this id is already assigned");
 			else
 				model.addAttribute("exception", e.getMessage());
 			return "error";
-		} catch(Exception exc) {
+		} catch (Exception exc) {
 			model.addAttribute("exception", exc.getMessage());
 			return "error";
 		}
@@ -71,46 +72,47 @@ public class NewAccountController {
 	@GetMapping(path = "/new-coach")
 	public String newCoach(Model model) throws FinderException {
 		final String mname = "newCoach";
-		LOGGER.debug("entering "+mname);
-		
-		List<DisciplineDTO>disciplineDTOs = null;
-		List<String>disciplineDTOsChoice=null;
-    	try {
-    		disciplineDTOs = sportService.findDisciplines();
+		LOGGER.debug("entering " + mname);
+
+		List<DisciplineDTO> disciplineDTOs = null;
+		List<String> disciplineDTOsChoice = null;
+		try {
+			disciplineDTOs = sportService.findDisciplines();
 		} catch (FinderException e) {
 			model.addAttribute("exception", e.getMessage());
 			return "error";
 		}
-   
-    	model.addAttribute("disciplineDTOsChoice", disciplineDTOsChoice);
+
+		model.addAttribute("disciplineDTOsChoice", disciplineDTOsChoice);
 		model.addAttribute("disciplineDTOs", disciplineDTOs);
 		model.addAttribute("userDTO", new UserDTO());
-		
+
 		return "new-coach";
 	}
 
 	@PostMapping(path = "/new-coach")
-	public String createCoach(@Valid UserDTO userDTO,@RequestParam(value = "discipline.id" , required = false) String[] disciplineId ,
-	         BindingResult bindingResult , Model model) {
+	public String createCoach(@Valid UserDTO userDTO,
+			@RequestParam(value = "discipline.id", required = false) String[] disciplineId, BindingResult bindingResult,
+			Model model) {
 		final String mname = "createCoach";
-		LOGGER.debug("entering "+mname);
-		
+		LOGGER.debug("entering " + mname);
+
 		try {
-		
 			userDTO.setRoleName("ROLE_COACH");
 			userService.createUser(userDTO);
-			for(String disciplineIdChecked: disciplineId) {
-			registryService.createDisciplineRegistry(new DisciplineRegistryDTO(sportService.findDiscipline(disciplineIdChecked),userDTO));
+			for (String disciplineIdChecked : disciplineId) {
+				registryService.createDisciplineRegistry(
+						new DisciplineRegistryDTO(sportService.findDiscipline(disciplineIdChecked), userDTO));
 			}
-			model.addAttribute("message","Coach account created");
+			model.addAttribute("message", "Coach account created");
 			return "index";
 		} catch (CreateException e) {
-			if(e instanceof DuplicateKeyException)
+			if (e instanceof DuplicateKeyException)
 				model.addAttribute("exception", "this id is already assigned");
 			else
 				model.addAttribute("exception", e.getMessage());
 			return "error";
-		} catch(Exception exc) {
+		} catch (Exception exc) {
 			model.addAttribute("exception", exc.getMessage());
 			return "error";
 		}

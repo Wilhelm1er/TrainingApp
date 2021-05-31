@@ -7,35 +7,56 @@
 	<nav th:insert="layout/default.html :: navbar"></nav>
 	<br>
 	<br>
+	<form class="form-horizontal" method="post" name="userForm"
+		th:action="@{/cart}" th:object="${eventRegistryDTO}"
+		enctype="multipart/form-data">
+		<div class="album py-5 bg-light">
+			<div class="container">
+				<h3 th:if="${userDTO != null}" th:text="#{events.coach}+${userDTO.username}"></h3>
+				<div th:each="eventDTO : ${eventDTOs}">
+					<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+						<div class="col">
+							<div class="card shadow-sm">
+
+								<div class="card-body">
+									<a th:href="@{'/find-event?eventId='+${eventDTO.id}}"
+										th:text="${eventDTO.name}"></a>
+									<p th:text="#{events.activity}+' '+${eventDTO.activityDTO.name}"></p>
+									<p th:text="#{events.coach}+' '+${eventDTO.coachDTO.username}"></p>
+									<p th:text="#{events.date}+' '+${eventDTO.date}"></p>
+									<p th:text="#{events.time}+' '+${eventDTO.time}"></p>
+									<p th:text="#{events.description}+' '+${eventDTO.description}"></p>
+									<p th:text="#{events.duration}+' '+${eventDTO.duration}"></p>
+									<p
+										th:text="#{events.intensity}+' '+${eventDTO.intensity}+' /5'"></p>
+									<p th:text="#{events.equipment}+' '+${eventDTO.equipment}"></p>
+
+									<p th:text="#{events.cost}"></p>
+									<span th:text="${eventDTO.creditCost}+' crédits'"></span>
+									<div class="d-flex justify-content-between align-items-center">
+										<div>
+											<a th:if="${username != null}"
+												th:href="@{'/add-to-cart?eventId='+${eventDTO.id}}"
+												th:text="#{cart.add}"></a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+
+
+
 	<br>
 	<br>
-	
+	<br>
+	<br>
+	<div th:insert="layout/default.html :: footer"></div>
 
-
-<br> <br> <br> <br>
-
-<div  th:each="eventDTO : ${eventDTOs}">
-		<table>
-		<tr style="border-bottom:0.5px solid grey">
-		<td style="padding-right:1em;padding-bottom:0.5em"><span th:text="${eventDTO.id}+' - '">
-		</span><a th:href="@{'/find-event?eventId='+${eventDTO.id}}" th:text="${eventDTO.name}" ></a> <span th:text="${eventDTO.date}"></span>
-		<br>
-		<span th:text="${eventDTO.activityDTO.description}"></span>
-    	</td>
-    	<td style="padding-right:1em;padding-bottom:0.5em">
-    	<span th:text="${eventDTO.creditCost}+' crédits'"></span>
-    	<br>
-    	</td>
-    	</tr>
-		</table>
-	</div>
-
-
-
-
-		<br> <br> <br> <br>
-		<div th:insert="layout/default.html :: footer"></div>
-	
 	<div th:insert="layout/default.html :: scripts"></div>
 </body>
 </html>

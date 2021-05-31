@@ -1,8 +1,11 @@
 package com.sport.training.api;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,61 +23,70 @@ import com.sport.training.authentication.domain.service.UserService;
 import com.sport.training.domain.dto.EventDTO;
 import com.sport.training.domain.service.SportService;
 import com.sport.training.exception.FinderException;
-import com.sport.training.domain.dto.ActivityDTO;
 
 /**
  * These servlets returns the selected event / events.
  */
 @Controller
 public class FindEventController {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(FindEventController.class);
-    
-    @Autowired
+
+	@Autowired
 	private SportService sportService;
-    
-    @Autowired
+
+	@Autowired
 	private UserService userService;
 
-    @GetMapping("/find-event")
-    protected String findEvent(Model model, @RequestParam Long eventId, Authentication authentication) {
-        final String mname = "findEvent";
-        LOGGER.debug("entering "+mname);
-        try {
-        	EventDTO eventDTO = sportService.findEvent(eventId);
-        	if(authentication != null) {
-    			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-    			UserDTO userDTO = userService.findUser(userDetails.getUsername());
-    			if(userDTO.getRoleName().equals("ROLE_USER"))
-    				model.addAttribute("username", userDetails.getUsername());
-    		}
-            model.addAttribute("eventDTO", eventDTO);
-            return "event";
-        } catch (FinderException e) {
-        	LOGGER.error("exception in "+mname+" : "+e.getMessage());
-            model.addAttribute("exception", e.getClass().getName());
+	@GetMapping("/find-event")
+	protected String findEvent(Model model, @RequestParam Long eventId, Authentication authentication) {
+		final String mname = "findEvent";
+		LOGGER.debug("entering " + mname);
+		try {
+			EventDTO eventDTO = sportService.findEvent(eventId);
+			if (authentication != null) {
+				UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+				UserDTO userDTO = userService.findUser(userDetails.getUsername());
+				if (userDTO.getRoleName().equals("ROLE_USER"))
+					model.addAttribute("username", userDetails.getUsername());
+			}
+			model.addAttribute("eventDTO", eventDTO);
+			return "event";
+		} catch (FinderException e) {
+			LOGGER.error("exception in " + mname + " : " + e.getMessage());
+			model.addAttribute("exception", e.getClass().getName());
 			return "error";
-        } catch (Exception e) {
-        	LOGGER.error("exception in "+mname+" : "+e.getMessage());
-            model.addAttribute("exception", e.getMessage());
+		} catch (Exception e) {
+			LOGGER.error("exception in " + mname + " : " + e.getMessage());
+			model.addAttribute("exception", e.getMessage());
 			return "error";
-        }     
-    }
-    
+		}
+	}
+
 	@GetMapping(path = "/find-events/{username}")
 	public String showEventsByCoach(Model model, @PathVariable String username) throws FinderException {
 		final String mname = "showEventsByCoach";
-		LOGGER.debug("entering "+mname);
-		
+		LOGGER.debug("entering " + mname);
+
 		UserDTO userDTO;
-		
-		List<EventDTO> eventDTOs = null;
-		
+
+		List<EventDTO> oldEventDTOs = null;
+		List<EventDTO> eventDTOs = new ArrayList<EventDTO>();
+
 		try {
 			userDTO = userService.findUser(username);
-			eventDTOs = sportService.findEvents(username);
+			oldEventDTOs = sportService.findEvents(username);
+			LocalDate dateNow = LocalDate.now();
+			for (EventDTO e : oldEventDTOs) {
+				LocalDate dateEvent = asLocalDate(e.getDate());
+				boolean isAfter = dateEvent.isAfter(dateNow);
+				if (isAfter == true) {
+					eventDTOs.add(e);
+				}
+			}
+
 		} catch (FinderException e) {
-			LOGGER.error("exception in "+mname+" : "+e.getMessage());
+			LOGGER.error("exception in " + mname + " : " + e.getMessage());
 			model.addAttribute("exception", e.getClass().getName());
 			return "error";
 		}
@@ -83,23 +95,28 @@ public class FindEventController {
 
 		return "events";
 	}
-	
+
 	@GetMapping(path = "/find-events")
 	public String showEventsByActivity(Model model, @RequestParam String activityId) throws FinderException {
 		final String mname = "showEventsByActivity";
-		LOGGER.debug("entering "+mname);
-		
+		LOGGER.debug("entering " + mname);
+
 		List<EventDTO> eventDTOs = null;
-		
+
 		try {
 			eventDTOs = sportService.findEventsByActivity(activityId);
+			System.out.println("event: " + eventDTOs);
 		} catch (FinderException e) {
-			LOGGER.error("exception in "+mname+" : "+e.getMessage());
+			LOGGER.error("exception in " + mname + " : " + e.getMessage());
 			model.addAttribute("exception", e.getClass().getName());
 			return "error";
 		}
 		model.addAttribute("eventDTOs", eventDTOs);
 
 		return "events";
+	}
+
+	public static LocalDate asLocalDate(Date date) {
+		return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
 	}
 }

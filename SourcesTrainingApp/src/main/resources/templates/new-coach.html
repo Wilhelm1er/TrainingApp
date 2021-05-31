@@ -14,7 +14,7 @@
 		<hr />
 		<br>
 		<form class="form-horizontal" method="post" name="userForm"
-			th:action="@{/new-coach}" th:object="${userDTO}">
+			th:action="@{/new-coach}" th:object="${userDTO}" enctype="multipart/form-data">
 
 			<div class="form-group">
 				<label for="username" class="col-sm-2 control-label"
@@ -131,10 +131,18 @@
 				<div class="col-md-4" th:each="disciplineDTO : ${disciplineDTOs}">
 					<div class="checkbox checkbox-custom checkbox-circle">
 						<input type="checkbox" name="discipline.id"
-							th:text="${disciplineDTO.name}" th:value="${disciplineDTO.id}" />
+							th:text="${disciplineDTO.name}" th:value="${disciplineDTO.id}" /><br><br>
+							<span th:text="'Documents: '+${disciplineDTO.documents}"></span><br><br>
+							
+                <p th:text="${message}" th:if="${message ne null}" class="alert alert-primary"></p>
+                    <div class="form-group">
+                        <input type="file" name="file" class="form-control-file">
+                    </div>
+                   
 					</div>
 				</div>
 			</div>
+
 
 
 			<br>

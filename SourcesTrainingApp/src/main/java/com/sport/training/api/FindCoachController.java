@@ -32,7 +32,7 @@ public class FindCoachController {
 		Set<UserDTO> coachDTOs = null;
 		try {
 			coachDTOs = registryService.findCoachsByDiscipline(disciplineId);
-			
+
 		} catch (FinderException e) {
 			model.addAttribute("exception", e.getMessage());
 			return "error";

@@ -19,48 +19,48 @@ import com.sport.training.exception.FinderException;
  * This servlet displays user according to their role.
  */
 @Controller
-public class FindUserController  {
-	
+public class FindUserController {
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(FindUserController.class);
-    
-    @Autowired
+
+	@Autowired
 	private UserService userService;
-    
-    @Autowired
+
+	@Autowired
 	private RoleService roleService;
-    
-    @Secured("ROLE_ADMIN")
-    @GetMapping("/display-coachs")
-    public String showCoachs(Model model) {
-    	final String mname = "showCoachs";
-		LOGGER.debug("entering "+mname);
-		
+
+	@Secured("ROLE_ADMIN")
+	@GetMapping("/display-coachs")
+	public String showCoachs(Model model) {
+		final String mname = "showCoachs";
+		LOGGER.debug("entering " + mname);
+
 		List<UserDTO> coachDTOs = null;
-    	try {
-    		coachDTOs = userService.findUsersByRole(roleService.findByRoleName("ROLE_COACH"));
+		try {
+			coachDTOs = userService.findUsersByRole(roleService.findByRoleName("ROLE_COACH"));
 		} catch (FinderException e) {
 			model.addAttribute("exception", e.getMessage());
 			return "error";
 		}
-    	model.addAttribute("coachDTOs", coachDTOs);
-    	return "display-users";
-    }
-    
-    @Secured({"ROLE_ADMIN"})
-    @GetMapping("/display-athletes")
-    public String showAthletes(Model model) {
-    	final String mname = "showAthletes";
-		LOGGER.debug("entering "+mname);
-		
+		model.addAttribute("coachDTOs", coachDTOs);
+		return "display-users";
+	}
+
+	@Secured({ "ROLE_ADMIN" })
+	@GetMapping("/display-athletes")
+	public String showAthletes(Model model) {
+		final String mname = "showAthletes";
+		LOGGER.debug("entering " + mname);
+
 		List<UserDTO> athleteDTOs = null;
-    	try {
-    		athleteDTOs = userService.findUsersByRole(roleService.findByRoleName("ROLE_ATHLETE"));
+		try {
+			athleteDTOs = userService.findUsersByRole(roleService.findByRoleName("ROLE_ATHLETE"));
 		} catch (FinderException e) {
 			model.addAttribute("exception", e.getMessage());
 			return "error";
 		}
-        model.addAttribute("athleteDTOs", athleteDTOs);
-    	return "display-users";
-    }
-    
+		model.addAttribute("athleteDTOs", athleteDTOs);
+		return "display-users";
+	}
+
 }

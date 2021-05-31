@@ -21,8 +21,7 @@
 							<th class="col-sm-3" th:text="#{user.email}"></th>
 						</tr>
 						<tr th:each="coach : ${coachDTOs}">
-							<td><a class="col-sm-2" th:href="@{'/events/'+${coach.username}}" th:text="${coach.username}"
-							sec:authorize="isAuthenticated()"></a></td>
+							<td><a class="col-sm-2" th:href="@{'/find-events/'+${coach.username}}" th:text="${coach.username}"></a></td>
 							<td class="col-sm-2" th:text="${coach.firstname}"></td>
 							<td class="col-sm-2" th:text="${coach.lastname}"></td>
 							<td class="col-sm-3" th:text="${coach.email}"></td>

@@ -13,22 +13,22 @@ import com.sport.training.domain.model.Counter;
 
 @Service
 public class CounterServiceImpl implements CounterService {
-	
-private static final Logger LOGGER = LoggerFactory.getLogger(CounterServiceImpl.class);
-    
-    @Autowired
-    private CounterRepository counterRepository;
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(CounterServiceImpl.class);
+
+	@Autowired
+	private CounterRepository counterRepository;
 
 	@Override
 	@Transactional
 	public String getUniqueId(String name) {
 		final String mname = "getUniqueId";
-		LOGGER.debug("entering "+mname);
+		LOGGER.debug("entering " + mname);
 		int nextId = 0;
-		Counter counter = null ;
+		Counter counter = null;
 		try {
 			counter = counterRepository.findById(name).get();
-			nextId = counter.getValue()+1;
+			nextId = counter.getValue() + 1;
 			counter.setValue(nextId);
 			counterRepository.save(counter);
 		} catch (NoSuchElementException e) {
@@ -37,23 +37,24 @@ private static final Logger LOGGER = LoggerFactory.getLogger(CounterServiceImpl.
 			nextId = 1;
 			counter.setValue(nextId);
 			counterRepository.save(counter);
-		}		
-		LOGGER.debug("exiting "+mname+" returning id "+nextId);
+		}
+		LOGGER.debug("exiting " + mname + " returning id " + nextId);
 		return String.valueOf(nextId);
 	}
-	
+
 	@Override
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	public String getLastId(String name) {
 		String LastId = "";
 		final String mname = "getLastId";
-		LOGGER.debug("entering "+mname);
-		Counter counter = null ;
+		LOGGER.debug("entering " + mname);
+		Counter counter = null;
 		try {
 			counter = counterRepository.findById(name).get();
-		} catch (NoSuchElementException e) {}		
+		} catch (NoSuchElementException e) {
+		}
 		LastId = String.valueOf(counter.getValue());
-		LOGGER.debug("exiting "+mname+" returning id "+LastId);
+		LOGGER.debug("exiting " + mname + " returning id " + LastId);
 		return LastId;
 	}
 
@@ -61,9 +62,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(CounterServiceImpl.
 	@Transactional
 	public void deleteById(String name) {
 		final String mname = "deleteById";
-		LOGGER.debug("entering "+mname);
+		LOGGER.debug("entering " + mname);
 		counterRepository.deleteById(name);
-		LOGGER.debug("exiting "+mname);
+		LOGGER.debug("exiting " + mname);
 	}
 
 }
