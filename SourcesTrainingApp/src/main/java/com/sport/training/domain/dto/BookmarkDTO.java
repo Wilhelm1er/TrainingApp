@@ -22,12 +22,16 @@ public class BookmarkDTO implements Serializable {
 	// ======================================
 	// = Constructors =
 	// ======================================
-	public BookmarkDTO() {
-	}
 
-	public BookmarkDTO(final UserDTO athleteDTO, final UserDTO coachDTO) {
-		setAthleteDTO(athleteDTO);
-		setCoachDTO(coachDTO);
+	public BookmarkDTO() {
+    	id=0L;
+	coachDTO=new UserDTO();
+	athleteDTO=new UserDTO();
+    }
+	
+	public BookmarkDTO(UserDTO athleteDTO, UserDTO coachDTO) {
+		this.athleteDTO=athleteDTO;
+		this.coachDTO=coachDTO;
 	}
 
 	// ======================================

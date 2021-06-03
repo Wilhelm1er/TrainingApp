@@ -211,7 +211,7 @@ public class CoachServiceImpl implements CoachService {
 		}
 
 		// :::::::::::::::: We change DTO to model ::::::::::::::: //
-		Bookmark bookmark = commonModelMapper.map(bookmarkDTO, Bookmark.class);
+		Bookmark bookmark = bookmarkModelMapper.map(bookmarkDTO, Bookmark.class);
 
 		// Creates the object
 		bookmarkRepository.save(bookmark);
@@ -235,7 +235,7 @@ public class CoachServiceImpl implements CoachService {
 			bookmark = bookmarkRepository.findById(bookmarkId).get();
 
 		LOGGER.debug("exiting " + mname);
-		return commonModelMapper.map(bookmark, BookmarkDTO.class);
+		return bookmarkModelMapper.map(bookmark, BookmarkDTO.class);
 	}
 
 	@Override
@@ -270,7 +270,7 @@ public class CoachServiceImpl implements CoachService {
 			throw new UpdateException("Bookmark must exist to be updated");
 
 		// :::::::::::::::: We change DTO to model ::::::::::::::: //
-		Bookmark updatedBookmark = commonModelMapper.map(updatedBookmarkDTO, Bookmark.class);
+		Bookmark updatedBookmark = bookmarkModelMapper.map(updatedBookmarkDTO, Bookmark.class);
 		// Updates the object
 		bookmarkRepository.save(updatedBookmark);
 		LOGGER.debug("exiting " + mname);
@@ -289,7 +289,7 @@ public class CoachServiceImpl implements CoachService {
 			throw new FinderException("No bookmark in the database");
 		}
 		List<BookmarkDTO> bookmarkDTOs = ((List<Bookmark>) bookmarks).stream()
-				.map(bookmark -> commonModelMapper.map(bookmark, BookmarkDTO.class)).collect(Collectors.toList());
+				.map(bookmark -> bookmarkModelMapper.map(bookmark, BookmarkDTO.class)).collect(Collectors.toList());
 
 		LOGGER.debug("exiting " + mname + " size of collection : " + size);
 		return bookmarkDTOs;

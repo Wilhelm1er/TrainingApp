@@ -2,6 +2,7 @@ package com.sport.training.api;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,7 +48,7 @@ public class FindEventController {
 			if (authentication != null) {
 				UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 				UserDTO userDTO = userService.findUser(userDetails.getUsername());
-				if (userDTO.getRoleName().equals("ROLE_USER"))
+				if (userDTO.getRoleName().equals("ROLE_ATHLETE"))
 					model.addAttribute("username", userDetails.getUsername());
 			}
 			model.addAttribute("eventDTO", eventDTO);
@@ -76,9 +77,9 @@ public class FindEventController {
 		try {
 			userDTO = userService.findUser(username);
 			oldEventDTOs = sportService.findEvents(username);
-			LocalDate dateNow = LocalDate.now();
+			LocalDateTime dateNow = LocalDateTime.now();
 			for (EventDTO e : oldEventDTOs) {
-				LocalDate dateEvent = asLocalDate(e.getDate());
+				LocalDateTime dateEvent = e.getDateTime();
 				boolean isAfter = dateEvent.isAfter(dateNow);
 				if (isAfter == true) {
 					eventDTOs.add(e);
@@ -97,15 +98,19 @@ public class FindEventController {
 	}
 
 	@GetMapping(path = "/find-events")
-	public String showEventsByActivity(Model model, @RequestParam String activityId) throws FinderException {
+	public String showEventsByActivity(Model model, @RequestParam String activityId, Authentication authentication) throws FinderException {
 		final String mname = "showEventsByActivity";
 		LOGGER.debug("entering " + mname);
 
 		List<EventDTO> eventDTOs = null;
-
+		if (authentication != null) {
+			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+			UserDTO userDTO = userService.findUser(userDetails.getUsername());
+			if (userDTO.getRoleName().equals("ROLE_ATHLETE"))
+				model.addAttribute("username", userDetails.getUsername());
+		}
 		try {
 			eventDTOs = sportService.findEventsByActivity(activityId);
-			System.out.println("event: " + eventDTOs);
 		} catch (FinderException e) {
 			LOGGER.error("exception in " + mname + " : " + e.getMessage());
 			model.addAttribute("exception", e.getClass().getName());
@@ -116,7 +121,4 @@ public class FindEventController {
 		return "events";
 	}
 
-	public static LocalDate asLocalDate(Date date) {
-		return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
-	}
 }

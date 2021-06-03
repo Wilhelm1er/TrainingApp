@@ -8,6 +8,8 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -40,9 +42,33 @@ public class AuthenticationController {
 	@Autowired
 	private SportService sportService;
 
-	@GetMapping(path = "/update-account/{username}")
-	public String showAccount(Model model, @PathVariable String username) {
+	@GetMapping(path = "/account/{username}")
+	public String showAccount(Model model, Authentication authentication) {
 		final String mname = "showAccount";
+		LOGGER.debug("entering " + mname);
+
+		UserDTO userDTO;
+		List<DisciplineDTO> disciplineDTOs = null;
+		Set<DisciplineDTO> disciplineDTOsCoach = null;
+		try {
+			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+			userDTO = userService.findUser(userDetails.getUsername());
+			disciplineDTOsCoach = registryService.findDisciplinesByCoach(userDTO.getUsername());
+			disciplineDTOs = sportService.findDisciplines();
+		} catch (FinderException e) {
+			model.addAttribute("exception", e.getClass().getName());
+			return "error";
+		}
+		model.addAttribute("userDTO", userDTO);
+		model.addAttribute("disciplineDTOsCoach", disciplineDTOsCoach);
+		model.addAttribute("disciplineDTOs", disciplineDTOs);
+
+		return "account";
+	}
+	
+	@GetMapping(path = "/update-account/{username}")
+	public String showUpdateAccount(Model model, @PathVariable String username) {
+		final String mname = "showUpdateAccount";
 		LOGGER.debug("entering " + mname);
 
 		UserDTO userDTO;

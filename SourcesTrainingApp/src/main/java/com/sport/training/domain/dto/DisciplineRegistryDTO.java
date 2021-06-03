@@ -70,7 +70,7 @@ public class DisciplineRegistryDTO implements Serializable {
 		buf.append("Discipline RegisterDTO{");
 		buf.append("id=").append(getId());
 		buf.append(",registerDate=").append(getRegisterDate());
-	        buf.append(",disciplineID=").append(getId());
+	        buf.append(",disciplineID=").append(getDisciplineDTO().getId());
 	        buf.append(",coachID=").append(getCoachDTO().getUsername());
 		buf.append('}');
 		return buf.toString();

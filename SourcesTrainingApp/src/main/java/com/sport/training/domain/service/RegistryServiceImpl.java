@@ -28,6 +28,7 @@ import com.sport.training.domain.dao.CreditRegistryRepository;
 import com.sport.training.domain.dao.DisciplineRegistryRepository;
 import com.sport.training.domain.dao.DisciplineRepository;
 import com.sport.training.domain.dao.EventRegistryRepository;
+import com.sport.training.domain.dao.EventRepository;
 import com.sport.training.domain.dto.CreditRegistryDTO;
 import com.sport.training.domain.dto.DisciplineDTO;
 import com.sport.training.domain.dto.DisciplineRegistryDTO;
@@ -54,16 +55,19 @@ public class RegistryServiceImpl implements RegistryService {
 	// ======================================
 
 	@Autowired
-	private ModelMapper commonModelMapper, userDTOModelMapper;
+	private ModelMapper commonModelMapper, userDTOModelMapper, eventRegistryModelMapper;
 
 	@Autowired
 	private DisciplineRegistryRepository disciplineRegistryRepository;
 
 	@Autowired
-	private EventRegistryRepository eventRegistryRepository;
+	private EventRepository eventRepository;
 
 	@Autowired
 	private CreditRegistryRepository creditRegistryRepository;
+	
+	@Autowired
+	private EventRegistryRepository eventRegistryRepository;
 
 	@Autowired
 	private DisciplineRepository disciplineRepository;
@@ -280,12 +284,14 @@ public class RegistryServiceImpl implements RegistryService {
 		if (eventRegistryDTO == null)
 			throw new CreateException("EventRegistryDTO object is null");
 
+		
+
 		if (eventRegistryDTO.getEventDTO() == null || eventRegistryDTO.getEventDTO().getId() == null
-				|| !eventRegistryRepository.findById(eventRegistryDTO.getEventDTO().getId()).isPresent())
+				|| !eventRepository.findById(eventRegistryDTO.getEventDTO().getId()).isPresent())
 			throw new CreateException("Event must exist to create an event registry");
 
 		try {
-			userService.findUser(eventRegistryDTO.getAthleteDTO().getUsername());
+			userService.findUser(eventRegistryDTO.getUserDTO().getUsername());
 		} catch (NullPointerException | FinderException e) {
 			throw new CreateException("Athlete must exist to create an EventRegistry");
 		}
@@ -293,6 +299,9 @@ public class RegistryServiceImpl implements RegistryService {
 		// :::::::::::::::: We change DTO to model ::::::::::::::: //
 		EventRegistry eventRegistry = commonModelMapper.map(eventRegistryDTO, EventRegistry.class);
 
+		if (eventRegistryRepository.findByUserAndEvent(eventRegistry.getUser(), eventRegistry.getEvent())!=null)
+			throw new CreateException("EventRegistry object already exist");
+		
 		// Creates the object
 		eventRegistryRepository.save(eventRegistry);
 
@@ -391,13 +400,17 @@ public class RegistryServiceImpl implements RegistryService {
 			athlete = userRepository.findById(athleteId).get();
 		
 		// Finds all the objects
-		final Iterable<EventRegistry> eventRegistries = eventRegistryRepository.findAllByAthlete(athlete);
+		final Iterable<EventRegistry> eventRegistries = eventRegistryRepository.findAllByUser(athlete);
+		
+		for(EventRegistry event:eventRegistries) {
+			System.out.println("eventreg: "+event);
+		}
 		int size;
 		if ((size = ((Collection<EventRegistry>) eventRegistries).size()) == 0) {
 			throw new FinderException("No event in the database");
 		}
 		List<EventRegistryDTO> eventRegistryDTOs = ((List<EventRegistry>) eventRegistries).stream()
-				.map(eventRegistry -> commonModelMapper.map(eventRegistry, EventRegistryDTO.class))
+				.map(eventRegistry -> eventRegistryModelMapper.map(eventRegistry, EventRegistryDTO.class))
 				.collect(Collectors.toList());
 
 		LOGGER.debug("exiting " + mname + " size of collection : " + size);

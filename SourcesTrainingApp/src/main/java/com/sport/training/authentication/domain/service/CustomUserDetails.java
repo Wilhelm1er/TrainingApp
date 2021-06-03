@@ -71,5 +71,8 @@ public class CustomUserDetails implements UserDetails {
 	public int getCredit() {
 	    return this.credit;
 	}
+	public int setCredit(int credit) {
+	    return this.credit = credit;
+	}
 
 }

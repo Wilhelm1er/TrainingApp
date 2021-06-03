@@ -1,6 +1,7 @@
 package com.sport.training.domain.model;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -40,11 +41,8 @@ public class Event implements Serializable {
 	@NotBlank(message = "invalid Name")
 	private String name;
  
-	@Temporal(TemporalType.DATE)
-	private Date date;
-	
-	@Temporal(TemporalType.TIME)
-	private Date time;
+	@Column(name = "DATE")
+	private LocalDateTime datetime;
 
 	@Column(name = "CREDITCOST")
 	@Positive(message = "invalid Creditcost")
@@ -79,11 +77,10 @@ public class Event implements Serializable {
 	public Event() {
 	}
 	
-	public Event(final String name, final Date date, final Date time, final int creditCost, final User coach,
+	public Event(final String name, final LocalDateTime datetime, final Date time, final int creditCost, final User coach,
 			final Activity activity) {
 		setName(name);
-		setDate(date);
-		setTime(time);
+		setDateTime(datetime);
 		setCreditCost(creditCost);
 		setCoach(coach);
 		setActivity(activity);
@@ -109,21 +106,14 @@ public class Event implements Serializable {
 		this.name = name;
 	}
 	
-	public Date getDate() {
-		return date;
+	public LocalDateTime getDateTime() {
+		return datetime;
 	}
 
-	public void setDate(Date date) {
-		this.date = date;
+	public void setDateTime(LocalDateTime date) {
+		this.datetime = date;
 	}
 
-	public Date getTime() {
-		return time;
-	}
-
-	public void setTime(Date time) {
-		this.time = time;
-	}
 
 
 	public int getCreditCost() {
@@ -184,7 +174,7 @@ public class Event implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Event [id=" + id + ", name=" + name + ", date=" + date + ", time=" + time + ", creditCost=" + creditCost
+		return "Event [id=" + id + ", name=" + name + ", date and time=" + datetime + ", creditCost=" + creditCost
 				+ ", duration=" + duration + ", description=" + description + ", intensity=" + intensity
 				+ ", equipment=" + equipment + ", coach=" + coach + ", activity=" + activity + "]";
 	}

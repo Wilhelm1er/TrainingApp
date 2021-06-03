@@ -67,7 +67,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 			try {
 				eventDTO = sportService.findEvent(eventId);
 				ShoppingCartEventDTO ShoppingCartEventDTO = new ShoppingCartEventDTO(eventId, eventDTO.getName(),
-						eventDTO.getDate(), eventDTO.getDescription(), eventDTO.getCreditCost());
+						eventDTO.getDateTime(), eventDTO.getDescription(), eventDTO.getCreditCost());
 				events.add(ShoppingCartEventDTO);
 			} catch (FinderException e) {
 				LOGGER.error(mname + " - eventId : " + eventId + " => " + e.getMessage());
@@ -87,8 +87,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 	}
 
 	@Override
-	public Double getTotal() {
-		double total = 0.0;
+	public int getTotal() {
+		int total = 0;
 		Collection<ShoppingCartEventDTO> cartEvents = getEvents();
 		Iterator<ShoppingCartEventDTO> it = cartEvents.iterator();
 		while (it.hasNext()) {

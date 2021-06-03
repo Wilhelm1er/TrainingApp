@@ -330,7 +330,6 @@ public class SportServiceImpl implements SportService {
 		final String mname = "createEvent";
 		LOGGER.debug("entering " + mname);
 
-		System.out.println("event: " + eventDTO);
 		if (eventDTO == null || eventDTO.getActivityDTO() == null)
 			throw new CreateException("Event object is invalid");
 

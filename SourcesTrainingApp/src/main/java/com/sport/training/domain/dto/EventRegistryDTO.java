@@ -18,15 +18,23 @@ public class EventRegistryDTO implements Serializable {
 	// ======================================
 	private Long id;
 	private Date registerDate;
-	private UserDTO athleteDTO;
+	private UserDTO userDTO;
 	private EventDTO eventDTO;
 
 	// ======================================
 	// = Constructors =
 	// ======================================
-    public EventRegistryDTO(final UserDTO athleteDTO, final EventDTO eventDTO) {
-    	setAthleteDTO(athleteDTO);
-    	setEventDTO(eventDTO);
+	
+	public EventRegistryDTO() {
+    	id=0L;
+        registerDate=null;
+	userDTO=new UserDTO();
+	eventDTO=new EventDTO();
+    }
+	
+	public EventRegistryDTO(UserDTO userDTO, EventDTO eventDTO) {       	
+        this.userDTO = userDTO;
+    	this.eventDTO = eventDTO;
     }
 
 	// ======================================
@@ -52,12 +60,12 @@ public class EventRegistryDTO implements Serializable {
 		this.eventDTO = eventDTO;
 	}
 
-	public UserDTO getAthleteDTO() {
-		return athleteDTO;
+	public UserDTO getUserDTO() {
+		return userDTO;
 	}
 
-	public void setAthleteDTO(UserDTO athleteDTO) {
-		this.athleteDTO = athleteDTO;
+	public void setUserDTO(UserDTO athleteDTO) {
+		this.userDTO = athleteDTO;
 	}
 
 	@Override
@@ -66,8 +74,8 @@ public class EventRegistryDTO implements Serializable {
 		buf.append("Event RegistryDTO{");
 		buf.append("id=").append(getId());
 		buf.append(",registerDate=").append(getRegisterDate());
-	    buf.append(",eventID=").append(getId());
-	    buf.append(",athleteID=").append(getAthleteDTO().getUsername());
+	    buf.append(",eventID=").append(getEventDTO().getId());
+	    buf.append(",athleteID=").append(getUserDTO().getUsername());
 		buf.append('}');
 		return buf.toString();
 	}

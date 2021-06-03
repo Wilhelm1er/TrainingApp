@@ -8,9 +8,11 @@ import org.springframework.context.annotation.Configuration;
 import com.sport.training.authentication.domain.dto.UserDTO;
 import com.sport.training.authentication.domain.model.User;
 import com.sport.training.domain.dto.EventDTO;
+import com.sport.training.domain.dto.EventRegistryDTO;
 import com.sport.training.domain.dto.ActivityDTO;
 import com.sport.training.domain.dto.BookmarkDTO;
 import com.sport.training.domain.model.Event;
+import com.sport.training.domain.model.EventRegistry;
 import com.sport.training.domain.model.Activity;
 import com.sport.training.domain.model.Bookmark;
 
@@ -57,6 +59,15 @@ public class MapperConfig {
 		TypeMap<Event, EventDTO> typeMap = modelMapper.createTypeMap(Event.class, EventDTO.class);
 		typeMap.addMappings(mapper -> mapper.map(Event::getCoach, EventDTO::setCoachDTO));
 		typeMap.addMappings(mapper -> mapper.map(Event::getActivity, EventDTO::setActivityDTO));
+		return modelMapper;
+	}
+	
+	@Bean
+	public ModelMapper eventRegistryModelMapper() {
+		ModelMapper modelMapper = new ModelMapper();
+		TypeMap<EventRegistry, EventRegistryDTO> typeMap = modelMapper.createTypeMap(EventRegistry.class, EventRegistryDTO.class);
+		typeMap.addMappings(mapper -> mapper.map(EventRegistry::getUser, EventRegistryDTO::setUserDTO));
+		typeMap.addMappings(mapper -> mapper.map(EventRegistry::getEvent, EventRegistryDTO::setEventDTO));
 		return modelMapper;
 	}
 	

@@ -2,6 +2,7 @@ package com.sport.training.api;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.sport.training.authentication.domain.dto.UserDTO;
+import com.sport.training.authentication.domain.service.CustomUserDetails;
 import com.sport.training.authentication.domain.service.UserService;
+import com.sport.training.domain.dto.CreditRegistryDTO;
 import com.sport.training.domain.dto.EventRegistryDTO;
 import com.sport.training.domain.dto.ShoppingCartEventDTO;
 import com.sport.training.domain.service.RegistryService;
@@ -46,7 +49,7 @@ public class ShoppingCartCheckoutController {
 
 	@GetMapping("/checkout")
 	protected String checkout(Model model, @Valid @ModelAttribute EventRegistryDTO eventRegistryDTO,
-			Authentication authentication) {
+			Authentication authentication) throws CreateException {
 		final String mname = "checkout";
 		LOGGER.debug("entering " + mname);
 
@@ -55,14 +58,16 @@ public class ShoppingCartCheckoutController {
 			model.addAttribute("exception", "no authenticated user");
 			return "error";
 		}
-		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+		CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 		String username = userDetails.getUsername();
 		UserDTO athleteDTO;
+		CreditRegistryDTO creditRegistryDTO;
+		int newSolde;
 		try {
 
 			athleteDTO = userService.findUser(username);
 			if (athleteDTO.getCredit() < shoppingCartService.getTotal()) {
-				model.addAttribute("exception", "not enough credit");
+				model.addAttribute("exception", "Not enough credit");
 				return "error";
 			}
 
@@ -72,16 +77,27 @@ public class ShoppingCartCheckoutController {
 				ShoppingCartEventDTO ShoppingCartEventDTO = it.next();
 				eventRegistryDTO = new EventRegistryDTO(athleteDTO,
 						sportService.findEvent(ShoppingCartEventDTO.getEventId()));
-				registryService.createEventRegistry(eventRegistryDTO);
-			}
+				try {
+					registryService.createEventRegistry(eventRegistryDTO);
 
+				} catch (CreateException e) {
+					LOGGER.error(mname + " - " + e.getMessage());
+					model.addAttribute("exception",
+							"Already registered for this event: " + eventRegistryDTO.getEventDTO().getName());
+					return "error";
+				}
+			}
+			creditRegistryDTO = new CreditRegistryDTO(athleteDTO, shoppingCartService.getTotal());
+			newSolde = userDetails.getCredit() - shoppingCartService.getTotal();
+			userDetails.setCredit(newSolde);
+			registryService.createCreditRegistry(creditRegistryDTO);
 			shoppingCartService.empty();
-		} catch (CreateException | FinderException e) {
+		} catch (FinderException e) {
 			LOGGER.error(mname + " - " + e.getMessage());
 			model.addAttribute("exception", e.getClass().getName() + " : " + e.getMessage());
 			return "error";
 		}
-		model.addAttribute("eventRegistryId", eventRegistryDTO.getId());
+		model.addAttribute("athleteCredit", userDetails.getCredit());
 
 		LOGGER.debug("exiting " + mname);
 		return "checkout";

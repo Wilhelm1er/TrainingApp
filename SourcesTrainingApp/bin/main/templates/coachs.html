@@ -5,6 +5,8 @@
 </head>
 <body>
 	<nav th:insert="layout/default.html :: navbar"></nav>
+	<form class="form-horizontal" method="post" name="userForm"
+		th:action="@{/bookmark}" th:object="${coachDTO}">
 	<div class="container">
 		<br> <br> <br> <br>
 		<div class="container">
@@ -20,20 +22,25 @@
 							<th class="col-sm-2" th:text="#{new.account.name}"></th>
 							<th class="col-sm-3" th:text="#{user.email}"></th>
 						</tr>
-						<tr th:each="coach : ${coachDTOs}">
-							<td><a class="col-sm-2" th:href="@{'/find-events/'+${coach.username}}" th:text="${coach.username}"></a></td>
-							<td class="col-sm-2" th:text="${coach.firstname}"></td>
-							<td class="col-sm-2" th:text="${coach.lastname}"></td>
-							<td class="col-sm-3" th:text="${coach.email}"></td>
+						<tr th:each="coachDTO : ${coachDTOs}">
+							<td><a class="col-sm-2" th:href="@{'/find-events/'+${coachDTO.username}}" id="coachDTO.username" 
+							th:field="coachDTO.username" th:text="${coachDTO.username}"></a></td>
+							<td class="col-sm-2" th:text="${coachDTO.firstname}"></td>
+							<td class="col-sm-2" th:text="${coachDTO.lastname}"></td>
+							<td class="col-sm-3" th:text="${coachDTO.email}"></td>
+							<td>
+									<button  type="submit" name="bookmarkCreateButton"
+						class="btn btn-primary" th:text=#{coachs.favorite} ></button>
+							</td>
 						</tr>
 					</table>
 				</div>
 			</div>
-		</div>
+		</div></div></form>
 
 		<br> <br> <br> <br> <br>
 		<div th:insert="layout/default.html :: footer"></div>
-	</div>
+	
 	<div th:insert="layout/default.html :: scripts"></div>
 </body>
 </html>

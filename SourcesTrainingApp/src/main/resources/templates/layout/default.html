@@ -62,15 +62,15 @@
 							class="dropdown-item" th:href="@{/display-athletes}"
 							th:text="#{athletes.list}" sec:authorize="hasAnyRole('ADMIN')"></a>
 						<a class="dropdown-item"
-							th:href="@{'/update-account/'+${#authentication.getPrincipal().getUsername()}}"
-							th:text="#{menu.edit.account}"
+							th:href="@{'/account/'+${#authentication.getPrincipal().getUsername()}}"
+							th:text="#{view.account.title}"
 							sec:authorize="hasAnyRole('ATHLETE','COACH')"></a>
 							<a class="dropdown-item"
 							th:href="@{'/bookmark/'+${#authentication.getPrincipal().getUsername()}}"
 							th:text="#{menu.bookmark}"
 							sec:authorize="hasAnyRole('ATHLETE')"></a>
 							<a class="dropdown-item"
-							th:href="@{'/sessions/'+${#authentication.getPrincipal().getUsername()}}"
+							th:href="@{'/athlete-events/'+${#authentication.getPrincipal().getUsername()}}"
 							th:text="#{menu.sessions}"
 							sec:authorize="hasAnyRole('ATHLETE')"></a>
 							<a
@@ -81,7 +81,7 @@
 							th:text="#{coachs.event.list}" sec:authorize="hasAnyRole('COACH')"></a>
 						<a class="dropdown-item" id="logout"
 							href="javascript:document.logoutForm.submit()"
-							th:text="#{menu.logout}">Logout</a>
+							th:text="#{menu.logout}">Se déconnecter</a>
 					</div>
 
 					<form name="logoutForm" th:action="@{/logout}" method="post"

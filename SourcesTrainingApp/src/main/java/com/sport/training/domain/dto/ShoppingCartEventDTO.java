@@ -1,5 +1,6 @@
 package com.sport.training.domain.dto;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.validation.constraints.NotBlank;
@@ -19,8 +20,8 @@ public class ShoppingCartEventDTO {
     private Long eventId;
 	@NotBlank(message = "invalid Name")
     private String eventName;
-	@NotBlank(message = "invalid event date")
-    private Date eventDate;
+	@NotBlank(message = "invalid event datetime")
+    private LocalDateTime eventDateTime;
 	@NotBlank(message = "invalid Description")
     private String eventDescription;
 	@Positive(message = "invalid credit cost")
@@ -29,10 +30,10 @@ public class ShoppingCartEventDTO {
     // ======================================
     // =            Constructors            =
     // ======================================
-    public ShoppingCartEventDTO(final Long eventId, final String eventName,final Date eventDate, final String eventDescription, final int creditCost) {
+    public ShoppingCartEventDTO(final Long eventId, final String eventName,final LocalDateTime localDateTime, final String eventDescription, final int creditCost) {
         this.eventId = eventId;
         this.eventName = eventName;
-        this.eventDate = eventDate;
+        this.eventDateTime = localDateTime;
         this.eventDescription = eventDescription;
         this.creditCost = creditCost;
     }
@@ -48,8 +49,8 @@ public class ShoppingCartEventDTO {
         return eventName;
     }
 
-    public Date getEventDate() {
-        return eventDate;
+    public LocalDateTime getEventDateTime() {
+        return eventDateTime;
     }
 
     public String getEventDescription() {
@@ -65,7 +66,7 @@ public class ShoppingCartEventDTO {
         final StringBuffer buf = new StringBuffer();
         buf.append("EventDTO{");
         buf.append("eventId=").append(getEventId());
-        buf.append(",eventDate=").append(getEventDate());
+        buf.append(",eventDateTime=").append(getEventDateTime());
         buf.append(",description=").append(getEventDescription());
         buf.append(",creditCost=").append(getCreditCost());
         buf.append('}');

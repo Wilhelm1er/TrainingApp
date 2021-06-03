@@ -1,5 +1,7 @@
 package com.sport.training.api;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -89,7 +91,6 @@ public class GestionCoachController {
 		ActivityDTO sActivityDTO;
 		UserDTO userDTO;
 		Long eventId = null;
-		System.out.println("eventId: " + eventRepository.findLastId().get().longValue());
 		try {
 			if (Objects.isNull(eventRepository.findLastId().get().longValue())) {
 				eventId = 1L;
@@ -97,13 +98,12 @@ public class GestionCoachController {
 			eventId = eventRepository.findLastId().get().longValue() + 1;
 			userDTO = userService.findUser(userId);
 			sActivityDTO = sportService.findActivity(activityDTO.getId());
+			model.addAttribute("eventDate", new String());
+			model.addAttribute("eventTime", new String());
 			model.addAttribute("eventDTO", new EventDTO());
 			model.addAttribute("activityDTO", sActivityDTO);
 			model.addAttribute("userDTO", userDTO);
 			model.addAttribute("eventId", eventId.toString());
-			System.out.println("activity: " + sActivityDTO);
-			System.out.println("user: " + userDTO);
-			System.out.println("eventId: " + eventId);
 			return "create-event";
 
 		} catch (Exception e) {
@@ -115,11 +115,20 @@ public class GestionCoachController {
 
 	@PostMapping("/create-event")
 	public String createEvent(@Valid @ModelAttribute EventDTO eventDTO, @ModelAttribute UserDTO userDTO,
-			@ModelAttribute ActivityDTO activityDTO, Model model) {
+			@ModelAttribute("eventDate") String eventDate,
+			@ModelAttribute("eventTime") String eventTime, @ModelAttribute ActivityDTO activityDTO, Model model) {
 		final String mname = "createEvent";
 		LOGGER.debug("entering " + mname);
+		
+		System.out.println("eventTime:"+eventTime);
+		String dateTime=eventDate+' '+eventTime;
+		System.out.println("dateTime:"+dateTime);
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		LocalDateTime eventDateTime = LocalDateTime.parse(dateTime, formatter);
 
 		try {
+			eventDTO.setDateTime(eventDateTime);
 			eventDTO.setActivityDTO(activityDTO);
 			eventDTO.setCoachDTO(userDTO);
 			sportService.createEvent(eventDTO);

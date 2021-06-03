@@ -5,14 +5,11 @@
 </head>
 <body>
 	<nav th:insert="layout/default.html :: navbar"></nav>
-	<br>
-	<br>
-	<form class="form-horizontal" method="post" name="userForm"
-		th:action="@{/cart}" th:object="${eventRegistryDTO}"
-		enctype="multipart/form-data">
-		<div class="album py-5 bg-light">
+	
+	
+	<div class="album py-5 bg-light">
 			<div class="container">
-				<h3 th:if="${userDTO != null}" th:text="#{events.coach}+${userDTO.username}"></h3>
+				<h3 th:text="#{events.coach}+#{events.ListAthlete}"></h3>
 				
 					<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
 					<div th:each="eventDTO : ${eventDTOs}">
@@ -25,7 +22,8 @@
 										th:text="${eventDTO.name}"></a>
 									<p th:text="#{events.activity}+' '+${eventDTO.activityDTO.name}"></p>
 									<p th:text="#{events.coach}+' '+${eventDTO.coachDTO.username}"></p>
-									<p th:text="#{events.dateTime}+' '+${eventDTO.dateTime}"></p>
+									<p th:text="#{events.date}+' '+${eventDTO.date}"></p>
+									<p th:text="#{events.time}+' '+${eventDTO.time}"></p>
 									<p th:text="#{events.description}+' '+${eventDTO.description}"></p>
 									<p th:text="#{events.duration}+' '+${eventDTO.duration}"></p>
 									<p
@@ -35,24 +33,22 @@
 									<p th:text="#{events.cost}"></p>
 									<span th:text="${eventDTO.creditCost}+' crédits'"></span>
 									<div class="d-flex justify-content-between align-items-center">
-										<div sec:authorize="hasRole('ATHLETE')">
-											<a th:if="${username != null}"
-												th:href="@{'/add-to-cart?eventId='+${eventDTO.id}}"
-												th:text="#{cart.add}"></a>
-										</div>
+										
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-		</div>
-	</form>
-
-
-
-	<br>
+			</div></div>
+	
+	
+	
+	
+	
+	
+	
+	
 	<br>
 	<br>
 	<br>

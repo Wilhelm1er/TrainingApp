@@ -14,7 +14,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.sport.training.authentication.domain.dto.UserDTO;
 import com.sport.training.authentication.domain.model.User;
+import com.sport.training.domain.dto.EventDTO;
 
 /**
  * An event register represents the event that an athlete registered. This registration has one
@@ -43,21 +45,24 @@ public class EventRegistry implements Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="USER_FK", nullable = false)
-    @NotNull(message = "invalid Athlete")
-    private User athlete;
+    @NotNull(message = "invalid User")
+    private User user;
 
     // ======================================
     // =            Constructors            =
     // ======================================
-    public EventRegistry() {
-    	this.registerDate=new Date();
+	
+	public EventRegistry() {
+    	id=0L;
+        registerDate=null;
+	user=new User();
+	event=new Event();
     }
-
-	public EventRegistry(final Event event,final User athlete) {
-    	this.registerDate=new Date();
-    	setRegisterDate(registerDate);
-    	setEvent(event);
-        setAthlete(athlete);
+	
+	public EventRegistry(User user, Event event) {   
+		this.registerDate=new Date();
+        this.user = user;
+    	this.event = event;
     }
 
     // ======================================
@@ -88,12 +93,12 @@ public class EventRegistry implements Serializable {
 		this.event = event;
 	}
 
-    public User getAthlete() {
-        return athlete;
+    public User getUser() {
+        return user;
     }
 
-    public void setAthlete(final User athlete) {
-    	this.athlete = athlete;
+    public void setUser(final User user) {
+    	this.user = user;
     }
 
     @Override
@@ -102,8 +107,8 @@ public class EventRegistry implements Serializable {
         buf.append("Event Registry{");
         buf.append("id=").append(getId());
         buf.append(",registerDate=").append(getRegisterDate());
-        buf.append(",eventID=").append(getId());
-        buf.append(",athleteID=").append(getAthlete().getUsername());
+        buf.append(",eventID=").append(getEvent().getId());
+        buf.append(",athleteID=").append(getUser().getUsername());
         buf.append('}');
         return buf.toString();
     }
