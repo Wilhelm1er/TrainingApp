@@ -23,20 +23,26 @@
 							<th class="col-sm-3" th:text="#{user.email}"></th>
 						</tr>
 						<tr th:each="coachDTO : ${coachDTOs}">
+						
 							<td><a class="col-sm-2" th:href="@{'/find-events/'+${coachDTO.username}}" id="coachDTO.username" 
 							th:field="coachDTO.username" th:text="${coachDTO.username}"></a></td>
 							<td class="col-sm-2" th:text="${coachDTO.firstname}"></td>
 							<td class="col-sm-2" th:text="${coachDTO.lastname}"></td>
 							<td class="col-sm-3" th:text="${coachDTO.email}"></td>
+							
 							<td>
-									<button  type="submit" name="bookmarkCreateButton"
-						class="btn btn-primary" th:text=#{coachs.favorite} ></button>
+									<div sec:authorize="hasRole('ATHLETE')">
+											<a 
+												th:href="@{'/bookmark?coachId='+${coachDTO.username}}"
+												th:text="#{coach.favorite}"></a>
+										</div>
 							</td>
 						</tr>
 					</table>
 				</div>
 			</div>
 		</div></div></form>
+
 
 		<br> <br> <br> <br> <br>
 		<div th:insert="layout/default.html :: footer"></div>

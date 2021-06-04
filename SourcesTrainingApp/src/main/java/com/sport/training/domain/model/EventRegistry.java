@@ -39,7 +39,7 @@ public class EventRegistry implements Serializable {
 	private Date registerDate;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "EVENT_FK")
+	@JoinColumn(name = "EVENT_FK", nullable = false)
 	@NotNull(message = "invalid Event")
 	private Event event;
 

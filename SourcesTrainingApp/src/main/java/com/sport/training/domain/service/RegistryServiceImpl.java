@@ -1,5 +1,6 @@
 package com.sport.training.domain.service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,10 +33,12 @@ import com.sport.training.domain.dao.EventRepository;
 import com.sport.training.domain.dto.CreditRegistryDTO;
 import com.sport.training.domain.dto.DisciplineDTO;
 import com.sport.training.domain.dto.DisciplineRegistryDTO;
+import com.sport.training.domain.dto.EventDTO;
 import com.sport.training.domain.dto.EventRegistryDTO;
 import com.sport.training.domain.model.CreditRegistry;
 import com.sport.training.domain.model.Discipline;
 import com.sport.training.domain.model.DisciplineRegistry;
+import com.sport.training.domain.model.Event;
 import com.sport.training.domain.model.EventRegistry;
 import com.sport.training.exception.CreateException;
 import com.sport.training.exception.FinderException;
@@ -55,7 +58,7 @@ public class RegistryServiceImpl implements RegistryService {
 	// ======================================
 
 	@Autowired
-	private ModelMapper commonModelMapper, userDTOModelMapper, eventRegistryModelMapper;
+	private ModelMapper commonModelMapper, userDTOModelMapper, eventRegistryModelMapper, eventModelMapper;
 
 	@Autowired
 	private DisciplineRegistryRepository disciplineRegistryRepository;
@@ -297,7 +300,7 @@ public class RegistryServiceImpl implements RegistryService {
 		}
 
 		// :::::::::::::::: We change DTO to model ::::::::::::::: //
-		EventRegistry eventRegistry = commonModelMapper.map(eventRegistryDTO, EventRegistry.class);
+		EventRegistry eventRegistry = eventRegistryModelMapper.map(eventRegistryDTO, EventRegistry.class);
 
 		if (eventRegistryRepository.findByUserAndEvent(eventRegistry.getUser(), eventRegistry.getEvent())!=null)
 			throw new CreateException("EventRegistry object already exist");
@@ -359,7 +362,7 @@ public class RegistryServiceImpl implements RegistryService {
 			throw new UpdateException("Event registry must exist to be updated");
 
 		// :::::::::::::::: We change DTO to model ::::::::::::::: //
-		EventRegistry updatedEventRegistry = commonModelMapper.map(updatedEventRegistryDTO, EventRegistry.class);
+		EventRegistry updatedEventRegistry = eventRegistryModelMapper.map(updatedEventRegistryDTO, EventRegistry.class);
 		// Updates the object
 		eventRegistryRepository.save(updatedEventRegistry);
 		LOGGER.debug("exiting " + mname);
@@ -378,7 +381,7 @@ public class RegistryServiceImpl implements RegistryService {
 			throw new FinderException("No event in the database");
 		}
 		List<EventRegistryDTO> eventRegistryDTOs = ((List<EventRegistry>) eventRegistries).stream()
-				.map(eventRegistry -> commonModelMapper.map(eventRegistry, EventRegistryDTO.class))
+				.map(eventRegistry -> eventRegistryModelMapper.map(eventRegistry, EventRegistryDTO.class))
 				.collect(Collectors.toList());
 
 		LOGGER.debug("exiting " + mname + " size of collection : " + size);
@@ -386,35 +389,118 @@ public class RegistryServiceImpl implements RegistryService {
 	}
 	
 	@Override
-	public List<EventRegistryDTO> findEventRegistriesByAthlete(final String athleteId) throws FinderException {
-		final String mname = "findEventRegistriesByAthlete";
+	@Transactional(readOnly = true)
+	public List<EventDTO> findEventsByAthlete(String athleteId) throws FinderException {
+		final String mname = "findEventsByAthlete";
 		LOGGER.debug("entering " + mname);
 
 		checkStringId(athleteId);
-		
+
 		User athlete = null;
-		
 		if (!userRepository.findById(athleteId).isPresent())
 			throw new FinderException("Athlete must exist to be found");
 		else
 			athlete = userRepository.findById(athleteId).get();
-		
+
 		// Finds all the objects
-		final Iterable<EventRegistry> eventRegistries = eventRegistryRepository.findAllByUser(athlete);
-		
-		for(EventRegistry event:eventRegistries) {
-			System.out.println("eventreg: "+event);
-		}
+		final Iterable<EventRegistry> eventRegistriesByAthlete = eventRegistryRepository
+				.findAllByUser(athlete);
+
 		int size;
-		if ((size = ((Collection<EventRegistry>) eventRegistries).size()) == 0) {
-			throw new FinderException("No event in the database");
+		if ((size = ((Collection<EventRegistry>) eventRegistriesByAthlete).size()) == 0) {
+			throw new FinderException("No Event in the database");
 		}
-		List<EventRegistryDTO> eventRegistryDTOs = ((List<EventRegistry>) eventRegistries).stream()
-				.map(eventRegistry -> eventRegistryModelMapper.map(eventRegistry, EventRegistryDTO.class))
-				.collect(Collectors.toList());
+
+		List<Event> eventList = new ArrayList<Event>();
+
+		for (EventRegistry eventReg : eventRegistriesByAthlete) {
+				eventList.add(eventReg.getEvent());
+		
+		}
+		int size2;
+		if ((size2 = ((Collection<Event>) eventList).size()) == 0) {
+			throw new FinderException("No Event in the database");
+		}
+
+		List<EventDTO> eventDTOs = (eventList.stream().map(event -> eventModelMapper.map(event, EventDTO.class))
+				.collect(Collectors.toList()));
 
 		LOGGER.debug("exiting " + mname + " size of collection : " + size);
-		return eventRegistryDTOs;
+		return eventDTOs;
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public EventRegistryDTO findEventRegistryByAthleteAndEvent(String coachId, Long eventId) throws FinderException {
+		final String mname = "findEventRegistryByAthleteAndEvent";
+		LOGGER.debug("entering " + mname);
+
+		checkStringId(coachId);
+		checkId(eventId);
+
+		User coach = null;
+		if (!userRepository.findById(coachId).isPresent())
+			throw new FinderException("Coach must exist to be found");
+		else
+			coach = userRepository.findById(coachId).get();
+		
+		Event event = null;
+		if (!eventRepository.findById(eventId).isPresent())
+			throw new FinderException("Event must exist to be found");
+		else
+			event = eventRepository.findById(eventId).get();
+
+		// Finds all the objects
+		final EventRegistry eventRegistriyByUserAndEvent = eventRegistryRepository
+				.findByUserAndEvent(coach, event);
+
+		// :::::::::::::::: We change DTO to model ::::::::::::::: //
+		EventRegistryDTO EventRegistryDTO = eventRegistryModelMapper.map(eventRegistriyByUserAndEvent, EventRegistryDTO.class);
+
+		LOGGER.debug("exiting " + mname);
+		return EventRegistryDTO;
+	}
+	
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<UserDTO> findAthleteByEvent(Long eventId) throws FinderException {
+		final String mname = "findAthleteByEvent";
+		LOGGER.debug("entering " + mname);
+
+		checkId(eventId);
+
+		Event event = null;
+		if (!eventRepository.findById(eventId).isPresent())
+			throw new FinderException("Event must exist to be found");
+		else
+			event = eventRepository.findById(eventId).get();
+
+		// Finds all the objects
+		final Iterable<EventRegistry> eventRegistriesByEvent = eventRegistryRepository
+				.findAllByEvent(event);
+
+		int size;
+		if ((size = ((Collection<EventRegistry>) eventRegistriesByEvent).size()) == 0) {
+			throw new FinderException("No Event in the database");
+		}
+
+		List<User> userList = new ArrayList<User>();
+
+		for (EventRegistry eventReg : eventRegistriesByEvent) {
+				userList.add(eventReg.getUser());
+		
+		}
+		int size2;
+		if ((size2 = ((Collection<User>) userList).size()) == 0) {
+			throw new FinderException("No User in the database");
+		}
+
+		List<UserDTO> userDTOs = (userList.stream().map(user -> userDTOModelMapper.map(user, UserDTO.class))
+				.collect(Collectors.toList()));
+
+		LOGGER.debug("exiting " + mname + " size of collection : " + size);
+		return userDTOs;
 	}
 
 	// ======================================
@@ -563,5 +649,6 @@ public class RegistryServiceImpl implements RegistryService {
 		if (id == null || id.equals(""))
 			throw new FinderException(id + " should not be null or empty");
 	}
+
 
 }

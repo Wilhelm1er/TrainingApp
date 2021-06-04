@@ -12,4 +12,6 @@ public interface EventRegistryRepository extends CrudRepository<EventRegistry, L
 	
 	EventRegistry findByUserAndEvent(User user, Event event);
 
+	Iterable<EventRegistry> findAllByEvent(Event event);
+
 }

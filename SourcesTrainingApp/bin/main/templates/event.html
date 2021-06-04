@@ -18,7 +18,7 @@
 		<table>
 		<tr style="border-bottom:0.5px solid grey">
 		<td style="padding-right:1em;padding-bottom:0.5em"><span th:text="${eventDTO.id}"></span>
-		<a th:href="@{'/find-event?eventId='+${eventDTO.id}}" th:text="${eventDTO.name}" ></a> <span th:text="${eventDTO.date}"></span>
+		<a th:href="@{'/find-event?eventId='+${eventDTO.id}}" th:text="${eventDTO.name}" ></a> <span th:text="${eventDTO.dateTime}"></span>
 		<br>
 		<span th:text="${eventDTO.activityDTO.description}"></span>
     	</td>

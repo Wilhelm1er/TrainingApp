@@ -22,7 +22,7 @@
 		<td style="width:50%"> 
 			<a th:href="@{'/find-event?eventId='+${cartEvent.eventId}}" th:text="${cartEvent.eventName}"></a>
 			<p th:text="${cartEvent.eventDescription}"/>
-			<p th:text="${cartEvent.eventDate}"/>
+			<p th:text="${cartEvent.eventDateTime}"/>
             <input type="hidden" name="eventId" th:value="${cartEvent.eventId}">
 		</td>
 		<td style="padding-right:0.5em">

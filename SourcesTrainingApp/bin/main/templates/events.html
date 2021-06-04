@@ -36,9 +36,24 @@
 									<span th:text="${eventDTO.creditCost}+' crédits'"></span>
 									<div class="d-flex justify-content-between align-items-center">
 										<div sec:authorize="hasRole('ATHLETE')">
-											<a th:if="${username != null}"
+											<a 
 												th:href="@{'/add-to-cart?eventId='+${eventDTO.id}}"
 												th:text="#{cart.add}"></a>
+										</div>
+									</div>
+									
+									<div class="d-flex justify-content-between align-items-center">
+										<div sec:authorize="hasRole('COACH')">
+											<a 
+												th:href="@{'/update-event?eventId='+${eventDTO.id}}"
+												th:text="#{events.modify}"></a>
+										</div>
+									</div>
+									<div class="d-flex justify-content-between align-items-center">
+										<div sec:authorize="hasRole('COACH')">
+											<a
+												th:href="@{'/delete-event?eventId='+${eventDTO.id}}"
+												th:text="#{events.delete}"></a>
 										</div>
 									</div>
 								</div>

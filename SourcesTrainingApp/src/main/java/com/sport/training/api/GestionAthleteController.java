@@ -1,5 +1,6 @@
 package com.sport.training.api;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,16 +17,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.sport.training.authentication.domain.dto.UserDTO;
+import com.sport.training.authentication.domain.service.CustomUserDetails;
 import com.sport.training.authentication.domain.service.UserService;
 import com.sport.training.domain.dto.BookmarkDTO;
+import com.sport.training.domain.dto.CreditRegistryDTO;
 import com.sport.training.domain.dto.EventDTO;
 import com.sport.training.domain.dto.EventRegistryDTO;
 import com.sport.training.domain.service.CoachService;
 import com.sport.training.domain.service.RegistryService;
+import com.sport.training.domain.service.SportService;
 import com.sport.training.exception.CreateException;
 import com.sport.training.exception.FinderException;
+import com.sport.training.exception.RemoveException;
 
 @Controller
 public class GestionAthleteController {
@@ -39,75 +45,87 @@ public class GestionAthleteController {
 	private CoachService coachService;
 
 	@Autowired
+	private SportService sportService;
+
+	@Autowired
 	private RegistryService registryService;
 
 	@GetMapping(path = "/bookmark")
-	public String showBookmark(Model model, Authentication authentication) {
+	public String showBookmark(Model model, @RequestParam String coachId, Authentication authentication)
+			throws CreateException {
 		final String mname = "showBookmark";
 		LOGGER.debug("entering " + mname);
 
-		List<BookmarkDTO> bookmarkDTOs = null;
-		try {
-			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-			bookmarkDTOs = coachService.findBookmarksByAthlete(userDetails.getUsername());
-
-		} catch (FinderException e) {
-			LOGGER.error("exception in " + mname + " : " + e.getMessage());
-			model.addAttribute("exception", e.getClass().getName());
-			return "error";
-		}
-		model.addAttribute("bookmarkDTOs", bookmarkDTOs);
-
-		return "bookmark";
-	}
-
-	@PostMapping(path = "/bookmark")
-	public String addBookmark(Model model, @Valid @ModelAttribute("coachDTO") UserDTO coachDTO, Authentication authentication)
-			throws CreateException {
-		final String mname = "addBookmark";
-		LOGGER.debug("entering " + mname);
-
-		List<BookmarkDTO> bookmarkDTOs = null;
-		UserDTO userDTO;
+		UserDTO athleteDTO = null;
+		UserDTO coachDTO;
+		System.out.println("coachID: " + coachId);
+		List<BookmarkDTO> bookmarkDTOs = new ArrayList<BookmarkDTO>();
 		
-		System.out.println("coach: "+coachDTO);
-
 		try {
 			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-			userDTO = userService.findUser(userDetails.getUsername());
-			bookmarkDTOs = coachService.findBookmarksByAthlete(userDetails.getUsername());
-			for (BookmarkDTO bookmark : bookmarkDTOs) {
-				if (bookmark.getCoachDTO() == null) {
-					coachService.createBookmark(new BookmarkDTO(userDTO, coachDTO));
+			athleteDTO = userService.findUser(userDetails.getUsername());
+			bookmarkDTOs = coachService.findBookmarksByAthlete(athleteDTO.getUsername());
+			if (coachId != null) {
+				coachDTO = userService.findUser(coachId);
+				if (bookmarkDTOs.isEmpty()) {
+					coachService.createBookmark(new BookmarkDTO(athleteDTO, coachDTO));
 				}
+				for (BookmarkDTO bookmark : bookmarkDTOs) {
+					if (bookmark.getCoachDTO() == null) {
+						coachService.createBookmark(new BookmarkDTO(athleteDTO, coachDTO));
+					}
+				}
+				model.addAttribute("bookmarkDTOs", bookmarkDTOs);
 			}
-
 		} catch (FinderException e) {
 			LOGGER.error("exception in " + mname + " : " + e.getMessage());
 			model.addAttribute("exception", e.getClass().getName());
 			return "error";
 		}
-		model.addAttribute("userDTO", userDTO);
-		model.addAttribute("bookmarkDTOs", bookmarkDTOs);
 
-		return "bookmark";
+		return "index";
 	}
+
+	/*
+	 * @PostMapping(path = "/bookmark") public String addBookmark(Model
+	 * model, @Valid @ModelAttribute("coachDTO") UserDTO coachDTO, Authentication
+	 * authentication) throws CreateException { final String mname = "addBookmark";
+	 * LOGGER.debug("entering " + mname);
+	 * 
+	 * List<BookmarkDTO> bookmarkDTOs = null; UserDTO userDTO;
+	 * 
+	 * System.out.println("coach: " + coachDTO);
+	 * 
+	 * try { UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+	 * userDTO = userService.findUser(userDetails.getUsername()); bookmarkDTOs =
+	 * coachService.findBookmarksByAthlete(userDetails.getUsername()); for
+	 * (BookmarkDTO bookmark : bookmarkDTOs) { if (bookmark.getCoachDTO() == null) {
+	 * coachService.createBookmark(new BookmarkDTO(userDTO, coachDTO)); } }
+	 * 
+	 * } catch (FinderException e) { LOGGER.error("exception in " + mname + " : " +
+	 * e.getMessage()); model.addAttribute("exception", e.getClass().getName());
+	 * return "error"; } model.addAttribute("userDTO", userDTO);
+	 * model.addAttribute("bookmarkDTOs", bookmarkDTOs);
+	 * 
+	 * return "bookmark"; }
+	 */
 
 	@GetMapping(path = "/athlete-events/{username}")
 	public String showEventsByAthlete(Model model, @PathVariable String username) {
 		final String mname = "showEventsByAthlete";
 		LOGGER.debug("entering " + mname);
 
-		List<EventRegistryDTO> eventregistryDTOs;
 		List<EventDTO> eventDTOs = new ArrayList<EventDTO>();
+		LocalDateTime dateNow = LocalDateTime.now();
+		
 		try {
-			eventregistryDTOs = registryService.findEventRegistriesByAthlete(username);
-			if(eventregistryDTOs!=null) {
-			for (EventRegistryDTO eventReg : eventregistryDTOs) {
-				eventDTOs.add(eventReg.getEventDTO());
-				System.out.println("event: "+eventReg.getEventDTO());
-			}}
-
+			eventDTOs = registryService.findEventsByAthlete(username);
+			for(EventDTO eventDTO:eventDTOs) {
+				// checke si les 30minutes avant event sont depassé pour annuler
+				if(eventDTO.getDateTime().minusMinutes(30).isBefore(dateNow)) {
+					eventDTO.setVoidable(1);
+				}
+			}
 		} catch (FinderException e) {
 			LOGGER.error("exception in " + mname + " : " + e.getMessage());
 			model.addAttribute("exception", e.getClass().getName());
@@ -117,4 +135,76 @@ public class GestionAthleteController {
 
 		return "athlete-events";
 	}
+
+	@GetMapping("/cancel-event/{eventId}")
+	protected String cancelEvent(Model model, @PathVariable Long eventId, Authentication authentication)
+			throws FinderException, RemoveException, CreateException {
+		final String mname = "cancelEvent";
+		LOGGER.debug("entering " + mname);
+
+		// A user must be authenticated
+		if (authentication == null) {
+			model.addAttribute("exception", "no authenticated user");
+			return "error";
+		}
+		CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+		String username = userDetails.getUsername();
+		UserDTO athleteDTO;
+		EventRegistryDTO eventReg;
+		EventDTO eventDTO = null;
+		int newSolde;
+		try {
+			athleteDTO = userService.findUser(username);
+			eventReg = registryService.findEventRegistryByAthleteAndEvent(userDetails.getUsername(), eventId);
+			eventDTO = sportService.findEvent(eventId);
+			newSolde = userDetails.getCredit() + eventDTO.getCreditCost();
+			userDetails.setCredit(newSolde);
+			registryService.createCreditRegistry(new CreditRegistryDTO(athleteDTO, eventDTO.getCreditCost()));
+			registryService.deleteEventRegistry(eventReg.getId());
+
+		} catch (FinderException e) {
+			LOGGER.error("exception in " + mname + " : " + e.getMessage());
+			model.addAttribute("exception", e.getClass().getName());
+			return "error";
+		}
+		LOGGER.debug("exiting " + mname);
+		return "index";
+	}
+	
+	@GetMapping("/display-event/{eventId}")
+	protected String displayEvent(Model model, @PathVariable Long eventId, Authentication authentication)
+			throws FinderException, RemoveException, CreateException {
+		final String mname = "displayEvent";
+		LOGGER.debug("entering " + mname);
+
+		// A user must be authenticated
+		if (authentication == null) {
+			model.addAttribute("exception", "no authenticated user");
+			return "error";
+		}
+		CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+		String username = userDetails.getUsername();
+		UserDTO athleteDTO;
+		List<UserDTO> userDTOs;
+		EventDTO eventDTO;
+		try {
+			athleteDTO = userService.findUser(username);
+			userDTOs = registryService.findAthleteByEvent(eventId);
+			eventDTO = sportService.findEvent(eventId);
+
+		} catch (FinderException e) {
+			LOGGER.error("exception in " + mname + " : " + e.getMessage());
+			model.addAttribute("exception", e.getClass().getName());
+			return "error";
+		}
+		model.addAttribute("athleteDTO", athleteDTO);
+		model.addAttribute("eventDTO", eventDTO);
+		model.addAttribute("userDTOs", userDTOs);
+		
+		LOGGER.debug("exiting " + mname);
+		return "display-event";
+	}
+	
+	
+	
 }

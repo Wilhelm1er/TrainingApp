@@ -61,6 +61,9 @@ public class Event implements Serializable {
 	@Column(name = "EQUIPMENT")
 	private String equipment;
 	
+	@Column(name = "VOIDABLE")
+	private int voidable;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "COACH_FK")
 	@NotNull(message = "invalid Coach")
@@ -79,6 +82,7 @@ public class Event implements Serializable {
 	
 	public Event(final String name, final LocalDateTime datetime, final Date time, final int creditCost, final User coach,
 			final Activity activity) {
+		setVoidable(0);
 		setName(name);
 		setDateTime(datetime);
 		setCreditCost(creditCost);
@@ -114,7 +118,13 @@ public class Event implements Serializable {
 		this.datetime = date;
 	}
 
+	public int getVoidable() {
+		return voidable;
+	}
 
+	public void setVoidable(int voidable) {
+		this.voidable = voidable;
+	}
 
 	public int getCreditCost() {
 		return creditCost;
@@ -174,9 +184,10 @@ public class Event implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Event [id=" + id + ", name=" + name + ", date and time=" + datetime + ", creditCost=" + creditCost
+		return "Event [id=" + id + ", name=" + name + ", datetime=" + datetime + ", creditCost=" + creditCost
 				+ ", duration=" + duration + ", description=" + description + ", intensity=" + intensity
-				+ ", equipment=" + equipment + ", coach=" + coach + ", activity=" + activity + "]";
+				+ ", equipment=" + equipment + ", voidable=" + voidable + ", coach=" + coach + ", activity=" + activity
+				+ "]";
 	}
 
 

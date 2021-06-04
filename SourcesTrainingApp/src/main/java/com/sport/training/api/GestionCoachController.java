@@ -151,8 +151,6 @@ public class GestionCoachController {
 		LOGGER.debug("entering " + mname);
 		try {
 			sportService.deleteEvent(eventId);
-			List<DisciplineDTO> disciplineDTOs = sportService.findDisciplines();
-			model.addAttribute("disciplineDTOs", disciplineDTOs);
 			model.addAttribute("eventDeleted", eventId);
 		} catch (RemoveException | FinderException e) {
 			LOGGER.error("exception in " + mname + " : " + e.getMessage());
@@ -163,7 +161,7 @@ public class GestionCoachController {
 			model.addAttribute("exception", e.getMessage());
 			return "error";
 		}
-		return "manage-sport";
+		return "events";
 	}
 
 	@PostMapping("/update-event")
@@ -172,11 +170,9 @@ public class GestionCoachController {
 		LOGGER.debug("entering " + mname);
 		try {
 			sportService.updateEvent(eventDTO);
-			List<DisciplineDTO> disciplineDTOs = sportService.findDisciplines();
-			model.addAttribute("disciplineDTOs", disciplineDTOs);
 			model.addAttribute("eventUpdated", eventDTO.getId());
-			return "manage-sport";
-		} catch (FinderException | UpdateException e) {
+			return "events";
+		} catch ( UpdateException e) {
 			LOGGER.error("exception in " + mname + " : " + e.getMessage());
 			model.addAttribute("exception", e.getClass().getName());
 			return "error";

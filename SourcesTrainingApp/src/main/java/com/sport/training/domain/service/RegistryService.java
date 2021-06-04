@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import com.sport.training.domain.dto.CreditRegistryDTO;
 import com.sport.training.domain.dto.DisciplineDTO;
 import com.sport.training.domain.dto.DisciplineRegistryDTO;
+import com.sport.training.domain.dto.EventDTO;
 import com.sport.training.domain.dto.EventRegistryDTO;
 import com.sport.training.exception.CreateException;
 import com.sport.training.exception.FinderException;
@@ -50,7 +51,11 @@ public interface RegistryService {
 
 	public List<EventRegistryDTO> findEventRegistries() throws FinderException;
 	
-	public List<EventRegistryDTO> findEventRegistriesByAthlete(final String athleteId) throws FinderException;
+	List<EventDTO> findEventsByAthlete(String athleteId) throws FinderException;
+	
+	EventRegistryDTO findEventRegistryByAthleteAndEvent(String coachId, Long eventId) throws FinderException;
+	
+	public List<UserDTO> findAthleteByEvent(Long eventId) throws FinderException;
 	
 
 	// ======================================
@@ -68,5 +73,5 @@ public interface RegistryService {
 	public List<CreditRegistryDTO> findCreditRegistries() throws FinderException;
 
 	public Map<Date, Integer> findDateAndCreditByUser(final String userId) throws FinderException;
-
+	
 }
