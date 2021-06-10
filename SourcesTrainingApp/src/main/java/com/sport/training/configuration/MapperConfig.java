@@ -9,12 +9,18 @@ import com.sport.training.authentication.domain.dto.UserDTO;
 import com.sport.training.authentication.domain.model.User;
 import com.sport.training.domain.dto.EventDTO;
 import com.sport.training.domain.dto.EventRegistryDTO;
+import com.sport.training.domain.dto.MessageDTO;
 import com.sport.training.domain.dto.ActivityDTO;
 import com.sport.training.domain.dto.BookmarkDTO;
+import com.sport.training.domain.dto.DisciplineRegistryDTO;
+import com.sport.training.domain.dto.DiscussionDTO;
 import com.sport.training.domain.model.Event;
 import com.sport.training.domain.model.EventRegistry;
+import com.sport.training.domain.model.Message;
 import com.sport.training.domain.model.Activity;
 import com.sport.training.domain.model.Bookmark;
+import com.sport.training.domain.model.DisciplineRegistry;
+import com.sport.training.domain.model.Discussion;
 
 @Configuration
 public class MapperConfig {
@@ -70,6 +76,15 @@ public class MapperConfig {
 		typeMap.addMappings(mapper -> mapper.map(EventRegistry::getEvent, EventRegistryDTO::setEventDTO));
 		return modelMapper;
 	}
+	@Bean
+	public ModelMapper disciplineRegistryModelMapper() {
+		ModelMapper modelMapper = new ModelMapper();
+		TypeMap<DisciplineRegistry, DisciplineRegistryDTO> typeMap = modelMapper.createTypeMap(DisciplineRegistry.class, DisciplineRegistryDTO.class);
+		typeMap.addMappings(mapper -> mapper.map(DisciplineRegistry::getCoach, DisciplineRegistryDTO::setCoachDTO));
+		typeMap.addMappings(mapper -> mapper.map(DisciplineRegistry::getDiscipline, DisciplineRegistryDTO::setDisciplineDTO));
+		return modelMapper;
+	}
+
 	
 	@Bean
 	public ModelMapper bookmarkModelMapper() {
@@ -79,5 +94,22 @@ public class MapperConfig {
 		typeMap.addMappings(mapper -> mapper.map(Bookmark::getCoach, BookmarkDTO::setCoachDTO));
 		return modelMapper;
 	}
-
+	
+	@Bean
+	public ModelMapper messageModelMapper() {
+		ModelMapper modelMapper = new ModelMapper();
+		TypeMap<Message, MessageDTO> typeMap = modelMapper.createTypeMap(Message.class, MessageDTO.class);
+		typeMap.addMappings(mapper -> mapper.map(Message::getRecipient, MessageDTO::setRecipientDTO));
+		typeMap.addMappings(mapper -> mapper.map(Message::getSender, MessageDTO::setSenderDTO));
+		typeMap.addMappings(mapper -> mapper.map(Message::getDiscussion, MessageDTO::setDiscussionDTO));
+		return modelMapper;
+	}
+	
+	@Bean
+	public ModelMapper discussionModelMapper() {
+		ModelMapper modelMapper = new ModelMapper();
+		TypeMap<Discussion, DiscussionDTO> typeMap = modelMapper.createTypeMap(Discussion.class, DiscussionDTO.class);
+		typeMap.addMappings(mapper -> mapper.map(Discussion::getUser, DiscussionDTO::setUserDTO));
+		return modelMapper;
+	}
 }

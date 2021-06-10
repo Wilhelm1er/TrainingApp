@@ -60,7 +60,7 @@ public class ActivityRestController {
 	}
 	
 	@GetMapping("/activity/{activityId}")
-	public ResponseEntity<ActivityDTO> getProduct(@PathVariable String activityId) {
+	public ResponseEntity<ActivityDTO> getActivity(@PathVariable String activityId) {
 		final String mname = "getActivity";
 		LOGGER.debug("entering "+mname);
 		try {

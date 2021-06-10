@@ -11,12 +11,12 @@
 	<br>
 	<div class="container" sec:authorize="hasRole('COACH')">
 
-		<h5 th:text="#{user.discipline.information}"></h5>
+		<h5 th:text="#{user.discipline.choice}"></h5>
 
 		<div id="decision" class="row" style="margin-top: 1%;">
 			<div class="col-md-4"
 				th:each="element : ${activityByDisciplinesCoach}">
-				<span th:text="${element.key}"></span> <br>
+				<span th:text="${element.key}"></span> <br><br>
 				<form class="form-horizontal" name="selectActivityForm"
 					method="post"
 					th:action="@{'/select-activity?userId='+${userDTO.username}}"

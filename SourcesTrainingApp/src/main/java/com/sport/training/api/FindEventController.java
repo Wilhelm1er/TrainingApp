@@ -88,7 +88,7 @@ public class FindEventController {
 
 		} catch (FinderException e) {
 			LOGGER.error("exception in " + mname + " : " + e.getMessage());
-			model.addAttribute("exception", e.getClass().getName());
+			model.addAttribute("exception", e.getMessage());
 			return "error";
 		}
 		model.addAttribute("userDTO", userDTO);

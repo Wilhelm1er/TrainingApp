@@ -137,19 +137,6 @@
 				</div>
 			</div>
 			<br>
-			
-			<div th:if="${userDTO.roleName == 'ROLE_COACH'}">
-			<h5 th:text="#{user.discipline.information}"></h5>
-
-			<div id="decision" class="row" style="margin-top: 1%;" >
-				<div class="col-md-4" th:each="disciplineDTO : ${disciplineDTOs}">
-					<div class="checkbox checkbox-custom checkbox-circle">
-						<input type="checkbox" name="discipline.id"
-							th:checked="${disciplineDTOsCoach.contains(disciplineDTOs)}"
-							th:text="${disciplineDTO.name}" th:value="${disciplineDTO.id}" />
-					</div>
-				</div>
-			</div></div>
 
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-5">

@@ -21,11 +21,13 @@ public class DisciplineRegistryDTO implements Serializable {
 	private Date registerDate;
 	private UserDTO coachDTO;
 	private DisciplineDTO disciplineDTO;
+	private String docStatut;
 
 	// ======================================
     // =            Constructors            =
     // ======================================
     public DisciplineRegistryDTO(DisciplineDTO disciplineDTO, UserDTO coachDTO) {
+    	docStatut="no";
     	setCoachDTO(coachDTO);
     	setDisciplineDTO(disciplineDTO);
     	
@@ -63,17 +65,19 @@ public class DisciplineRegistryDTO implements Serializable {
 	public UserDTO getCoachDTO() {
 		return coachDTO;
 	}
-	
+
+	public String getDocStatut() {
+		return docStatut;
+	}
+
+	public void setDocStatut(String docStatut) {
+		this.docStatut = docStatut;
+	}
+
 	@Override
 	public String toString() {
-		final StringBuffer buf = new StringBuffer();
-		buf.append("Discipline RegisterDTO{");
-		buf.append("id=").append(getId());
-		buf.append(",registerDate=").append(getRegisterDate());
-	        buf.append(",disciplineID=").append(getDisciplineDTO().getId());
-	        buf.append(",coachID=").append(getCoachDTO().getUsername());
-		buf.append('}');
-		return buf.toString();
+		return "DisciplineRegistryDTO [id=" + id + ", registerDate=" + registerDate + ", coachDTO=" + coachDTO
+				+ ", disciplineDTO=" + disciplineDTO + ", docStatut=" + docStatut + "]";
 	}
 
 }

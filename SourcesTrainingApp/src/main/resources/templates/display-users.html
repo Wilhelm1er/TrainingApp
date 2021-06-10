@@ -48,14 +48,18 @@
 
 						</tr>
 						<tr th:each="coach : ${coachDTOs}">
-						<td><a class="col-sm-2" th:href="@{'/find-events/'+${coach.username}}" th:text="${coach.username}"
-							sec:authorize="isAuthenticated()"></a></td>
+							<td><a class="col-sm-2"
+								th:href="@{'/find-events/'+${coach.username}}"
+								th:text="${coach.username}" sec:authorize="isAuthenticated()"></a></td>
 							<td class="col-sm-2" th:text="${coach.firstname}"></td>
 							<td class="col-sm-2" th:text="${coach.lastname}"></td>
 							<td class="col-sm-3" th:text="${coach.email}"></td>
 							<td class="col-sm-3" th:text="${coach.statut}"></td>
 							<td><a th:href="@{'/update-account/'+${coach.username}}">
 									<button type="button" class="btn btn-sm btn-outline-secondary">Modifier</button>
+							</a></td>
+							<td><a th:href="@{'/discussion/'+${coach.username}}">
+									<button type="button" class="btn btn-sm btn-outline-secondary">Discussions</button>
 							</a></td>
 						</tr>
 					</table>

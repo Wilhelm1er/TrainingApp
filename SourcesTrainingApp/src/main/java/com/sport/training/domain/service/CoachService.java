@@ -5,8 +5,11 @@ import java.util.Set;
 
 import javax.validation.Valid;
 
+import com.sport.training.authentication.domain.dto.UserDTO;
 import com.sport.training.domain.dto.BookmarkDTO;
 import com.sport.training.domain.dto.DisciplineDTO;
+import com.sport.training.domain.dto.DiscussionDTO;
+import com.sport.training.domain.dto.MessageDTO;
 import com.sport.training.domain.dto.NotationDTO;
 import com.sport.training.exception.CreateException;
 import com.sport.training.exception.FinderException;
@@ -40,7 +43,37 @@ public interface CoachService {
 	public void updateBookmark(@Valid final BookmarkDTO bookmarkDTO) throws UpdateException;
 
 	public List<BookmarkDTO> findBookmarks() throws FinderException;
-	
+
 	public List<BookmarkDTO> findBookmarksByAthlete(final String athleteId) throws FinderException;
+
+	// ======================================
+	// = Discussion Business methods =
+	// ======================================
+	public DiscussionDTO createDiscussion(@Valid final DiscussionDTO discussionDTO) throws CreateException;
+
+	public DiscussionDTO findDiscussion(final Long discussionId) throws FinderException;
+
+	public void deleteDiscussion(final Long discussionId) throws FinderException, RemoveException;
+
+	public void updateDiscussion(@Valid final DiscussionDTO discussionDTO) throws UpdateException;
+
+	public List<DiscussionDTO> findDiscussions() throws FinderException;
+
+	public List<DiscussionDTO> findDiscussionsByUser(String userId) throws FinderException;
+
+	// ======================================
+	// = Message Business methods =
+	// ======================================
+	public MessageDTO createMessage(@Valid final MessageDTO messageDTO) throws CreateException;
+
+	public MessageDTO findMessage(final Long messageId) throws FinderException;
+
+	public void deleteMessage(final Long messageId) throws FinderException, RemoveException;
+
+	public void updateMessage(@Valid final MessageDTO messageDTO) throws UpdateException;
+
+	public List<MessageDTO> findMessages() throws FinderException;
+
+	List<MessageDTO> findMessagesByDiscussion(Long discussionId) throws FinderException;
 
 }

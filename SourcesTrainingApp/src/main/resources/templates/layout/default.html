@@ -54,33 +54,41 @@
 					aria-haspopup="true" aria-expanded="false"><span
 						sec:authentication="name"></span></a>
 					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-
+						<!--  Partie ADMIN    -->
 						<a class="dropdown-item" th:href="@{/manage-disciplines}"
 							th:text="#{manage.sport}" sec:authorize="hasRole('ADMIN')"></a> <a
 							class="dropdown-item" th:href="@{/display-coachs}"
 							th:text="#{coachs.list}" sec:authorize="hasRole('ADMIN')"></a> <a
 							class="dropdown-item" th:href="@{/display-athletes}"
 							th:text="#{athletes.list}" sec:authorize="hasAnyRole('ADMIN')"></a>
-						<a class="dropdown-item"
+						<!--  Partie ATHLETE ET COACH   -->
+						<a class="dropdown-item" 
 							th:href="@{'/account/'+${#authentication.getPrincipal().getUsername()}}"
 							th:text="#{view.account.title}"
 							sec:authorize="hasAnyRole('ATHLETE','COACH')"></a>
-							<a class="dropdown-item"
-							th:href="@{/bookmark}"
-							th:text="#{menu.bookmark}"
-							sec:authorize="hasAnyRole('ATHLETE')"></a>
-							<a class="dropdown-item"
+						<!--  Partie ATHLETE      -->
+						<a class="dropdown-item" th:if="${#authentication.getPrincipal().getStatut()}=='VALIDE'" th:href="@{/bookmark}"
+							th:text="#{menu.bookmark}" sec:authorize="hasAnyRole('ATHLETE')"></a>
+						<a class="dropdown-item" th:if="${#authentication.getPrincipal().getStatut()}=='VALIDE'"
 							th:href="@{'/athlete-events/'+${#authentication.getPrincipal().getUsername()}}"
-							th:text="#{menu.sessions}"
-							sec:authorize="hasAnyRole('ATHLETE')"></a>
-							<a
-							class="dropdown-item" th:href="@{'/select-activity/'+${#authentication.getPrincipal().getUsername()}}"
+							th:text="#{menu.sessions}" sec:authorize="hasAnyRole('ATHLETE')"></a>
+						<!--  Partie COACH        -->
+						<a class="dropdown-item" 
+							th:href="@{/coach-discipline/}"
+							th:text="#{coachs.discipline}"
+							sec:authorize="hasAnyRole('COACH')"></a> 
+						<a class="dropdown-item" th:if="${#authentication.getPrincipal().getStatut()}=='VALIDE'"
+							th:href="@{'/select-activity/'+${#authentication.getPrincipal().getUsername()}}"
 							th:text="#{coachs.event}" sec:authorize="hasAnyRole('COACH')"></a>
-							<a
-							class="dropdown-item" th:href="@{'/events/'+${#authentication.getPrincipal().getUsername()}}"
-							th:text="#{coachs.event.list}" sec:authorize="hasAnyRole('COACH')"></a>
-						<a class="dropdown-item" id="logout"
-							href="javascript:document.logoutForm.submit()"
+						<a class="dropdown-item" th:if="${#authentication.getPrincipal().getStatut()}=='VALIDE'"
+							th:href="@{'/events/'+${#authentication.getPrincipal().getUsername()}}"
+							th:text="#{coachs.event.list}"
+							sec:authorize="hasAnyRole('COACH')"></a>
+						<!--  Partie Pour tous     -->
+						<a class="dropdown-item"
+							th:href="@{'/messagerie/'+${#authentication.getPrincipal().getUsername()}}"
+							th:text="#{menu.messages}"></a> <a class="dropdown-item"
+							id="logout" href="javascript:document.logoutForm.submit()"
 							th:text="#{menu.logout}">Se déconnecter</a>
 					</div>
 
@@ -97,8 +105,9 @@
 						th:text="'Solde: '+${#authentication.getPrincipal().getCredit()}+ ' Cr'"></span></a>
 					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 						<a class="nav-item dropdown-item"></a> <a class="dropdown-item"
-							th:href="@{'/credit/'+${#authentication.getPrincipal().getUsername()}}" th:text="#{credit.gestion}">Credit</a>
-							
+							th:href="@{'/credit/'+${#authentication.getPrincipal().getUsername()}}"
+							th:text="#{credit.gestion}">Credit</a>
+
 					</div>
 				</li>
 
@@ -109,9 +118,10 @@
 			<input type="search" class="form-control form-control-dark"
 				placeholder="Rechercher...">
 		</form>
-		<div class="nav-item active" sec:authorize="hasRole('ATHLETE')"><a
-					class="nav-link" th:href="@{/view-cart}" th:text="#{cart}"></a></div>
-		
+		<div class="nav-item active" sec:authorize="hasRole('ATHLETE')">
+			<a class="nav-link" th:href="@{/view-cart}" th:text="#{cart}"></a>
+		</div>
+
 
 
 		<form class="nav-item active" sec:authorize="isAnonymous()">

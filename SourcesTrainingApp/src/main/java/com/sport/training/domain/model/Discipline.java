@@ -80,4 +80,10 @@ public class Discipline implements Serializable {
 		this.documents = documents;
 	}
 
+	@Override
+	public String toString() {
+		return "Discipline [id=" + id + ", name=" + name + ", description=" + description + ", documents=" + documents
+				+ "]";
+	}
+
 }

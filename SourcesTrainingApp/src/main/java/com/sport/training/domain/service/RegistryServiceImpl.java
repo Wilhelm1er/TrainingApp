@@ -58,7 +58,7 @@ public class RegistryServiceImpl implements RegistryService {
 	// ======================================
 
 	@Autowired
-	private ModelMapper commonModelMapper, userDTOModelMapper, eventRegistryModelMapper, eventModelMapper;
+	private ModelMapper commonModelMapper, userDTOModelMapper, eventRegistryModelMapper, eventModelMapper, disciplineRegistryModelMapper;
 
 	@Autowired
 	private DisciplineRegistryRepository disciplineRegistryRepository;
@@ -112,10 +112,13 @@ public class RegistryServiceImpl implements RegistryService {
 		} catch (NullPointerException | FinderException e) {
 			throw new CreateException("User must exist to create a DisciplineRegistry");
 		}
-
+		
 		// :::::::::::::::: We change DTO to model ::::::::::::::: //
-		DisciplineRegistry disciplineRegistry = commonModelMapper.map(disciplineRegistryDTO, DisciplineRegistry.class);
-
+		DisciplineRegistry disciplineRegistry = disciplineRegistryModelMapper.map(disciplineRegistryDTO, DisciplineRegistry.class);
+			
+		if(disciplineRegistryRepository.findAllByCoachAndDiscipline(disciplineRegistry.getCoach(),disciplineRegistry.getDiscipline())!=null)
+			throw new CreateException("DisciplineRegistry object already exist for this discipline: "+ disciplineRegistry.getDiscipline().getName());
+			
 		// Creates the object
 		disciplineRegistryRepository.save(disciplineRegistry);
 
@@ -227,7 +230,7 @@ public class RegistryServiceImpl implements RegistryService {
 		Set<User> coachList = new HashSet<User>();
 
 		for (DisciplineRegistry discReg : disciplineRegistriesByDiscipline) {
-			if (discReg.getCoach().getStatut().equals("VALIDE")) {
+			if (discReg.getCoach().getStatut().equals("VALIDE") && discReg.getDocStatut().equals("ok")) {
 				coachList.add(discReg.getCoach());
 			}
 		}
@@ -245,7 +248,39 @@ public class RegistryServiceImpl implements RegistryService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public Set<DisciplineDTO> findDisciplinesByCoach(String coachId) throws FinderException {
+	public Set<DisciplineDTO> findDisciplinesByCoach(String coachId, String statutDoc) throws FinderException {
+		final String mname = "findDisciplinesByCoach";
+		LOGGER.debug("entering " + mname);
+
+		checkStringId(coachId);
+
+		User coach = null;
+		if (!userRepository.findById(coachId).isPresent())
+			throw new FinderException("Coach must exist to be found");
+		else
+			coach = userRepository.findById(coachId).get();
+
+		// Finds all the objects
+		final Iterable<DisciplineRegistry> disciplineRegistriesByDiscipline = disciplineRegistryRepository
+				.findAllByCoach(coach);
+
+		Set<Discipline> disciplineList = new HashSet<Discipline>();
+
+		for (DisciplineRegistry discReg : disciplineRegistriesByDiscipline) {
+			if (coach.getStatut().equals("VALIDE") && discReg.getDocStatut().equals(statutDoc))
+				disciplineList.add(discReg.getDiscipline());
+		}
+
+		Set<DisciplineDTO> disciplineDTOs = (disciplineList).stream()
+				.map(discipline -> commonModelMapper.map(discipline, DisciplineDTO.class)).collect(Collectors.toSet());
+
+		LOGGER.debug("exiting " + mname);
+		return disciplineDTOs;
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Set<DisciplineDTO> findAllDisciplinesByCoach(String coachId) throws FinderException {
 		final String mname = "findDisciplinesByCoach";
 		LOGGER.debug("entering " + mname);
 
@@ -274,6 +309,8 @@ public class RegistryServiceImpl implements RegistryService {
 		LOGGER.debug("exiting " + mname);
 		return disciplineDTOs;
 	}
+	
+	
 
 	// =====================================
 	// = EventRegistry Business methods =

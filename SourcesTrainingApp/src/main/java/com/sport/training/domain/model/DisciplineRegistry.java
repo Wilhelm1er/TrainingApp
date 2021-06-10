@@ -44,6 +44,9 @@ public class DisciplineRegistry implements Serializable {
     @JoinColumn(name="DISCIPLINE_FK")
     @NotNull(message = "invalid Discipline")
     private Discipline discipline;
+    
+    @Column(name = "Doc_STATUT")
+	private String docStatut;
 
 	// ======================================
     // =            Constructors            =
@@ -54,6 +57,7 @@ public class DisciplineRegistry implements Serializable {
 
     public DisciplineRegistry(final Discipline discipline,final User coach) {
     	this.registerDate=new Date();
+    	docStatut="no";
     	setRegisterDate(registerDate);
     	setDiscipline(discipline);
         setCoach(coach);
@@ -93,12 +97,22 @@ public class DisciplineRegistry implements Serializable {
 	public Discipline getDiscipline() {
 		return discipline;
 	}
+	
+
+	public String getDocStatut() {
+		return docStatut;
+	}
+
+	public void setDocStatut(String docStatut) {
+		this.docStatut = docStatut;
+	}
 
 	@Override
 	public String toString() {
 		return "DisciplineRegistry [id=" + id + ", registerDate=" + registerDate + ", coach=" + coach + ", discipline="
-				+ discipline + "]";
+				+ discipline + ", docStatut=" + docStatut + "]";
 	}
+
 	
 	
 }

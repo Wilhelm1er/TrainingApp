@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
+<head th:replace="layout/default.html :: header">
+<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+<script type="text/javascript" src="js/show.js"></script>
+
+</head>
+<body>
+	<nav th:insert="layout/default.html :: navbar"></nav>
+	<div class="container">
+		<br> <br> <br>
+		<h3 th:text="#{user.discipline.choice}">Choix discipline
+			entraîneur</h3>
+		<hr />
+		<br>
+		<form class="form-horizontal" method="post" name="userForm"
+			th:action="@{/coach-discipline}" th:object="${disciplineDTO}"
+			enctype="multipart/form-data">
+
+			<h5 th:text="#{user.discipline.choice}"></h5>
+			<div id="decision" class="row" style="margin-top: 1%;">
+				<div class="col-md-4" th:each="disciplineDTO : ${disciplineDTOs}">
+					<div class="checkbox checkbox-custom checkbox-circle">
+						<input type="checkbox" name="discipline.id"
+							th:text="${disciplineDTO.name}" th:value="${disciplineDTO.id}" /><br>
+						<br>
+					</div>
+				</div>
+			</div>
+
+			<br>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-5">
+					<button type="submit" class="btn btn-primary"
+						th:text="#{coachs.discipline.add}">Create</button>
+				</div>
+			</div>
+		</form>
+
+		<h5 th:text="#{user.discipline}"></h5>
+
+		<div id="decision" class="row" style="margin-top: 1%;">
+			<div class="col-md-4"
+				th:each="disciplineDTO : ${disciplineDTOsCoach}">
+				<label th:text="${disciplineDTO.name}"></label><br> <label
+					style="text-decoration: underline;" th:text="'Documents: '"></label>
+				<label th:text="${disciplineDTO.documents}"></label>
+				
+					
+					
+				<div th:if="${message}">
+		<h2 th:text="${message}"/>
+	</div>
+
+	<div>
+		<form method="POST" enctype="multipart/form-data" action="/">
+			<table>
+				<tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr>
+				<tr><td></td><td><input type="submit" value="Upload" /></td></tr>
+			</table>
+		</form>
+	</div>
+
+	<div>
+		<ul>
+			<li th:each="file : ${files}">
+				<a th:href="${file}" th:text="${file}" />
+			</li>
+		</ul>
+	</div>
+
+
+			</div>
+		</div>
+
+		<br> <br> <br> <br>
+	</div>
+	<div th:insert="layout/default.html :: footer"></div>
+</body>
+</html>

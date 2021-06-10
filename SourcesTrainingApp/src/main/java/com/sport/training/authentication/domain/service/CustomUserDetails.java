@@ -52,9 +52,9 @@ public class CustomUserDetails implements UserDetails {
 
 	@Override
 	public boolean isAccountNonLocked() {
-		if(statut.equals("INVALIDE")) {
-			return false;
-		}
+		//if(statut.equals("INVALIDE")) {
+		//	return false;
+		//}
 	    return true;
 	}
 
@@ -73,6 +73,14 @@ public class CustomUserDetails implements UserDetails {
 	}
 	public int setCredit(int credit) {
 	    return this.credit = credit;
+	}
+	
+	public String getStatut() {
+		return statut;
+	}
+
+	public void setStatut(String statut) {
+		this.statut = statut;
 	}
 
 }

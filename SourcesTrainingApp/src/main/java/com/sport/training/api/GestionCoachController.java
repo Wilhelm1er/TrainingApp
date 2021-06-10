@@ -5,7 +5,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Random;
 import java.util.Set;
 
 import javax.validation.Valid;
@@ -13,23 +15,37 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.sport.training.authentication.domain.dao.RoleRepository;
 import com.sport.training.authentication.domain.dto.UserDTO;
+import com.sport.training.authentication.domain.model.Role;
 import com.sport.training.authentication.domain.service.UserService;
+import com.sport.training.domain.dao.DiscussionRepository;
 import com.sport.training.domain.dao.EventRepository;
+import com.sport.training.domain.dao.MessageRepository;
 import com.sport.training.domain.dto.ActivityDTO;
 import com.sport.training.domain.dto.DisciplineDTO;
+import com.sport.training.domain.dto.DisciplineRegistryDTO;
+import com.sport.training.domain.dto.DiscussionDTO;
 import com.sport.training.domain.dto.EventDTO;
+import com.sport.training.domain.dto.MessageDTO;
+import com.sport.training.domain.model.Discussion;
+import com.sport.training.domain.service.CoachService;
 import com.sport.training.domain.service.RegistryService;
 import com.sport.training.domain.service.SportService;
 import com.sport.training.exception.CreateException;
+import com.sport.training.exception.DuplicateKeyException;
 import com.sport.training.exception.FinderException;
 import com.sport.training.exception.RemoveException;
 import com.sport.training.exception.UpdateException;
@@ -49,7 +65,13 @@ public class GestionCoachController {
 	private EventRepository eventRepository;
 
 	@Autowired
+	private RoleRepository roleRepository;
+
+	@Autowired
 	private SportService sportService;
+
+	@Autowired
+	private CoachService coachService;
 
 	@GetMapping(path = "/select-activity/{username}")
 	public String showSelectActivity(Model model, @PathVariable String username) {
@@ -61,7 +83,7 @@ public class GestionCoachController {
 		HashMap<String, List<ActivityDTO>> activityByDisciplinesCoach = new HashMap<String, List<ActivityDTO>>();
 		try {
 			userDTO = userService.findUser(username);
-			disciplineDTOsCoach = registryService.findDisciplinesByCoach(username);
+			disciplineDTOsCoach = registryService.findDisciplinesByCoach(username, "ok");
 			if (disciplineDTOsCoach != null) {
 				for (DisciplineDTO disciplineDTO : disciplineDTOsCoach) {
 					List<ActivityDTO> list = new ArrayList<ActivityDTO>(
@@ -115,15 +137,13 @@ public class GestionCoachController {
 
 	@PostMapping("/create-event")
 	public String createEvent(@Valid @ModelAttribute EventDTO eventDTO, @ModelAttribute UserDTO userDTO,
-			@ModelAttribute("eventDate") String eventDate,
-			@ModelAttribute("eventTime") String eventTime, @ModelAttribute ActivityDTO activityDTO, Model model) {
+			@ModelAttribute("eventDate") String eventDate, @ModelAttribute("eventTime") String eventTime,
+			@ModelAttribute ActivityDTO activityDTO, Model model) {
 		final String mname = "createEvent";
 		LOGGER.debug("entering " + mname);
-		
-		System.out.println("eventTime:"+eventTime);
-		String dateTime=eventDate+' '+eventTime;
-		System.out.println("dateTime:"+dateTime);
-		
+
+		String dateTime = eventDate + ' ' + eventTime;
+
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 		LocalDateTime eventDateTime = LocalDateTime.parse(dateTime, formatter);
 
@@ -172,7 +192,7 @@ public class GestionCoachController {
 			sportService.updateEvent(eventDTO);
 			model.addAttribute("eventUpdated", eventDTO.getId());
 			return "events";
-		} catch ( UpdateException e) {
+		} catch (UpdateException e) {
 			LOGGER.error("exception in " + mname + " : " + e.getMessage());
 			model.addAttribute("exception", e.getClass().getName());
 			return "error";
@@ -225,4 +245,223 @@ public class GestionCoachController {
 		return "events";
 	}
 
+	@GetMapping(path = "/coach-discipline")
+	public String showDisciplineChoice(Model model, Authentication authentication) throws FinderException {
+		final String mname = "showDisciplineChoice";
+		LOGGER.debug("entering " + mname);
+
+		UserDTO coachDTO = null;
+		List<DisciplineDTO> disciplineDTOs = null;
+		Set<DisciplineDTO> disciplineDTOsCoach = null;
+		Set<DisciplineDTO> allDisciplineDTOsCoach = null;
+
+		try {
+			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+			coachDTO = userService.findUser(userDetails.getUsername());
+			disciplineDTOsCoach = registryService.findDisciplinesByCoach(coachDTO.getUsername(), "no");
+			allDisciplineDTOsCoach = registryService.findAllDisciplinesByCoach(coachDTO.getUsername());
+			disciplineDTOs = sportService.findDisciplines();
+
+		} catch (FinderException e) {
+			model.addAttribute("exception", e.getMessage());
+			return "error";
+		}
+		int i = 0;
+		while (i < disciplineDTOs.size()) {
+			for (DisciplineDTO e : allDisciplineDTOsCoach) {
+				if (e.getName().equals(disciplineDTOs.get(i).getName())) {
+					disciplineDTOs.remove(i);
+				}
+			}
+			i++;
+		}
+
+		model.addAttribute("disciplineDTOsCoach", disciplineDTOsCoach);
+		model.addAttribute("disciplineDTOs", disciplineDTOs);
+		model.addAttribute("coachDTO", coachDTO);
+
+		return "coach-discipline";
+	}
+
+	@PostMapping(path = "/coach-discipline")
+	public String disciplineChoice(@Valid UserDTO coachDTO,
+			@RequestParam(value = "discipline.id", required = false) String[] disciplineId, BindingResult bindingResult,
+			Authentication authentication, Model model) {
+		final String mname = "disciplineChoice";
+		LOGGER.debug("entering " + mname);
+		try {
+			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+			coachDTO = userService.findUser(userDetails.getUsername());
+			for (String disciplineIdChecked : disciplineId) {
+				registryService.createDisciplineRegistry(
+						new DisciplineRegistryDTO(sportService.findDiscipline(disciplineIdChecked), coachDTO));
+			}
+			model.addAttribute("message", "Coach discipline(s) added");
+			return "index";
+		} catch (CreateException e) {
+			if (e instanceof DuplicateKeyException)
+				model.addAttribute("exception", "this id is already assigned");
+			else
+				model.addAttribute("exception", e.getMessage());
+			return "error";
+		} catch (Exception exc) {
+			model.addAttribute("exception", exc.getMessage());
+			return "error";
+		}
+	}
+
+	@GetMapping(path = "/messagerie/{username}")
+	public String getMessagerie(@PathVariable String username, Model model) {
+		final String mname = "getMessagerie";
+		LOGGER.debug("entering " + mname);
+
+		List<DiscussionDTO> discussionDTOs = null;
+		UserDTO userDTO;
+
+		List<UserDTO> coachesList;
+		Role role;
+		try {
+
+			role = roleRepository.findByName("ROLE_COACH");
+
+			coachesList = userService.findUsersByRole(role);
+
+			userDTO = userService.findUser(username);
+			if (userDTO.getRoleName().equals("ROLE_ADMIN")) {
+				discussionDTOs = coachService.findDiscussions();
+
+			} else {
+
+				discussionDTOs = coachService.findDiscussionsByUser(username);
+			}
+
+		} catch (Exception exc) {
+			model.addAttribute("error", exc.getMessage());
+			return "messagerie";
+		}
+		model.addAttribute("coachesList", coachesList);
+		model.addAttribute("discussionDTOs", discussionDTOs);
+		model.addAttribute("coachDTO", new UserDTO());
+
+		return "messagerie";
+	}
+
+	@Secured("ROLE_ADMIN")
+	@GetMapping(path = "/discussion/{username}")
+	public String getDiscussion(@PathVariable String username, Model model) {
+		final String mname = "getDiscussion";
+		LOGGER.debug("entering " + mname);
+
+		List<DiscussionDTO> discussionDTOs = null;
+		// UserDTO adminDTO;
+		UserDTO userDTO;
+		try {
+			userDTO = userService.findUser(username);
+			System.out.println("userDTO : " + userDTO);
+			discussionDTOs = coachService.findDiscussionsByUser(username);
+		} catch (Exception exc) {
+			model.addAttribute("error", exc.getMessage());
+			return "discussion";
+		}
+		model.addAttribute("username", userDTO.getUsername());
+		model.addAttribute("discussionDTOs", discussionDTOs);
+
+		return "discussion";
+	}
+
+	@PostMapping("/discussion")
+	public String newDiscussion(@ModelAttribute("coachDTO") UserDTO coachDTO, Model model) throws CreateException {
+		final String mname = "newDiscussion";
+		LOGGER.debug("entering " + mname);
+
+		DiscussionDTO discussionDTO;
+		try {
+			discussionDTO = coachService.createDiscussion(new DiscussionDTO(coachDTO));
+		} catch (Exception exc) {
+			model.addAttribute("error", exc.getMessage());
+			return "discussion";
+		}
+		model.addAttribute("username", coachDTO.getUsername());
+		model.addAttribute("discussionDTO", discussionDTO);
+
+		return "discussion";
+	}
+
+	@GetMapping("/messages/{discussionId}")
+	public String showMessages(@PathVariable String discussionId, Model model) throws CreateException {
+		final String mname = "showMessages";
+		LOGGER.debug("entering " + mname);
+
+		List<MessageDTO> messageDTOs = null;
+		try {
+
+			messageDTOs = coachService.findMessagesByDiscussion(Long.valueOf(discussionId));
+		} catch (Exception exc) {
+			model.addAttribute("error", exc.getMessage());
+			return "messages";
+		}
+		/*
+		 * if (nouveauMessage.isEmpty()) { model.addAttribute("error", "message vide");
+		 * } else { coachService.createMessage(new MessageDTO(nouveauMessage, userDTO,
+		 * userDTO, recipientDTO, discussionDTO));
+		 * 
+		 * }
+		 */
+		model.addAttribute("messageDTO", new MessageDTO());
+		model.addAttribute("messageDTOs", messageDTOs);
+		model.addAttribute("texte", new String());
+
+		return "messages";
+	}
+
+	@PostMapping("/messages/{discussionId}")
+	public String sendMessage(@PathVariable String discussionId, @Valid @ModelAttribute("texte") String texte, 
+			@Valid @ModelAttribute MessageDTO messageDTO,
+			Authentication authentication, Model model) throws CreateException {
+		final String mname = "sendMessage";
+		LOGGER.debug("entering " + mname);
+
+		List<MessageDTO> messageDTOs = null;
+		UserDTO senderDTO;
+		UserDTO adminDTO;
+		
+		Role role;
+		List<UserDTO> adminsList;
+		Random rand = new Random();
+		
+		try {
+			// Choix admin random
+			role = roleRepository.findByName("ROLE_ADMIN");
+			adminsList = userService.findUsersByRole(role);
+			adminDTO = adminsList.get(rand.nextInt(adminsList.size()));
+			
+			// Determination du sender
+			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+			senderDTO = userService.findUser(userDetails.getUsername());
+			
+			//set dans le message
+			messageDTO.setDiscussionDTO(coachService.findDiscussion(Long.valueOf(discussionId)));
+			messageDTO.setSenderDTO(senderDTO);
+			if(senderDTO.getRoleName().equals("ROLE_ADMIN")) {
+			messageDTO.setRecipientDTO(messageDTO.getDiscussionDTO().getUserDTO());
+			}
+			if(senderDTO.getRoleName().equals("ROLE_COACH")) {
+				messageDTO.setRecipientDTO(adminDTO);
+			}
+			if (texte.isEmpty()) {
+				model.addAttribute("error", "message vide");
+			} else {
+				coachService.createMessage(messageDTO);
+			}
+			
+			messageDTOs = coachService.findMessagesByDiscussion(Long.valueOf(discussionId));
+		} catch (Exception exc) {
+			model.addAttribute("error", exc.getMessage());
+			return "messages";
+		}
+
+		model.addAttribute("messageDTOs", messageDTOs);
+
+		return "messages";
+	}
 }

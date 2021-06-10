@@ -125,26 +125,6 @@
 				</div>
 			</div>
 
-
-			<h5 th:text="#{user.discipline.information}"></h5>
-			<div id="decision" class="row" style="margin-top: 1%;">
-				<div class="col-md-4" th:each="disciplineDTO : ${disciplineDTOs}">
-					<div class="checkbox checkbox-custom checkbox-circle">
-						<input type="checkbox" name="discipline.id"
-							th:text="${disciplineDTO.name}" th:value="${disciplineDTO.id}" /><br><br>
-							<span th:text="'Documents: '+${disciplineDTO.documents}"></span><br><br>
-							
-                <p th:text="${message}" th:if="${message ne null}" class="alert alert-primary"></p>
-                    <div class="form-group">
-                        <input type="file" name="file" class="form-control-file">
-                    </div>
-                   
-					</div>
-				</div>
-			</div>
-
-
-
 			<br>
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-5">

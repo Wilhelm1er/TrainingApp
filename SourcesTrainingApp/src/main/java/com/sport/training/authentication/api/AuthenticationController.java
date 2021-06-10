@@ -36,32 +36,20 @@ public class AuthenticationController {
 	@Autowired
 	private UserService userService;
 
-	@Autowired
-	private RegistryService registryService;
-
-	@Autowired
-	private SportService sportService;
-
 	@GetMapping(path = "/account/{username}")
 	public String showAccount(Model model, Authentication authentication) {
 		final String mname = "showAccount";
 		LOGGER.debug("entering " + mname);
 
 		UserDTO userDTO;
-		List<DisciplineDTO> disciplineDTOs = null;
-		Set<DisciplineDTO> disciplineDTOsCoach = null;
 		try {
 			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 			userDTO = userService.findUser(userDetails.getUsername());
-			disciplineDTOsCoach = registryService.findDisciplinesByCoach(userDTO.getUsername());
-			disciplineDTOs = sportService.findDisciplines();
 		} catch (FinderException e) {
 			model.addAttribute("exception", e.getClass().getName());
 			return "error";
 		}
 		model.addAttribute("userDTO", userDTO);
-		model.addAttribute("disciplineDTOsCoach", disciplineDTOsCoach);
-		model.addAttribute("disciplineDTOs", disciplineDTOs);
 
 		return "account";
 	}
@@ -72,35 +60,25 @@ public class AuthenticationController {
 		LOGGER.debug("entering " + mname);
 
 		UserDTO userDTO;
-		List<DisciplineDTO> disciplineDTOs = null;
-		Set<DisciplineDTO> disciplineDTOsCoach = null;
 		try {
 			userDTO = userService.findUser(username);
-			disciplineDTOsCoach = registryService.findDisciplinesByCoach(username);
-			disciplineDTOs = sportService.findDisciplines();
 		} catch (FinderException e) {
 			model.addAttribute("exception", e.getClass().getName());
 			return "error";
 		}
 		model.addAttribute("userDTO", userDTO);
-		model.addAttribute("disciplineDTOsCoach", disciplineDTOsCoach);
-		model.addAttribute("disciplineDTOs", disciplineDTOs);
 
 		return "update-account";
 	}
 
 	@PostMapping(path = "/update-account")
 	public String updateAccount(@Valid @ModelAttribute UserDTO userDTO,
-			@RequestParam(value = "discipline.id", required = false) String[] disciplineId, BindingResult bindingResult,
 			Model model) {
 		final String mname = "updateAccount";
 		LOGGER.debug("entering " + mname);
 		try {
 			userService.updateUser(userDTO);
-			for (String disciplineIdChecked : disciplineId) {
-				registryService.createDisciplineRegistry(
-						new DisciplineRegistryDTO(sportService.findDiscipline(disciplineIdChecked), userDTO));
-			}
+			
 			model.addAttribute("message", "account updated");
 			return "index";
 		} catch (UpdateException e) {

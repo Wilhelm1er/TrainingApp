@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
+<head>
+<th:block th:insert="layout/default.html :: header"></th:block>
+</head>
+<body>
+	<nav th:insert="layout/default.html :: navbar"></nav>
+
+	<br><br><br>
+	<h1 th:text=#{discussion.title}+${username} ></h1>
+	<br><div class="erreur" th:if="${error}" th:text="${error}"></div>
+	<br>
+
+	<div class="container">
+		<div class="row justify-content-start">
+			<table>
+				<tr>
+					<th class="col-sm-2" th:text="#{discussion.id}"></th>
+				</tr>
+				<tr th:each="discussion : ${discussionDTOs}">
+					<td class="col-sm-2" th:text="${discussion.id}"></td>
+					<td><a
+						th:href="@{'/messages/'+${discussion.id}}">
+							<button type="button" class="btn btn-sm btn-outline-secondary">Voir
+								la discussion</button>
+					</a></td>
+				</tr>
+			</table>
+		</div>
+	</div><br><br>
+
+	<br>
+	<br>
+	<br>
+	<br>
+
+	<th:block th:insert="layout/default.html :: footer"></th:block>
+	<th:block th:insert="layout/default.html :: scripts"></th:block>
+</body>
+</html>
