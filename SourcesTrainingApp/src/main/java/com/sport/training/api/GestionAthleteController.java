@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.sport.training.authentication.domain.dto.UserDTO;
@@ -60,7 +56,7 @@ public class GestionAthleteController {
 		UserDTO coachDTO;
 		System.out.println("coachID: " + coachId);
 		List<BookmarkDTO> bookmarkDTOs = new ArrayList<BookmarkDTO>();
-		
+
 		try {
 			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 			athleteDTO = userService.findUser(userDetails.getUsername());
@@ -117,12 +113,12 @@ public class GestionAthleteController {
 
 		List<EventDTO> eventDTOs = new ArrayList<EventDTO>();
 		LocalDateTime dateNow = LocalDateTime.now();
-		
+
 		try {
 			eventDTOs = registryService.findEventsByAthlete(username);
-			for(EventDTO eventDTO:eventDTOs) {
+			for (EventDTO eventDTO : eventDTOs) {
 				// checke si les 30minutes avant event sont depassé pour annuler
-				if(eventDTO.getDateTime().minusMinutes(30).isBefore(dateNow)) {
+				if (eventDTO.getDateTime().minusMinutes(30).isBefore(dateNow)) {
 					eventDTO.setVoidable(1);
 				}
 			}
@@ -170,7 +166,7 @@ public class GestionAthleteController {
 		LOGGER.debug("exiting " + mname);
 		return "index";
 	}
-	
+
 	@GetMapping("/display-event/{eventId}")
 	protected String displayEvent(Model model, @PathVariable Long eventId, Authentication authentication)
 			throws FinderException, RemoveException, CreateException {
@@ -200,11 +196,9 @@ public class GestionAthleteController {
 		model.addAttribute("athleteDTO", athleteDTO);
 		model.addAttribute("eventDTO", eventDTO);
 		model.addAttribute("userDTOs", userDTOs);
-		
+
 		LOGGER.debug("exiting " + mname);
 		return "display-event";
 	}
-	
-	
-	
+
 }

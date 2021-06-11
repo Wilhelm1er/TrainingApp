@@ -1,7 +1,6 @@
 package com.sport.training.domain.model;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -19,9 +18,9 @@ import javax.validation.constraints.NotNull;
 import com.sport.training.authentication.domain.model.User;
 
 /**
- * This class represents an Event the Sport system. The sport system
- * is divided into disciplines. Each one divided into activities and each activity
- * in event.
+ * This class represents an Event the Sport system. The sport system is divided
+ * into disciplines. Each one divided into activities and each activity in
+ * event.
  */
 @SuppressWarnings("serial")
 @Entity
@@ -34,7 +33,7 @@ public class Message implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "msg_seq_gen")
 	private Long id;
-	
+
 	@Column(name = "DATE", nullable = false)
 	private Date date;
 
@@ -45,14 +44,14 @@ public class Message implements Serializable {
 	@JoinColumn(name = "SENDER")
 	@NotNull(message = "invalid Sender")
 	private User sender;
- 
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "RECIPIENT")
 	@NotNull(message = "invalid Recipient")
 	private User recipient;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="DISCUSSION_FK")
+	@JoinColumn(name = "DISCUSSION_FK")
 	@NotNull(message = "invalid Discussion")
 	private Discussion discussion;
 
@@ -61,23 +60,23 @@ public class Message implements Serializable {
 	// ======================================
 
 	public Message() {
-		id=0L;
-		this.date=new Date();
-    	sender=new User();
-    	recipient=new User();
-    	discussion=new Discussion();
-		
+		id = 0L;
+		this.date = new Date();
+		sender = new User();
+		recipient = new User();
+		discussion = new Discussion();
+
 	}
-	
+
 	public Message(final String texte, final User sender, final User recipient, Discussion discussion) {
-		this.date=new Date();
+		this.date = new Date();
 		setDate(date);
 		this.texte = texte;
 		setSender(sender);
 		setRecipient(recipient);
 		setDiscussion(discussion);
 	}
-	
+
 	// ======================================
 	// = Getters and Setters =
 	// ======================================
@@ -121,7 +120,7 @@ public class Message implements Serializable {
 	public void setRecipient(User recipient) {
 		this.recipient = recipient;
 	}
-	
+
 	public Discussion getDiscussion() {
 		return discussion;
 	}
@@ -135,6 +134,5 @@ public class Message implements Serializable {
 		return "Message [id=" + id + ", date=" + date + ", texte=" + texte + ", sender=" + sender + ", recipient="
 				+ recipient + ", discussion=" + discussion + "]";
 	}
-
 
 }

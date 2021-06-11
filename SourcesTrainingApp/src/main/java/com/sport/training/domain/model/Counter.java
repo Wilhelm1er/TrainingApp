@@ -5,15 +5,16 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "T_COUNTER") 
+@Table(name = "T_COUNTER")
 public class Counter {
-	
+
 	@Id
 	private String name;
-	
+
 	private int value;
-	
-	public Counter() {}
+
+	public Counter() {
+	}
 
 	public String getName() {
 		return name;
@@ -30,5 +31,5 @@ public class Counter {
 	public void setValue(int value) {
 		this.value = value;
 	}
-	
+
 }

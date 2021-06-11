@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import com.sport.training.authentication.domain.dao.UserRepository;
-import com.sport.training.authentication.domain.dto.UserDTO;
 import com.sport.training.authentication.domain.model.User;
 import com.sport.training.authentication.domain.service.UserService;
 import com.sport.training.authentication.domain.service.UserServiceImpl;
@@ -25,12 +24,10 @@ import com.sport.training.domain.dao.EventRepository;
 import com.sport.training.domain.dao.MessageRepository;
 import com.sport.training.domain.dao.NotationRepository;
 import com.sport.training.domain.dto.BookmarkDTO;
-import com.sport.training.domain.dto.DisciplineRegistryDTO;
 import com.sport.training.domain.dto.DiscussionDTO;
 import com.sport.training.domain.dto.MessageDTO;
 import com.sport.training.domain.dto.NotationDTO;
 import com.sport.training.domain.model.Bookmark;
-import com.sport.training.domain.model.DisciplineRegistry;
 import com.sport.training.domain.model.Discussion;
 import com.sport.training.domain.model.Message;
 import com.sport.training.domain.model.Notation;
@@ -52,7 +49,7 @@ public class CoachServiceImpl implements CoachService {
 	// ======================================
 
 	@Autowired
-	private ModelMapper commonModelMapper,bookmarkModelMapper, messageModelMapper, discussionModelMapper;
+	private ModelMapper commonModelMapper, bookmarkModelMapper, messageModelMapper, discussionModelMapper;
 
 	@Autowired
 	private EventRepository eventRepository;
@@ -62,19 +59,18 @@ public class CoachServiceImpl implements CoachService {
 
 	@Autowired
 	private BookmarkRepository bookmarkRepository;
-	
+
 	@Autowired
 	private MessageRepository messageRepository;
-	
+
 	@Autowired
 	private DiscussionRepository discussionRepository;
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private UserRepository userRepository;
-	
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
@@ -321,7 +317,7 @@ public class CoachServiceImpl implements CoachService {
 			throw new FinderException("Coach must exist to be found");
 		else
 			athlete = userRepository.findById(athleteId).get();
-		
+
 		// Finds all the objects
 		final Iterable<Bookmark> bookmarks = bookmarkRepository.findAllByAthlete(athlete);
 		int size;
@@ -331,11 +327,10 @@ public class CoachServiceImpl implements CoachService {
 
 		List<BookmarkDTO> bookmarkDTOs = ((List<Bookmark>) bookmarks).stream()
 				.map(bookmark -> bookmarkModelMapper.map(bookmark, BookmarkDTO.class)).collect(Collectors.toList());
-		
+
 		LOGGER.debug("exiting " + mname + " size of collection : " + size);
 		return bookmarkDTOs;
 	}
-	
 
 	// ======================================
 	// = Message Business methods =
@@ -406,7 +401,7 @@ public class CoachServiceImpl implements CoachService {
 		// Deletes the object
 		messageRepository.delete(message);
 		LOGGER.debug("exiting " + mname);
-		
+
 	}
 
 	@Override
@@ -447,7 +442,7 @@ public class CoachServiceImpl implements CoachService {
 		LOGGER.debug("exiting " + mname + " size of collection : " + size);
 		return messageDTOs;
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	public List<MessageDTO> findMessagesByDiscussion(Long discussionId) throws FinderException {
@@ -461,25 +456,25 @@ public class CoachServiceImpl implements CoachService {
 			throw new FinderException("Discussion must exist to be found");
 		else
 			discussion = discussionRepository.findById(discussionId).get();
-		
+
 		// Finds all the objects
 		final Iterable<Message> messages = messageRepository.findAllByDiscussion(discussion);
 		int size;
 		if ((size = ((Collection<Message>) messages).size()) == 0) {
 			throw new FinderException("No message in the database");
 		}
- 
+
 		List<MessageDTO> messageDTOs = ((List<Message>) messages).stream()
 				.map(message -> messageModelMapper.map(message, MessageDTO.class)).collect(Collectors.toList());
-		
+
 		LOGGER.debug("exiting " + mname + " size of collection : " + size);
 		return messageDTOs;
 	}
-	
+
 	// ======================================
 	// = Discussion Business methods =
 	// ======================================
-	
+
 	@Override
 	@Transactional
 	public DiscussionDTO createDiscussion(@Valid DiscussionDTO discussionDTO) throws CreateException {
@@ -539,7 +534,7 @@ public class CoachServiceImpl implements CoachService {
 		// Deletes the object
 		discussionRepository.delete(discussion);
 		LOGGER.debug("exiting " + mname);
-		
+
 	}
 
 	@Override
@@ -560,7 +555,7 @@ public class CoachServiceImpl implements CoachService {
 		// Updates the object
 		discussionRepository.save(discussion);
 		LOGGER.debug("exiting " + mname);
-		
+
 	}
 
 	@Override
@@ -575,9 +570,10 @@ public class CoachServiceImpl implements CoachService {
 		if ((size = ((Collection<Discussion>) discussions).size()) == 0) {
 			throw new FinderException("No discussion in the database");
 		}
-		
+
 		List<DiscussionDTO> discussionDTOs = ((List<Discussion>) discussions).stream()
-				.map(discussion -> discussionModelMapper.map(discussion, DiscussionDTO.class)).collect(Collectors.toList());
+				.map(discussion -> discussionModelMapper.map(discussion, DiscussionDTO.class))
+				.collect(Collectors.toList());
 
 		LOGGER.debug("exiting " + mname + " size of collection : " + size);
 		return discussionDTOs;
@@ -596,7 +592,7 @@ public class CoachServiceImpl implements CoachService {
 			throw new FinderException("User must exist to be found");
 		else
 			user = userRepository.findById(userId).get();
-		
+
 		// Finds all the objects
 		final Iterable<Discussion> discussions = discussionRepository.findAllByUser(user);
 		int size;
@@ -605,13 +601,13 @@ public class CoachServiceImpl implements CoachService {
 		}
 
 		List<DiscussionDTO> discussionDTOs = ((List<Discussion>) discussions).stream()
-				.map(discussion -> discussionModelMapper.map(discussion, DiscussionDTO.class)).collect(Collectors.toList());
-		
+				.map(discussion -> discussionModelMapper.map(discussion, DiscussionDTO.class))
+				.collect(Collectors.toList());
+
 		LOGGER.debug("exiting " + mname + " size of collection : " + size);
 		return discussionDTOs;
 	}
 
-	
 	// ======================================
 	// = Private Methods =
 	// ======================================
@@ -620,7 +616,7 @@ public class CoachServiceImpl implements CoachService {
 		if (l == 0)
 			throw new FinderException("Id should not be 0");
 	}
-	
+
 	private void checkStringId(final String id) throws FinderException {
 		if (id == null || id.equals(""))
 			throw new FinderException(id + " should not be null or empty");

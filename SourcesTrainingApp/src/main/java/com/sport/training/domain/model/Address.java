@@ -5,10 +5,10 @@ import javax.validation.constraints.NotBlank;
 
 @Embeddable
 public class Address {
-	
+
 	// ======================================
-    // =             Attributes             =
-    // ======================================
+	// = Attributes =
+	// ======================================
 	@NotBlank(message = "invalid Address")
 	private String address1;
 	private String address2;
@@ -19,12 +19,13 @@ public class Address {
 	private String zipcode;
 	@NotBlank(message = "invalid Country")
 	private String country;
-	
-	public Address() {}
+
+	public Address() {
+	}
 
 	// ======================================
-    // =         Getters and Setters        =
-    // ======================================
+	// = Getters and Setters =
+	// ======================================
 	public String getAddress1() {
 		return address1;
 	}
@@ -72,5 +73,5 @@ public class Address {
 	public void setCountry(final String country) {
 		this.country = country;
 	}
-	
+
 }

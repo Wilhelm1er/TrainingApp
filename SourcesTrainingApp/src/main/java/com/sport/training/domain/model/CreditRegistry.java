@@ -18,94 +18,94 @@ import javax.validation.constraints.Positive;
 
 import com.sport.training.authentication.domain.model.User;
 
-	/**
-	 * A credit register represents the credit that an athlete registered. This registration has one
-	 * registration credit and is relevant for one athlete.
-	 *
-	 */
-	@SuppressWarnings("serial")
-	@Entity
-	@Table(name = "T_CREDIT_REGISTRY") 
-	public class CreditRegistry implements Serializable {
+/**
+ * A credit register represents the credit that an athlete registered. This
+ * registration has one registration credit and is relevant for one athlete.
+ *
+ */
+@SuppressWarnings("serial")
+@Entity
+@Table(name = "T_CREDIT_REGISTRY")
+public class CreditRegistry implements Serializable {
 
-	    // ======================================
-	    // =             Attributes             =
-	    // ======================================
-		@Id
-		@GeneratedValue(strategy = GenerationType.AUTO, generator="credit_seq_gen")
-		private Long id;
-		
-		@Column(name = "MOUVEMENT_DATE")
-		private Date mouvementDate;
-		
-		@Column(name = "CREDIT")
-		@Positive(message = "invalid Credit")
-		private int credit;
+	// ======================================
+	// = Attributes =
+	// ======================================
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "credit_seq_gen")
+	private Long id;
 
-		@ManyToOne(fetch = FetchType.LAZY)
-	    @JoinColumn(name ="USER_FK", nullable = false)
-	    @NotNull(message = "invalid Athlete")
-	    private User user;
+	@Column(name = "MOUVEMENT_DATE")
+	private Date mouvementDate;
 
-	    // ======================================
-	    // =            Constructors            =
-	    // ======================================
-	    public CreditRegistry() {
-	    	this.mouvementDate=new Date();
-	    }
+	@Column(name = "CREDIT")
+	@Positive(message = "invalid Credit")
+	private int credit;
 
-		public CreditRegistry(final int credit,final User user) {
-	    	this.mouvementDate=new Date();
-	    	setMouvementDate(mouvementDate);
-	    	setCredit(credit);
-	        setUser(user);
-	    }
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "USER_FK", nullable = false)
+	@NotNull(message = "invalid Athlete")
+	private User user;
 
-	    // ======================================
-	    // =         Getters and Setters        =
-	    // ======================================
-	    
-	    public Long getId() {
-			return id;
-		}
+	// ======================================
+	// = Constructors =
+	// ======================================
+	public CreditRegistry() {
+		this.mouvementDate = new Date();
+	}
 
-		public void setId(final long id) {
-			this.id = id;
-		}
+	public CreditRegistry(final int credit, final User user) {
+		this.mouvementDate = new Date();
+		setMouvementDate(mouvementDate);
+		setCredit(credit);
+		setUser(user);
+	}
 
-	    private void setMouvementDate(final Date mouvementDate) {
-	    	this.mouvementDate = mouvementDate;
-	    }
+	// ======================================
+	// = Getters and Setters =
+	// ======================================
 
-	    public Date getMouvementDate() {
-			return mouvementDate;
-		}
+	public Long getId() {
+		return id;
+	}
 
-	    public int getCredit() {
-			return credit;
-		}
+	public void setId(final long id) {
+		this.id = id;
+	}
 
-		public void setCredit(int credit) {
-			this.credit = credit;
-		}
+	private void setMouvementDate(final Date mouvementDate) {
+		this.mouvementDate = mouvementDate;
+	}
 
-	    public User getUser() {
-	        return user;
-	    }
+	public Date getMouvementDate() {
+		return mouvementDate;
+	}
 
-	    public void setUser(final User user) {
-	    	this.user = user;
-	    }
+	public int getCredit() {
+		return credit;
+	}
 
-	    @Override
-		public String toString() {
-	        final StringBuffer buf = new StringBuffer();
-	        buf.append("Credit Registry{");
-	        buf.append("id=").append(getId());
-	        buf.append(",mouvementDate=").append(getMouvementDate());
-	        buf.append(",credit=").append(getCredit());
-	        buf.append(",userID=").append(getUser().getUsername());
-	        buf.append('}');
-	        return buf.toString();
-	    }
+	public void setCredit(int credit) {
+		this.credit = credit;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(final User user) {
+		this.user = user;
+	}
+
+	@Override
+	public String toString() {
+		final StringBuffer buf = new StringBuffer();
+		buf.append("Credit Registry{");
+		buf.append("id=").append(getId());
+		buf.append(",mouvementDate=").append(getMouvementDate());
+		buf.append(",credit=").append(getCredit());
+		buf.append(",userID=").append(getUser().getUsername());
+		buf.append('}');
+		return buf.toString();
+	}
 }

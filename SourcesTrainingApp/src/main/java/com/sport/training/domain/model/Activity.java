@@ -14,28 +14,28 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 /**
- * This class represents an Activity in the sport system.
- * The sport system is divided into disciplines. Each one divided into activities
- * and each activity in event.
+ * This class represents an Activity in the sport system. The sport system is
+ * divided into disciplines. Each one divided into activities and each activity
+ * in event.
  */
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "T_ACTIVITY") 
+@Table(name = "T_ACTIVITY")
 public class Activity implements Serializable {
 
-    // ======================================
-    // =             Attributes             =
-    // ======================================
+	// ======================================
+	// = Attributes =
+	// ======================================
 	@NotBlank(message = "id must be defined")
 	@Id
 	private String id;
-	
+
 	@NotBlank(message = "invalid Name")
-    private String name;
-	
-    @NotBlank(message = "invalid Description")
-    private String description;
-  
+	private String name;
+
+	@NotBlank(message = "invalid Description")
+	private String description;
+
 	@Column(name = "CREDITCOSTMIN")
 	@Positive(message = "invalid Creditcost min")
 	private int creditcostMin;
@@ -43,33 +43,34 @@ public class Activity implements Serializable {
 	@Column(name = "CREDITCOSTMAX")
 	@Positive(message = "invalid Creditcost max")
 	private int creditcostMax;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="DISCIPLINE_FK")
-    @NotNull(message = "invalid Discipline")
-    private Discipline discipline;
 
-    // ======================================
-    // =            Constructors            =
-    // ======================================
-    public Activity() {}
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "DISCIPLINE_FK")
+	@NotNull(message = "invalid Discipline")
+	private Discipline discipline;
 
-    public Activity(final String id) {
-        setId(id);
-    }
+	// ======================================
+	// = Constructors =
+	// ======================================
+	public Activity() {
+	}
 
-    public Activity(final String id, final String name, final String description, final Discipline discipline) {
-        setId(id);
-        setName(name);
-        setDescription(description);
-        setDiscipline(discipline);
-    }
+	public Activity(final String id) {
+		setId(id);
+	}
 
-    // ======================================
-    // =         Getters and Setters        =
-    // ======================================
-    
-    public String getId() {
+	public Activity(final String id, final String name, final String description, final Discipline discipline) {
+		setId(id);
+		setName(name);
+		setDescription(description);
+		setDiscipline(discipline);
+	}
+
+	// ======================================
+	// = Getters and Setters =
+	// ======================================
+
+	public String getId() {
 		return id;
 	}
 
@@ -78,29 +79,29 @@ public class Activity implements Serializable {
 	}
 
 	public String getName() {
-        return name;
-    }
+		return name;
+	}
 
-    public void setName(final String name) {
-    	this.name = name;
-    }
+	public void setName(final String name) {
+		this.name = name;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public void setDescription(final String description) {
-    	this.description = description;
-    }
-    
-    public int getCreditcostMin() {
+	public void setDescription(final String description) {
+		this.description = description;
+	}
+
+	public int getCreditcostMin() {
 		return creditcostMin;
 	}
 
 	public void setCreditcostMin(int creditcostMin) {
 		this.creditcostMin = creditcostMin;
 	}
-	
+
 	public int getCreditcostMax() {
 		return creditcostMax;
 	}
@@ -109,21 +110,18 @@ public class Activity implements Serializable {
 		this.creditcostMax = creditcostMax;
 	}
 
-    public Discipline getDiscipline() {
-        return discipline;
-    }
+	public Discipline getDiscipline() {
+		return discipline;
+	}
 
-    public void setDiscipline(final Discipline discipline) {
-        this.discipline = discipline;
-    }
+	public void setDiscipline(final Discipline discipline) {
+		this.discipline = discipline;
+	}
 
 	@Override
 	public String toString() {
-		return "Activity [id=" + id + ", name=" + name + ", description=" + description 
-				+ ", creditcostMin=" + creditcostMin + ", creditcostMax=" + creditcostMax + ", discipline=" + discipline
-				+ "]";
+		return "Activity [id=" + id + ", name=" + name + ", description=" + description + ", creditcostMin="
+				+ creditcostMin + ", creditcostMax=" + creditcostMax + ", discipline=" + discipline + "]";
 	}
-
-  
 
 }

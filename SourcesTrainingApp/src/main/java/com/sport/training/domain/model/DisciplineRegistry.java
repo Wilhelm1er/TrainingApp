@@ -17,56 +17,56 @@ import javax.validation.constraints.NotNull;
 import com.sport.training.authentication.domain.model.User;
 
 /**
- * A discipline register represents the discipline that a coach registered. This registration has one
- * registration event and is relevant for one coach.
+ * A discipline register represents the discipline that a coach registered. This
+ * registration has one registration event and is relevant for one coach.
  */
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "T_DISCIPLINE_REGISTRY")  
+@Table(name = "T_DISCIPLINE_REGISTRY")
 public class DisciplineRegistry implements Serializable {
 
-    // ======================================
-    // =             Attributes             =
-    // ======================================
+	// ======================================
+	// = Attributes =
+	// ======================================
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO, generator="disc_seq_gen")
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "disc_seq_gen")
 	private Long id;
-	
+
 	@Column(name = "REGISTER_DATE")
 	private Date registerDate;
-    
+
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name ="COACH_FK", nullable = false)
-    @NotNull(message = "invalid Athlete")
-    private User coach;
-	
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="DISCIPLINE_FK")
-    @NotNull(message = "invalid Discipline")
-    private Discipline discipline;
-    
-    @Column(name = "Doc_STATUT")
+	@JoinColumn(name = "COACH_FK", nullable = false)
+	@NotNull(message = "invalid Athlete")
+	private User coach;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "DISCIPLINE_FK")
+	@NotNull(message = "invalid Discipline")
+	private Discipline discipline;
+
+	@Column(name = "Doc_STATUT")
 	private String docStatut;
 
 	// ======================================
-    // =            Constructors            =
-    // ======================================
-    public DisciplineRegistry() {
-    	this.registerDate=new Date();
-    }
+	// = Constructors =
+	// ======================================
+	public DisciplineRegistry() {
+		this.registerDate = new Date();
+	}
 
-    public DisciplineRegistry(final Discipline discipline,final User coach) {
-    	this.registerDate=new Date();
-    	docStatut="no";
-    	setRegisterDate(registerDate);
-    	setDiscipline(discipline);
-        setCoach(coach);
-    }
+	public DisciplineRegistry(final Discipline discipline, final User coach) {
+		this.registerDate = new Date();
+		docStatut = "no";
+		setRegisterDate(registerDate);
+		setDiscipline(discipline);
+		setCoach(coach);
+	}
 
-    // ======================================
-    // =         Getters and Setters        =
-    // ======================================
-    
+	// ======================================
+	// = Getters and Setters =
+	// ======================================
+
 	public Long getId() {
 		return id;
 	}
@@ -74,20 +74,20 @@ public class DisciplineRegistry implements Serializable {
 	public void setId(final Long id) {
 		this.id = id;
 	}
-    
-    public void setCoach(User coach) {
-    	this.coach = coach;
-		
+
+	public void setCoach(User coach) {
+		this.coach = coach;
+
 	}
 
 	public void setDiscipline(Discipline discipline) {
 		this.discipline = discipline;
-		
+
 	}
 
 	public void setRegisterDate(Date registerDate) {
 		this.registerDate = registerDate;
-		
+
 	}
 
 	public User getCoach() {
@@ -97,7 +97,6 @@ public class DisciplineRegistry implements Serializable {
 	public Discipline getDiscipline() {
 		return discipline;
 	}
-	
 
 	public String getDocStatut() {
 		return docStatut;
@@ -113,6 +112,4 @@ public class DisciplineRegistry implements Serializable {
 				+ discipline + ", docStatut=" + docStatut + "]";
 	}
 
-	
-	
 }

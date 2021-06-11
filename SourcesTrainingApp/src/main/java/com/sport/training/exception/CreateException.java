@@ -6,10 +6,10 @@ package com.sport.training.exception;
 @SuppressWarnings("serial")
 public class CreateException extends ApplicationException {
 
-    public CreateException() {
-    }
+	public CreateException() {
+	}
 
-    public CreateException(final String message) {
-        super(message);
-    }
+	public CreateException(final String message) {
+		super(message);
+	}
 }

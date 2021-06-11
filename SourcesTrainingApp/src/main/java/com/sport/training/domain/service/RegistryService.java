@@ -35,10 +35,10 @@ public interface RegistryService {
 	public List<DisciplineRegistryDTO> findDisciplineRegistries() throws FinderException;
 
 	public Set<UserDTO> findCoachsByDiscipline(final String disciplineId) throws FinderException;
-	
-	public Set<DisciplineDTO> findDisciplinesByCoach(String coachId, String statutDoc) throws FinderException;
-	
-	public Set<DisciplineDTO> findAllDisciplinesByCoach(String coachId) throws FinderException;
+
+	public List<DisciplineDTO> findDisciplinesByCoach(String coachId) throws FinderException;
+
+	public List<DisciplineDTO> findDisciplineToCheckByCoach(String coachId) throws FinderException;
 
 	// ======================================
 	// = EventRegistry Business methods =
@@ -52,13 +52,12 @@ public interface RegistryService {
 	public void updateEventRegistry(@Valid final EventRegistryDTO eventRegistryDTO) throws UpdateException;
 
 	public List<EventRegistryDTO> findEventRegistries() throws FinderException;
-	
+
 	List<EventDTO> findEventsByAthlete(String athleteId) throws FinderException;
-	
+
 	EventRegistryDTO findEventRegistryByAthleteAndEvent(String coachId, Long eventId) throws FinderException;
-	
+
 	public List<UserDTO> findAthleteByEvent(Long eventId) throws FinderException;
-	
 
 	// ======================================
 	// = Credit Business methods =
@@ -76,6 +75,4 @@ public interface RegistryService {
 
 	public Map<Date, Integer> findDateAndCreditByUser(final String userId) throws FinderException;
 
-	
-	
 }

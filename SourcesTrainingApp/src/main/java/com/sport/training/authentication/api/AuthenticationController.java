@@ -1,8 +1,5 @@
 package com.sport.training.authentication.api;
 
-import java.util.List;
-import java.util.Set;
-
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -12,19 +9,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import com.sport.training.authentication.domain.dto.UserDTO;
 import com.sport.training.authentication.domain.service.UserService;
-import com.sport.training.domain.dto.DisciplineDTO;
-import com.sport.training.domain.dto.DisciplineRegistryDTO;
-import com.sport.training.domain.service.RegistryService;
-import com.sport.training.domain.service.SportService;
 import com.sport.training.exception.FinderException;
 import com.sport.training.exception.UpdateException;
 
@@ -53,7 +43,7 @@ public class AuthenticationController {
 
 		return "account";
 	}
-	
+
 	@GetMapping(path = "/update-account/{username}")
 	public String showUpdateAccount(Model model, @PathVariable String username) {
 		final String mname = "showUpdateAccount";
@@ -72,13 +62,12 @@ public class AuthenticationController {
 	}
 
 	@PostMapping(path = "/update-account")
-	public String updateAccount(@Valid @ModelAttribute UserDTO userDTO,
-			Model model) {
+	public String updateAccount(@Valid @ModelAttribute UserDTO userDTO, Model model) {
 		final String mname = "updateAccount";
 		LOGGER.debug("entering " + mname);
 		try {
 			userService.updateUser(userDTO);
-			
+
 			model.addAttribute("message", "account updated");
 			return "index";
 		} catch (UpdateException e) {

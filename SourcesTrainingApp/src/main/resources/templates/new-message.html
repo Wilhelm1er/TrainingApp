@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
+<head>
+<th:block th:insert="layout/default.html :: header"></th:block>
+</head>
+<body>
+	<nav th:insert="layout/default.html :: navbar"></nav>
+	<br>
+	<br>
+	<br>
+	
+
+	<form method="post" th:action="@{'/new-message/'+${discussionId}}" th:object="${texte}">
+		<br> <br> <br> Entrez votre nouveau message...<br>
+		<textarea name="texte" rows="3" cols="50" th:value="${texte}"></textarea>
+		<br> <input type="submit" />
+	</form>
+
+	<br>
+	<br>
+	<br>
+	<br>
+
+	<th:block th:insert="layout/default.html :: footer"></th:block>
+	<th:block th:insert="layout/default.html :: scripts"></th:block>
+</body>
+</html>

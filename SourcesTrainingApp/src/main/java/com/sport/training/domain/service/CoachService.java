@@ -1,13 +1,9 @@
 package com.sport.training.domain.service;
 
 import java.util.List;
-import java.util.Set;
-
 import javax.validation.Valid;
 
-import com.sport.training.authentication.domain.dto.UserDTO;
 import com.sport.training.domain.dto.BookmarkDTO;
-import com.sport.training.domain.dto.DisciplineDTO;
 import com.sport.training.domain.dto.DiscussionDTO;
 import com.sport.training.domain.dto.MessageDTO;
 import com.sport.training.domain.dto.NotationDTO;

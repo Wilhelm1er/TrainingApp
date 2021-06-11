@@ -6,7 +6,7 @@ package com.sport.training.exception;
 @SuppressWarnings("serial")
 public class UpdateException extends ApplicationException {
 
-    public UpdateException(final String message) {
-        super(message);
-    }
+	public UpdateException(final String message) {
+		super(message);
+	}
 }

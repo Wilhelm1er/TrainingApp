@@ -13,8 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
@@ -22,9 +20,9 @@ import javax.validation.constraints.Positive;
 import com.sport.training.authentication.domain.model.User;
 
 /**
- * This class represents an Event the Sport system. The sport system
- * is divided into disciplines. Each one divided into activities and each activity
- * in event.
+ * This class represents an Event the Sport system. The sport system is divided
+ * into disciplines. Each one divided into activities and each activity in
+ * event.
  */
 @SuppressWarnings("serial")
 @Entity
@@ -35,32 +33,32 @@ public class Event implements Serializable {
 	// = Attributes =
 	// ======================================
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO, generator="event_seq_gen")
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "event_seq_gen")
 	private Long id;
 
 	@NotBlank(message = "invalid Name")
 	private String name;
- 
+
 	@Column(name = "DATE")
 	private LocalDateTime datetime;
 
 	@Column(name = "CREDITCOST")
 	@Positive(message = "invalid Creditcost")
 	private int creditCost;
-	
+
 	@Column(name = "DURATION")
 	@Positive(message = "invalid Duration")
 	private int duration;
 
 	@Column(name = "DESCRIPTION")
 	private String description;
-	
+
 	@Column(name = "INTENSITY")
 	private int intensity;
-	
+
 	@Column(name = "EQUIPMENT")
 	private String equipment;
-	
+
 	@Column(name = "VOIDABLE")
 	private int voidable;
 
@@ -79,9 +77,9 @@ public class Event implements Serializable {
 	// ======================================
 	public Event() {
 	}
-	
-	public Event(final String name, final LocalDateTime datetime, final Date time, final int creditCost, final User coach,
-			final Activity activity) {
+
+	public Event(final String name, final LocalDateTime datetime, final Date time, final int creditCost,
+			final User coach, final Activity activity) {
 		setVoidable(0);
 		setName(name);
 		setDateTime(datetime);
@@ -109,7 +107,7 @@ public class Event implements Serializable {
 	public void setName(final String name) {
 		this.name = name;
 	}
-	
+
 	public LocalDateTime getDateTime() {
 		return datetime;
 	}
@@ -149,7 +147,7 @@ public class Event implements Serializable {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 	public int getIntensity() {
 		return intensity;
 	}
@@ -173,7 +171,7 @@ public class Event implements Serializable {
 	public void setCoach(User coach) {
 		this.coach = coach;
 	}
-	
+
 	public Activity getActivity() {
 		return activity;
 	}
@@ -189,6 +187,5 @@ public class Event implements Serializable {
 				+ ", equipment=" + equipment + ", voidable=" + voidable + ", coach=" + coach + ", activity=" + activity
 				+ "]";
 	}
-
 
 }

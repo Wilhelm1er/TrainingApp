@@ -12,6 +12,7 @@ import com.sport.training.domain.dto.EventRegistryDTO;
 import com.sport.training.domain.dto.MessageDTO;
 import com.sport.training.domain.dto.ActivityDTO;
 import com.sport.training.domain.dto.BookmarkDTO;
+import com.sport.training.domain.dto.DisciplineDTO;
 import com.sport.training.domain.dto.DisciplineRegistryDTO;
 import com.sport.training.domain.dto.DiscussionDTO;
 import com.sport.training.domain.model.Event;
@@ -19,6 +20,7 @@ import com.sport.training.domain.model.EventRegistry;
 import com.sport.training.domain.model.Message;
 import com.sport.training.domain.model.Activity;
 import com.sport.training.domain.model.Bookmark;
+import com.sport.training.domain.model.Discipline;
 import com.sport.training.domain.model.DisciplineRegistry;
 import com.sport.training.domain.model.Discussion;
 
@@ -112,4 +114,5 @@ public class MapperConfig {
 		typeMap.addMappings(mapper -> mapper.map(Discussion::getUser, DiscussionDTO::setUserDTO));
 		return modelMapper;
 	}
+
 }

@@ -18,8 +18,8 @@ import javax.validation.constraints.Positive;
 import com.sport.training.authentication.domain.model.User;
 
 /**
- * This class represents a Notation from the Sport system. The sport system
- * is divided into disciplines. Each one divided into activities and each activity
+ * This class represents a Notation from the Sport system. The sport system is
+ * divided into disciplines. Each one divided into activities and each activity
  * in event which athlete can provide a notation.
  */
 @SuppressWarnings("serial")
@@ -31,7 +31,7 @@ public class Notation implements Serializable {
 	// = Attributes =
 	// ======================================
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO, generator="note_seq_gen")
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "note_seq_gen")
 	private Long id;
 
 	@Column(name = "NOTATION_DATE")
@@ -40,7 +40,7 @@ public class Notation implements Serializable {
 	@Column(name = "NOTE")
 	@Positive(message = "invalid Note")
 	private int note;
-	
+
 	@Column(name = "COMMENTS")
 	@Positive(message = "invalid Comments")
 	private String comments;
@@ -49,7 +49,7 @@ public class Notation implements Serializable {
 	@JoinColumn(name = "EVENT_FK")
 	@NotNull(message = "invalid Event")
 	private Event event;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "COACH_FK")
 	@NotNull(message = "invalid Coach")
@@ -59,16 +59,16 @@ public class Notation implements Serializable {
 	@JoinColumn(name = "ATHLETE_FK")
 	@NotNull(message = "invalid Athlete")
 	private User athlete;
- 
+
 	// ======================================
 	// = Constructors =
 	// ======================================
 	public Notation() {
-		this.notationDate=new Date();
+		this.notationDate = new Date();
 	}
 
 	public Notation(final int note, final User coach, final Event event) {
-		this.notationDate=new Date();
+		this.notationDate = new Date();
 		setNotationDate(notationDate);
 		setNote(note);
 		setCoach(coach);
@@ -86,10 +86,10 @@ public class Notation implements Serializable {
 	public void setId(final Long id) {
 		this.id = id;
 	}
-	
+
 	public void setNotationDate(Date notationDate) {
 		this.notationDate = notationDate;
-		
+
 	}
 
 	public int getNote() {
@@ -99,7 +99,7 @@ public class Notation implements Serializable {
 	public void setNote(int note) {
 		this.note = note;
 	}
-	
+
 	public String getComments() {
 		return comments;
 	}
@@ -115,7 +115,7 @@ public class Notation implements Serializable {
 	public void setEvent(Event event) {
 		this.event = event;
 	}
-	
+
 	public User getCoach() {
 		return coach;
 	}
@@ -134,8 +134,8 @@ public class Notation implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Notation [id=" + id + ", date=" + notationDate + ", note=" + note + ", comments=" + comments + ", event="
-				+ event + ", coach=" + coach + ", athlete=" + athlete + "]";
+		return "Notation [id=" + id + ", date=" + notationDate + ", note=" + note + ", comments=" + comments
+				+ ", event=" + event + ", coach=" + coach + ", athlete=" + athlete + "]";
 	}
-	
+
 }

@@ -7,15 +7,15 @@ import com.sport.training.authentication.domain.dto.UserDTO;
 
 /**
  * This class follows the Data Transfert Object design pattern. It is a client
- * view of a discipline registration. This class only transfers data from a distant service to a
- * client.
+ * view of a discipline registration. This class only transfers data from a
+ * distant service to a client.
  */
 @SuppressWarnings("serial")
 public class DisciplineRegistryDTO implements Serializable {
 
-    // ======================================
-    // =             Attributes             =
-    // ======================================
+	// ======================================
+	// = Attributes =
+	// ======================================
 
 	private Long id;
 	private Date registerDate;
@@ -24,19 +24,19 @@ public class DisciplineRegistryDTO implements Serializable {
 	private String docStatut;
 
 	// ======================================
-    // =            Constructors            =
-    // ======================================
-    public DisciplineRegistryDTO(DisciplineDTO disciplineDTO, UserDTO coachDTO) {
-    	docStatut="no";
-    	setCoachDTO(coachDTO);
-    	setDisciplineDTO(disciplineDTO);
-    	
-    }
+	// = Constructors =
+	// ======================================
+	public DisciplineRegistryDTO(DisciplineDTO disciplineDTO, UserDTO coachDTO) {
+		docStatut = "no";
+		setCoachDTO(coachDTO);
+		setDisciplineDTO(disciplineDTO);
 
-    // ======================================
-    // =         Getters and Setters        =
-    // ======================================
-    
+	}
+
+	// ======================================
+	// = Getters and Setters =
+	// ======================================
+
 	public Long getId() {
 		return id;
 	}
@@ -44,24 +44,24 @@ public class DisciplineRegistryDTO implements Serializable {
 	public void setId(final Long id) {
 		this.id = id;
 	}
-	
+
 	public Date getRegisterDate() {
 		return registerDate;
 	}
-    
+
 	public void setCoachDTO(UserDTO coachDTO) {
-    	this.coachDTO = coachDTO;
-		
+		this.coachDTO = coachDTO;
+
 	}
-	
-    public DisciplineDTO getDisciplineDTO() {
+
+	public DisciplineDTO getDisciplineDTO() {
 		return disciplineDTO;
 	}
 
 	public void setDisciplineDTO(DisciplineDTO disciplineDTO) {
 		this.disciplineDTO = disciplineDTO;
 	}
-	
+
 	public UserDTO getCoachDTO() {
 		return coachDTO;
 	}

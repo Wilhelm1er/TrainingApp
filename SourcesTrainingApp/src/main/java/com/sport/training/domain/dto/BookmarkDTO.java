@@ -6,8 +6,8 @@ import com.sport.training.authentication.domain.dto.UserDTO;
 
 /**
  * This class follows the Data Transfert Object design pattern. It is a client
- * view of a Bookmark. This class only transfers data from a distant service to a
- * client.
+ * view of a Bookmark. This class only transfers data from a distant service to
+ * a client.
  */
 @SuppressWarnings("serial")
 public class BookmarkDTO implements Serializable {
@@ -24,14 +24,14 @@ public class BookmarkDTO implements Serializable {
 	// ======================================
 
 	public BookmarkDTO() {
-    	id=0L;
-	coachDTO=new UserDTO();
-	athleteDTO=new UserDTO();
-    }
-	
+		id = 0L;
+		coachDTO = new UserDTO();
+		athleteDTO = new UserDTO();
+	}
+
 	public BookmarkDTO(UserDTO athleteDTO, UserDTO coachDTO) {
-		this.athleteDTO=athleteDTO;
-		this.coachDTO=coachDTO;
+		this.athleteDTO = athleteDTO;
+		this.coachDTO = coachDTO;
 	}
 
 	// ======================================

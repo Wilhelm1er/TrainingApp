@@ -6,7 +6,7 @@ package com.sport.training.exception;
 @SuppressWarnings("serial")
 public class RemoveException extends ApplicationException {
 
-    public RemoveException(final String message) {
-        super(message);
-    }
+	public RemoveException(final String message) {
+		super(message);
+	}
 }

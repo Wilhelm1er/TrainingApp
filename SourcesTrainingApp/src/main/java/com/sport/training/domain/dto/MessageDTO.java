@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.sport.training.authentication.domain.dto.UserDTO;
-import com.sport.training.authentication.domain.model.User;
-import com.sport.training.domain.model.Discussion;
 
 /**
  * This class follows the Data Transfert Object design pattern. It is a client
@@ -29,15 +27,16 @@ public class MessageDTO implements Serializable {
 	// = Constructors =
 	// ======================================
 	public MessageDTO() {
-		id=0L;
-		this.date=new Date();
-    	senderDTO=new UserDTO();
-    	recipientDTO=new UserDTO();
-    	discussionDTO=new DiscussionDTO();
+		id = 0L;
+		this.date = new Date();
+		senderDTO = new UserDTO();
+		recipientDTO = new UserDTO();
+		discussionDTO = new DiscussionDTO();
 	}
 
-	public MessageDTO(final String texte, final UserDTO senderDTO, final UserDTO recipientDTO, final DiscussionDTO discussionDTO) {
-		this.texte=texte;
+	public MessageDTO(final String texte, final UserDTO senderDTO, final UserDTO recipientDTO,
+			final DiscussionDTO discussionDTO) {
+		this.texte = texte;
 		setSenderDTO(senderDTO);
 		setRecipientDTO(recipientDTO);
 		setDiscussionDTO(discussionDTO);
@@ -69,7 +68,7 @@ public class MessageDTO implements Serializable {
 	public void setTexte(String texte) {
 		this.texte = texte;
 	}
-	
+
 	public UserDTO getSenderDTO() {
 		return senderDTO;
 	}
@@ -85,7 +84,7 @@ public class MessageDTO implements Serializable {
 	public void setRecipientDTO(UserDTO recipientDTO) {
 		this.recipientDTO = recipientDTO;
 	}
-	
+
 	public DiscussionDTO getDiscussionDTO() {
 		return discussionDTO;
 	}
@@ -99,6 +98,5 @@ public class MessageDTO implements Serializable {
 		return "MessageDTO [id=" + id + ", date=" + date + ", texte=" + texte + ", senderDTO=" + senderDTO
 				+ ", recipientDTO=" + recipientDTO + ", discussionDTO=" + discussionDTO + "]";
 	}
-	
 
 }

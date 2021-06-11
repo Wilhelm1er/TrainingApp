@@ -7,8 +7,8 @@ import com.sport.training.authentication.domain.dto.UserDTO;
 
 /**
  * This class follows the Data Transfert Object design pattern. It is a client
- * view of an Event registration. This class only transfers data from a distant service to a
- * client.
+ * view of an Event registration. This class only transfers data from a distant
+ * service to a client.
  */
 @SuppressWarnings("serial")
 public class EventRegistryDTO implements Serializable {
@@ -24,18 +24,18 @@ public class EventRegistryDTO implements Serializable {
 	// ======================================
 	// = Constructors =
 	// ======================================
-	
+
 	public EventRegistryDTO() {
-    	id=0L;
-        registerDate=null;
-	userDTO=new UserDTO();
-	eventDTO=new EventDTO();
-    }
-	
-	public EventRegistryDTO(UserDTO userDTO, EventDTO eventDTO) {       	
-        this.userDTO = userDTO;
-    	this.eventDTO = eventDTO;
-    }
+		id = 0L;
+		registerDate = null;
+		userDTO = new UserDTO();
+		eventDTO = new EventDTO();
+	}
+
+	public EventRegistryDTO(UserDTO userDTO, EventDTO eventDTO) {
+		this.userDTO = userDTO;
+		this.eventDTO = eventDTO;
+	}
 
 	// ======================================
 	// = Getters and Setters =
@@ -48,11 +48,11 @@ public class EventRegistryDTO implements Serializable {
 		this.id = id;
 	}
 
-    public Date getRegisterDate() {
+	public Date getRegisterDate() {
 		return registerDate;
 	}
 
-    public EventDTO getEventDTO() {
+	public EventDTO getEventDTO() {
 		return eventDTO;
 	}
 
@@ -74,8 +74,8 @@ public class EventRegistryDTO implements Serializable {
 		buf.append("Event RegistryDTO{");
 		buf.append("id=").append(getId());
 		buf.append(",registerDate=").append(getRegisterDate());
-	    buf.append(",eventID=").append(getEventDTO().getId());
-	    buf.append(",athleteID=").append(getUserDTO().getUsername());
+		buf.append(",eventID=").append(getEventDTO().getId());
+		buf.append(",athleteID=").append(getUserDTO().getUsername());
 		buf.append('}');
 		return buf.toString();
 	}

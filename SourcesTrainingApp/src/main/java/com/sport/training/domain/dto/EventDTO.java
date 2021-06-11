@@ -35,7 +35,8 @@ public class EventDTO implements Serializable {
 	public EventDTO() {
 	}
 
-	public EventDTO(final String name, final LocalDateTime datetime, final Date time, final int creditCost, final UserDTO coachDTO, final ActivityDTO activityDTO) {
+	public EventDTO(final String name, final LocalDateTime datetime, final Date time, final int creditCost,
+			final UserDTO coachDTO, final ActivityDTO activityDTO) {
 		setVoidable(0);
 		setName(name);
 		setDateTime(datetime);
@@ -78,7 +79,7 @@ public class EventDTO implements Serializable {
 	public void setDuration(int duration) {
 		this.duration = duration;
 	}
-	
+
 	public int getIntensity() {
 		return intensity;
 	}
@@ -102,7 +103,7 @@ public class EventDTO implements Serializable {
 	public void setCreditCost(final int creditCost) {
 		this.creditCost = creditCost;
 	}
-	
+
 	public int getVoidable() {
 		return voidable;
 	}
@@ -110,7 +111,7 @@ public class EventDTO implements Serializable {
 	public void setVoidable(int voidable) {
 		this.voidable = voidable;
 	}
-	
+
 	public String getDescription() {
 		return description;
 	}
@@ -119,7 +120,6 @@ public class EventDTO implements Serializable {
 		this.description = description;
 	}
 
-	
 	public UserDTO getCoachDTO() {
 		return coachDTO;
 	}

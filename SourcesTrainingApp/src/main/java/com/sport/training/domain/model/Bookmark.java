@@ -15,8 +15,7 @@ import javax.validation.constraints.NotNull;
 import com.sport.training.authentication.domain.model.User;
 
 /**
- * This class represents a Bookmark for a User.
- * in event.
+ * This class represents a Bookmark for a User. in event.
  */
 @SuppressWarnings("serial")
 @Entity
@@ -27,9 +26,9 @@ public class Bookmark implements Serializable {
 	// = Attributes =
 	// ======================================
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO, generator="book_seq_gen")
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "book_seq_gen")
 	private Long id;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "COACH_FK")
 	@NotNull(message = "invalid Coach")
@@ -70,7 +69,7 @@ public class Bookmark implements Serializable {
 	public void setCoach(User coach) {
 		this.coach = coach;
 	}
-	
+
 	public User getAthlete() {
 		return athlete;
 	}
@@ -83,6 +82,5 @@ public class Bookmark implements Serializable {
 	public String toString() {
 		return "Bookmark [id=" + id + ", coach=" + coach + ", athlete=" + athlete + "]";
 	}
-
 
 }

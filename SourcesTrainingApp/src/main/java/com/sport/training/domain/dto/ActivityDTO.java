@@ -3,75 +3,75 @@ package com.sport.training.domain.dto;
 import java.io.Serializable;
 
 /**
- * This class follows the Data Transfert Object design pattern.
- * It is a client view of an Activity. This class only
- * transfers data from a distant service to a client.
+ * This class follows the Data Transfert Object design pattern. It is a client
+ * view of an Activity. This class only transfers data from a distant service to
+ * a client.
  */
 @SuppressWarnings("serial")
 public class ActivityDTO implements Serializable {
 
-    // ======================================
-    // =             Attributes             =
-    // ======================================
-    private String id;
-    private String name;
-    private String description;
-    private int creditcostMin;
-    private int creditcostMax;
-    private DisciplineDTO disciplineDTO;
+	// ======================================
+	// = Attributes =
+	// ======================================
+	private String id;
+	private String name;
+	private String description;
+	private int creditcostMin;
+	private int creditcostMax;
+	private DisciplineDTO disciplineDTO;
 
-    // ======================================
-    // =            Constructors            =
-    // ======================================
-    public ActivityDTO() {
-    }
+	// ======================================
+	// = Constructors =
+	// ======================================
+	public ActivityDTO() {
+	}
 
-    public ActivityDTO(final String id) {
-    	this.id = id;
-    }
-    
-    public ActivityDTO(final String id, final String name, final String description) {
-        setId(id);
-        setName(name);
-        setDescription(description);
-    }
+	public ActivityDTO(final String id) {
+		this.id = id;
+	}
 
-    // ======================================
-    // =         Getters and Setters        =
-    // ======================================
+	public ActivityDTO(final String id, final String name, final String description) {
+		setId(id);
+		setName(name);
+		setDescription(description);
+	}
 
-    public String getId() {
-        return id;
-    }
+	// ======================================
+	// = Getters and Setters =
+	// ======================================
 
-    public void setId(final String id) {
-    	this.id = id;
-    }
+	public String getId() {
+		return id;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setId(final String id) {
+		this.id = id;
+	}
 
-    public void setName(final String name) {
-    	this.name = name;
-    }
-    
-    public String getDescription() {
-        return description;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setDescription(final String documents) {
-    	this.description = documents;
-    }
-    
-    public int getCreditcostMin() {
+	public void setName(final String name) {
+		this.name = name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(final String documents) {
+		this.description = documents;
+	}
+
+	public int getCreditcostMin() {
 		return creditcostMin;
 	}
 
 	public void setCreditcostMin(int creditcostMin) {
 		this.creditcostMin = creditcostMin;
 	}
-	
+
 	public int getCreditcostMax() {
 		return creditcostMax;
 	}
@@ -80,7 +80,7 @@ public class ActivityDTO implements Serializable {
 		this.creditcostMax = creditcostMax;
 	}
 
-    public DisciplineDTO getDisciplineDTO() {
+	public DisciplineDTO getDisciplineDTO() {
 		return disciplineDTO;
 	}
 
@@ -93,7 +93,5 @@ public class ActivityDTO implements Serializable {
 		return "ActivityDTO [id=" + id + ", name=" + name + ", description=" + description + ", creditcostMin="
 				+ creditcostMin + ", creditcostMax=" + creditcostMax + ", disciplineDTO=" + disciplineDTO + "]";
 	}
-
-
 
 }

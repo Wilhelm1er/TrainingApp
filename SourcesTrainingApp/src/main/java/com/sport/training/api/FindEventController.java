@@ -1,11 +1,7 @@
 package com.sport.training.api;
 
-import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -98,7 +94,8 @@ public class FindEventController {
 	}
 
 	@GetMapping(path = "/find-events")
-	public String showEventsByActivity(Model model, @RequestParam String activityId, Authentication authentication) throws FinderException {
+	public String showEventsByActivity(Model model, @RequestParam String activityId, Authentication authentication)
+			throws FinderException {
 		final String mname = "showEventsByActivity";
 		LOGGER.debug("entering " + mname);
 

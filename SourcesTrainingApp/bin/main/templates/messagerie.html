@@ -13,13 +13,15 @@
 
 <div class="container" >
 <div class="row justify-content-start">
-					<table>
+					<table border="1">
 						<tr>
-							<th class="col-sm-2" th:text="#{discussion.id}"></th>
+						<th class="col-sm-2" th:text="#{discussion.creationdate}"></th>
+							<th class="col-sm-2" th:text="#{discussion.subject}"></th>
 							<th class="col-sm-2" th:text="#{discussion.user}" sec:authorize="hasAnyRole('ADMIN')"></th>
 						</tr>
 						<tr th:each="discussion : ${discussionDTOs}">
-							<td class="col-sm-2" th:text="${discussion.id}"></td>
+						<th class="col-sm-2" th:text="${discussion.creationDate}"></th>
+							<th class="col-sm-2" th:text="${discussion.subject}"></th>
 							<td class="col-sm-2" th:text="${discussion.userDTO.username}" sec:authorize="hasAnyRole('ADMIN')"></td>
 							<td><a th:href="@{'/messages/'+${discussion.id}}">
 									<button type="button" class="btn btn-sm btn-outline-secondary">Voir la discussion</button>
@@ -29,10 +31,15 @@
 				</div>
 	 </div>
 	 
-	 <br> <br>
+	 <br> <br> 
 	 
 	<form method="post" th:action="@{/discussion}" th:object="${coachDTO}" sec:authorize="hasAnyRole('ADMIN')">
 	<div class="col-md-4">
+	<h5 th:text=#{discussion.text} ></h5>
+	<input class="form-control"
+           type="text" id="subject" name="subject"
+           th:value="${subject}" />
+           <h5 th:text=#{discussion.coach} ></h5>
 	<select class="form-control selectpicker" th:field="*{username}" id="username">
 						<option th:each="coachDTO : ${coachesList}"
 							th:text="${coachDTO.username}" th:value="${coachDTO.username}" />

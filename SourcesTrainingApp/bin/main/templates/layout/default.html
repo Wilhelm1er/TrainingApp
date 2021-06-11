@@ -86,7 +86,7 @@
 							sec:authorize="hasAnyRole('COACH')"></a>
 						<!--  Partie Pour tous     -->
 						<a class="dropdown-item"
-							th:href="@{'/messagerie/'+${#authentication.getPrincipal().getUsername()}}"
+							th:href="@{/messagerie}"
 							th:text="#{menu.messages}"></a> <a class="dropdown-item"
 							id="logout" href="javascript:document.logoutForm.submit()"
 							th:text="#{menu.logout}">Se déconnecter</a>

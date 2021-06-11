@@ -7,48 +7,49 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
 /**
- * This class represents a Discipline in the sport system.
- * The sport system is divided into disciplines. Each one divided into activities
- * and each activity in event.
+ * This class represents a Discipline in the sport system. The sport system is
+ * divided into disciplines. Each one divided into activities and each activity
+ * in event.
  */
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "T_DISCIPLINE")  
+@Table(name = "T_DISCIPLINE")
 public class Discipline implements Serializable {
 
-    // ======================================
-    // =             Attributes             =
-    // ======================================
+	// ======================================
+	// = Attributes =
+	// ======================================
 	@NotBlank(message = "id must be defined")
 	@Id
 	private String id;
 	@NotBlank(message = "invalid Name")
-    private String name;
-    @NotBlank(message = "invalid Description")
-    private String description;
-    @NotBlank(message = "invalid Documents")
-    private String documents;
+	private String name;
+	@NotBlank(message = "invalid Description")
+	private String description;
+	@NotBlank(message = "invalid Documents")
+	private String documents;
 
 	// ======================================
-    // =            Constructors            =
-    // ======================================
-    public Discipline() {}
+	// = Constructors =
+	// ======================================
+	public Discipline() {
+	}
 
-    public Discipline(final String id) {
-        setId(id);
-    }
+	public Discipline(final String id) {
+		setId(id);
+	}
 
-    public Discipline(final String id, final String name, final String description) {
-        setId(id);
-        setName(name);
-        setDescription(description);
-    }
+	public Discipline(final String id, final String name, final String description) {
+		setId(id);
+		setName(name);
+		setDescription(description);
+	}
 
-    // ======================================
-    // =         Getters and Setters        =
-    // ======================================
-    
-    public String getId() {
+	// ======================================
+	// = Getters and Setters =
+	// ======================================
+
+	public String getId() {
 		return id;
 	}
 
@@ -57,22 +58,22 @@ public class Discipline implements Serializable {
 	}
 
 	public String getName() {
-        return name;
-    }
+		return name;
+	}
 
-    public void setName(final String name) {
-    	this.name = name;
-    }
+	public void setName(final String name) {
+		this.name = name;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public void setDescription(final String description) {
-    	this.description = description;
-    }
-    
-    public String getDocuments() {
+	public void setDescription(final String description) {
+		this.description = description;
+	}
+
+	public String getDocuments() {
 		return documents;
 	}
 
@@ -85,5 +86,6 @@ public class Discipline implements Serializable {
 		return "Discipline [id=" + id + ", name=" + name + ", description=" + description + ", documents=" + documents
 				+ "]";
 	}
+
 
 }

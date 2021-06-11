@@ -10,10 +10,23 @@
 	<nav th:insert="layout/default.html :: navbar"></nav>
 	<div class="container">
 		<br> <br> <br>
-		<h3 th:text="#{user.discipline.choice}">Choix discipline
-			entraîneur</h3>
-		<hr />
+		<h3 th:text="#{manage.sport}">Gestion des disciplines</h3>
+		
+		<div th:if="${message}">
+		<h2 th:text="${message}"/></h2>
+	</div>
+	
 		<br>
+		<h5 th:if="${!disciplineDTOsCoach.empty}" th:text="#{coachs.your.discipline}"></h5>
+		<div id="decision" class="row" style="margin-top: 1%;">
+			<div class="col-md-4"
+				th:each="disciplineDTO : ${disciplineDTOsCoach}">
+				<label th:text="${disciplineDTO.name}"></label><br> </label>	
+					</div></div>
+			
+		
+		
+		
 		<form class="form-horizontal" method="post" name="userForm"
 			th:action="@{/coach-discipline}" th:object="${disciplineDTO}"
 			enctype="multipart/form-data">
@@ -38,19 +51,17 @@
 			</div>
 		</form>
 
-		<h5 th:text="#{user.discipline}"></h5>
+		<h5 th:if="${!disciplineDTOsToCheckCoach.empty}" th:text="#{user.discipline}"></h5>
 
 		<div id="decision" class="row" style="margin-top: 1%;">
 			<div class="col-md-4"
-				th:each="disciplineDTO : ${disciplineDTOsCoach}">
+				th:each="disciplineDTO : ${disciplineDTOsToCheckCoach}">
 				<label th:text="${disciplineDTO.name}"></label><br> <label
 					style="text-decoration: underline;" th:text="'Documents: '"></label>
-				<label th:text="${disciplineDTO.documents}"></label>
-				
-					
+				<label th:text="${disciplineDTO.documents}"></label>	
 					
 				<div th:if="${message}">
-		<h2 th:text="${message}"/>
+		<h2 th:text="${message}"/></h2>
 	</div>
 
 	<div>
@@ -65,7 +76,7 @@
 	<div>
 		<ul>
 			<li th:each="file : ${files}">
-				<a th:href="${file}" th:text="${file}" />
+				<a th:href="${file}" th:text="${file}" ></a>
 			</li>
 		</ul>
 	</div>

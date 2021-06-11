@@ -7,8 +7,8 @@ import com.sport.training.authentication.domain.dto.UserDTO;
 
 /**
  * This class follows the Data Transfert Object design pattern. It is a client
- * view of a Notation. This class only transfers data from a distant service to a
- * client.
+ * view of a Notation. This class only transfers data from a distant service to
+ * a client.
  */
 @SuppressWarnings("serial")
 public class NotationDTO implements Serializable {
@@ -30,11 +30,11 @@ public class NotationDTO implements Serializable {
 	public NotationDTO() {
 	}
 
-	public NotationDTO( final int note, UserDTO coachDTO, UserDTO athleteDTO, EventDTO eventDTO) {
+	public NotationDTO(final int note, UserDTO coachDTO, UserDTO athleteDTO, EventDTO eventDTO) {
 		setNote(note);
 		setCoachDTO(coachDTO);
-    	setAthleteDTO(athleteDTO);
-    	setEventDTO(eventDTO);
+		setAthleteDTO(athleteDTO);
+		setEventDTO(eventDTO);
 	}
 
 	// ======================================
@@ -47,10 +47,11 @@ public class NotationDTO implements Serializable {
 	public void setId(final Long id) {
 		this.id = id;
 	}
+
 	public Date getNotationDate() {
 		return notationDate;
 	}
-	
+
 	public double getNote() {
 		return note;
 	}
@@ -58,7 +59,7 @@ public class NotationDTO implements Serializable {
 	public void setNote(final int note) {
 		this.note = note;
 	}
-	
+
 	public String getComments() {
 		return comments;
 	}

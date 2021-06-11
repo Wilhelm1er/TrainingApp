@@ -58,7 +58,8 @@ public class RegistryServiceImpl implements RegistryService {
 	// ======================================
 
 	@Autowired
-	private ModelMapper commonModelMapper, userDTOModelMapper, eventRegistryModelMapper, eventModelMapper, disciplineRegistryModelMapper;
+	private ModelMapper commonModelMapper, userDTOModelMapper, eventRegistryModelMapper, eventModelMapper,
+			disciplineRegistryModelMapper;
 
 	@Autowired
 	private DisciplineRegistryRepository disciplineRegistryRepository;
@@ -68,7 +69,7 @@ public class RegistryServiceImpl implements RegistryService {
 
 	@Autowired
 	private CreditRegistryRepository creditRegistryRepository;
-	
+
 	@Autowired
 	private EventRegistryRepository eventRegistryRepository;
 
@@ -92,7 +93,6 @@ public class RegistryServiceImpl implements RegistryService {
 	// =====================================
 	// = DisciplineRegistry Business methods =
 	// =====================================
-
 	@Override
 	@Transactional
 	public DisciplineRegistryDTO createDisciplineRegistry(@Valid DisciplineRegistryDTO disciplineRegistryDTO)
@@ -112,13 +112,16 @@ public class RegistryServiceImpl implements RegistryService {
 		} catch (NullPointerException | FinderException e) {
 			throw new CreateException("User must exist to create a DisciplineRegistry");
 		}
-		
+
 		// :::::::::::::::: We change DTO to model ::::::::::::::: //
-		DisciplineRegistry disciplineRegistry = disciplineRegistryModelMapper.map(disciplineRegistryDTO, DisciplineRegistry.class);
-			
-		if(disciplineRegistryRepository.findAllByCoachAndDiscipline(disciplineRegistry.getCoach(),disciplineRegistry.getDiscipline())!=null)
-			throw new CreateException("DisciplineRegistry object already exist for this discipline: "+ disciplineRegistry.getDiscipline().getName());
-			
+		DisciplineRegistry disciplineRegistry = disciplineRegistryModelMapper.map(disciplineRegistryDTO,
+				DisciplineRegistry.class);
+		
+		if (disciplineRegistryRepository.findByCoachAndDiscipline(disciplineRegistry.getCoach(),
+				disciplineRegistry.getDiscipline()) != null) {
+			throw new CreateException("DisciplineRegistry object already exist for this discipline: "
+					+ disciplineRegistry.getDiscipline().getName());
+		}
 		// Creates the object
 		disciplineRegistryRepository.save(disciplineRegistry);
 
@@ -248,7 +251,7 @@ public class RegistryServiceImpl implements RegistryService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public Set<DisciplineDTO> findDisciplinesByCoach(String coachId, String statutDoc) throws FinderException {
+	public List<DisciplineDTO> findDisciplinesByCoach(String coachId) throws FinderException {
 		final String mname = "findDisciplinesByCoach";
 		LOGGER.debug("entering " + mname);
 
@@ -261,27 +264,31 @@ public class RegistryServiceImpl implements RegistryService {
 			coach = userRepository.findById(coachId).get();
 
 		// Finds all the objects
-		final Iterable<DisciplineRegistry> disciplineRegistriesByDiscipline = disciplineRegistryRepository
-				.findAllByCoach(coach);
+		final Iterable<Discipline> disciplinesByCoach = disciplineRegistryRepository
+				.findDisciplinesByCoach(coach);
 
-		Set<Discipline> disciplineList = new HashSet<Discipline>();
+		int size;
+		if ((size = ((Collection<Discipline>) disciplinesByCoach).size()) == 0) {
+			throw new FinderException("No Discipline in the database for this coach");
+		}
+		
+		List<Discipline> disciplineList = new ArrayList<Discipline>();
 
-		for (DisciplineRegistry discReg : disciplineRegistriesByDiscipline) {
-			if (coach.getStatut().equals("VALIDE") && discReg.getDocStatut().equals(statutDoc))
-				disciplineList.add(discReg.getDiscipline());
+		for (Discipline disc : disciplinesByCoach) {
+			disciplineList.add(disc);
 		}
 
-		Set<DisciplineDTO> disciplineDTOs = (disciplineList).stream()
-				.map(discipline -> commonModelMapper.map(discipline, DisciplineDTO.class)).collect(Collectors.toSet());
+		List<DisciplineDTO> disciplineDTOs = (disciplineList).stream()
+				.map(discipline -> commonModelMapper.map(discipline, DisciplineDTO.class)).collect(Collectors.toList());
 
 		LOGGER.debug("exiting " + mname);
 		return disciplineDTOs;
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
-	public Set<DisciplineDTO> findAllDisciplinesByCoach(String coachId) throws FinderException {
-		final String mname = "findDisciplinesByCoach";
+	public List<DisciplineDTO> findDisciplineToCheckByCoach(String coachId) throws FinderException {
+		final String mname = "findDisciplineToCheckByCoach";
 		LOGGER.debug("entering " + mname);
 
 		checkStringId(coachId);
@@ -296,21 +303,25 @@ public class RegistryServiceImpl implements RegistryService {
 		final Iterable<DisciplineRegistry> disciplineRegistriesByDiscipline = disciplineRegistryRepository
 				.findAllByCoach(coach);
 
-		Set<Discipline> disciplineList = new HashSet<Discipline>();
+		int size;
+		if ((size = ((Collection<DisciplineRegistry>) disciplineRegistriesByDiscipline).size()) == 0) {
+			throw new FinderException("No Discipline in the database for this coach");
+		}
+		
+		List<Discipline> disciplineList = new ArrayList<Discipline>();
 
 		for (DisciplineRegistry discReg : disciplineRegistriesByDiscipline) {
-			if (coach.getStatut().equals("VALIDE"))
+			if (discReg.getDocStatut().equals("no")) {
 				disciplineList.add(discReg.getDiscipline());
+			}
 		}
 
-		Set<DisciplineDTO> disciplineDTOs = (disciplineList).stream()
-				.map(discipline -> commonModelMapper.map(discipline, DisciplineDTO.class)).collect(Collectors.toSet());
+		List<DisciplineDTO> disciplineDTOs = (disciplineList).stream()
+				.map(discipline -> commonModelMapper.map(discipline, DisciplineDTO.class)).collect(Collectors.toList());
 
 		LOGGER.debug("exiting " + mname);
 		return disciplineDTOs;
 	}
-	
-	
 
 	// =====================================
 	// = EventRegistry Business methods =
@@ -323,8 +334,6 @@ public class RegistryServiceImpl implements RegistryService {
 
 		if (eventRegistryDTO == null)
 			throw new CreateException("EventRegistryDTO object is null");
-
-		
 
 		if (eventRegistryDTO.getEventDTO() == null || eventRegistryDTO.getEventDTO().getId() == null
 				|| !eventRepository.findById(eventRegistryDTO.getEventDTO().getId()).isPresent())
@@ -339,9 +348,9 @@ public class RegistryServiceImpl implements RegistryService {
 		// :::::::::::::::: We change DTO to model ::::::::::::::: //
 		EventRegistry eventRegistry = eventRegistryModelMapper.map(eventRegistryDTO, EventRegistry.class);
 
-		if (eventRegistryRepository.findByUserAndEvent(eventRegistry.getUser(), eventRegistry.getEvent())!=null)
+		if (eventRegistryRepository.findByUserAndEvent(eventRegistry.getUser(), eventRegistry.getEvent()) != null)
 			throw new CreateException("EventRegistry object already exist");
-		
+
 		// Creates the object
 		eventRegistryRepository.save(eventRegistry);
 
@@ -424,7 +433,7 @@ public class RegistryServiceImpl implements RegistryService {
 		LOGGER.debug("exiting " + mname + " size of collection : " + size);
 		return eventRegistryDTOs;
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	public List<EventDTO> findEventsByAthlete(String athleteId) throws FinderException {
@@ -440,8 +449,7 @@ public class RegistryServiceImpl implements RegistryService {
 			athlete = userRepository.findById(athleteId).get();
 
 		// Finds all the objects
-		final Iterable<EventRegistry> eventRegistriesByAthlete = eventRegistryRepository
-				.findAllByUser(athlete);
+		final Iterable<EventRegistry> eventRegistriesByAthlete = eventRegistryRepository.findAllByUser(athlete);
 
 		int size;
 		if ((size = ((Collection<EventRegistry>) eventRegistriesByAthlete).size()) == 0) {
@@ -451,8 +459,8 @@ public class RegistryServiceImpl implements RegistryService {
 		List<Event> eventList = new ArrayList<Event>();
 
 		for (EventRegistry eventReg : eventRegistriesByAthlete) {
-				eventList.add(eventReg.getEvent());
-		
+			eventList.add(eventReg.getEvent());
+
 		}
 		int size2;
 		if ((size2 = ((Collection<Event>) eventList).size()) == 0) {
@@ -465,7 +473,7 @@ public class RegistryServiceImpl implements RegistryService {
 		LOGGER.debug("exiting " + mname + " size of collection : " + size);
 		return eventDTOs;
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	public EventRegistryDTO findEventRegistryByAthleteAndEvent(String coachId, Long eventId) throws FinderException {
@@ -480,7 +488,7 @@ public class RegistryServiceImpl implements RegistryService {
 			throw new FinderException("Coach must exist to be found");
 		else
 			coach = userRepository.findById(coachId).get();
-		
+
 		Event event = null;
 		if (!eventRepository.findById(eventId).isPresent())
 			throw new FinderException("Event must exist to be found");
@@ -488,16 +496,15 @@ public class RegistryServiceImpl implements RegistryService {
 			event = eventRepository.findById(eventId).get();
 
 		// Finds all the objects
-		final EventRegistry eventRegistriyByUserAndEvent = eventRegistryRepository
-				.findByUserAndEvent(coach, event);
+		final EventRegistry eventRegistriyByUserAndEvent = eventRegistryRepository.findByUserAndEvent(coach, event);
 
 		// :::::::::::::::: We change DTO to model ::::::::::::::: //
-		EventRegistryDTO EventRegistryDTO = eventRegistryModelMapper.map(eventRegistriyByUserAndEvent, EventRegistryDTO.class);
+		EventRegistryDTO EventRegistryDTO = eventRegistryModelMapper.map(eventRegistriyByUserAndEvent,
+				EventRegistryDTO.class);
 
 		LOGGER.debug("exiting " + mname);
 		return EventRegistryDTO;
 	}
-	
 
 	@Override
 	@Transactional(readOnly = true)
@@ -514,8 +521,7 @@ public class RegistryServiceImpl implements RegistryService {
 			event = eventRepository.findById(eventId).get();
 
 		// Finds all the objects
-		final Iterable<EventRegistry> eventRegistriesByEvent = eventRegistryRepository
-				.findAllByEvent(event);
+		final Iterable<EventRegistry> eventRegistriesByEvent = eventRegistryRepository.findAllByEvent(event);
 
 		int size;
 		if ((size = ((Collection<EventRegistry>) eventRegistriesByEvent).size()) == 0) {
@@ -525,8 +531,8 @@ public class RegistryServiceImpl implements RegistryService {
 		List<User> userList = new ArrayList<User>();
 
 		for (EventRegistry eventReg : eventRegistriesByEvent) {
-				userList.add(eventReg.getUser());
-		
+			userList.add(eventReg.getUser());
+
 		}
 		int size2;
 		if ((size2 = ((Collection<User>) userList).size()) == 0) {
@@ -686,6 +692,5 @@ public class RegistryServiceImpl implements RegistryService {
 		if (id == null || id.equals(""))
 			throw new FinderException(id + " should not be null or empty");
 	}
-
 
 }

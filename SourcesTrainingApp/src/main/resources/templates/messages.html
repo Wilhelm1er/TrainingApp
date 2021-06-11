@@ -10,35 +10,33 @@
 	<br>
 	<br>
 	
-		<h1 th:text=#{discussion.liste}+${discussionId}></h1>
+		<h1 th:text=#{discussion.liste}+${subject}></h1>
 		<br>
 		<div class="erreur" th:if="${error}" th:text="${error}"></div>
 		<br>
 
 		<div class="container">
 			<div class="row justify-content-start">
-				<table>
+				<table border="1">
 					<tr>
-						<th class="col-sm-2" th:text="#{message.date}"></th>
+						<th class="col-sm-4" th:text="#{message.date}"></th>
 						<th class="col-sm-2" th:text="#{message.sender}"></th>
 						<th class="col-sm-2" th:text="#{message.recipient}"></th>
-						<th class="col-sm-2" th:text="#{message.texte}"></th>
+						<th class="col-sm-4" th:text="#{message.texte}"></th>
 					</tr>
 					<tr th:each="message : ${messageDTOs}">
-						<td class="col-sm-2" th:text="${message.date}"></td>
+						<td class="col-sm-4" th:text="${message.date}"></td>
 						<td class="col-sm-2" th:text="${message.senderDTO.username}"></td>
 						<th class="col-sm-2" th:text="${message.recipientDTO.username}"></th>
-						<th class="col-sm-2" th:text="${message.texte}"></th>
+						<th class="col-sm-4" th:text="${message.texte}"></th>
 
 					</tr>
 				</table>
 			</div>
 		</div>
-	<form method="post" th:action="@{'/messages/'+${discussionId}}" th:object="${texte}">
-		<br> <br> <br> Entrez votre nouveau message...<br>
-		<textarea name="texte" rows="3" cols="50" th:value="${texte}"></textarea>
-		<br> <input type="submit" />
-	</form>
+		
+		<a th:href="@{'/new-message/'+${discussionId}}"
+					>Nouveau message</a>
 
 	<br>
 	<br>

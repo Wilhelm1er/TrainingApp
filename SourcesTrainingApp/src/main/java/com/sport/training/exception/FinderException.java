@@ -6,10 +6,10 @@ package com.sport.training.exception;
 @SuppressWarnings("serial")
 public class FinderException extends ApplicationException {
 
-    public FinderException() {
-    }
+	public FinderException() {
+	}
 
-    public FinderException(final String message) {
-        super(message);
-    }
+	public FinderException(final String message) {
+		super(message);
+	}
 }

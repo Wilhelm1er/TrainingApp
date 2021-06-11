@@ -13,12 +13,12 @@ import com.sport.training.domain.model.Activity;
 public interface EventRepository extends CrudRepository<Event, Long> {
 
 	Iterable<Event> findAllByActivity(Activity activity);
-	
+
 	@Query("select distinct e from Event e where upper(e.id) like upper(concat('%', :keyword,'%')) or upper(e.name) like upper(concat('%', :keyword,'%'))")
 	Iterable<Event> findByIdOrNameContaining(@Param("keyword") String keyword);
 
 	Iterable<Event> findAllByCoach(User coach);
-	
+
 	@Query("select MAX(id) from Event e")
-	public Optional<Long> findLastId();	
+	public Optional<Long> findLastId();
 }
