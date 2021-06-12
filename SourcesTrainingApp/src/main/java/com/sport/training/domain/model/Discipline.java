@@ -87,5 +87,4 @@ public class Discipline implements Serializable {
 				+ "]";
 	}
 
-
 }

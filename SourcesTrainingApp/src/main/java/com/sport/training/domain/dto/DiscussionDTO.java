@@ -25,7 +25,7 @@ public class DiscussionDTO implements Serializable {
 	// ======================================
 	// = Constructors =
 	// ======================================
-	
+
 	public DiscussionDTO() {
 
 	}
@@ -64,7 +64,7 @@ public class DiscussionDTO implements Serializable {
 	public void setSubject(String subject) {
 		this.subject = subject;
 	}
-	
+
 	public Date getCreationDate() {
 		return creationDate;
 	}

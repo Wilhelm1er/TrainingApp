@@ -2,8 +2,6 @@ package com.sport.training.domain.dto;
 
 import java.io.Serializable;
 
-import com.sport.training.domain.model.Discipline;
-
 /**
  * This class follows the Data Transfert Object design pattern. It is a client
  * view of a Discipline. This class only transfers data from a distant service
@@ -71,7 +69,7 @@ public class DisciplineDTO implements Serializable {
 	public void setDocuments(String documents) {
 		this.documents = documents;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "DisciplineDTO [id=" + id + ", name=" + name + ", description=" + description + ", documents="

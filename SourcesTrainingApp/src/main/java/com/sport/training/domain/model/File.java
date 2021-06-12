@@ -17,8 +17,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.GenericGenerator;
-
 import com.sport.training.authentication.domain.model.User;
 
 /**
@@ -36,7 +34,7 @@ public class File implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "file_seq_gen")
 	private Long id;
-	
+
 	@Column(name = "DATE", nullable = false)
 	private Date date;
 
@@ -45,7 +43,7 @@ public class File implements Serializable {
 
 	@NotBlank(message = "invalid type")
 	private String type;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "USER_FK")
 	@NotNull(message = "invalid User")
@@ -55,8 +53,8 @@ public class File implements Serializable {
 	private byte[] data;
 
 	// ======================================
-		// = Constructors =
-		// ======================================
+	// = Constructors =
+	// ======================================
 	public File() {
 		id = 0L;
 		this.date = new Date();
@@ -115,8 +113,7 @@ public class File implements Serializable {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-	
-	
+
 	public User getUser() {
 		return user;
 	}
@@ -131,5 +128,4 @@ public class File implements Serializable {
 				+ Arrays.toString(data) + "]";
 	}
 
-	
 }

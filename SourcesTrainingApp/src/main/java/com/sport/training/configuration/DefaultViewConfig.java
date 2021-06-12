@@ -7,12 +7,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class DefaultViewConfig implements WebMvcConfigurer {
-	
+
 	@Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("index");
-        registry.addViewController("/login");
-        registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
-    }
+	public void addViewControllers(ViewControllerRegistry registry) {
+		registry.addViewController("/").setViewName("index");
+		registry.addViewController("/login");
+		registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
+	}
 
 }

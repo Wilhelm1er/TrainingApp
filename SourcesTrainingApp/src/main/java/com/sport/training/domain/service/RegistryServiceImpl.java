@@ -116,7 +116,7 @@ public class RegistryServiceImpl implements RegistryService {
 		// :::::::::::::::: We change DTO to model ::::::::::::::: //
 		DisciplineRegistry disciplineRegistry = disciplineRegistryModelMapper.map(disciplineRegistryDTO,
 				DisciplineRegistry.class);
-		
+
 		if (disciplineRegistryRepository.findByCoachAndDiscipline(disciplineRegistry.getCoach(),
 				disciplineRegistry.getDiscipline()) != null) {
 			throw new CreateException("DisciplineRegistry object already exist for this discipline: "
@@ -264,14 +264,13 @@ public class RegistryServiceImpl implements RegistryService {
 			coach = userRepository.findById(coachId).get();
 
 		// Finds all the objects
-		final Iterable<Discipline> disciplinesByCoach = disciplineRegistryRepository
-				.findDisciplinesByCoach(coach);
+		final Iterable<Discipline> disciplinesByCoach = disciplineRegistryRepository.findDisciplinesByCoach(coach);
 
 		int size;
 		if ((size = ((Collection<Discipline>) disciplinesByCoach).size()) == 0) {
 			throw new FinderException("No Discipline in the database for this coach");
 		}
-		
+
 		List<Discipline> disciplineList = new ArrayList<Discipline>();
 
 		for (Discipline disc : disciplinesByCoach) {
@@ -307,7 +306,7 @@ public class RegistryServiceImpl implements RegistryService {
 		if ((size = ((Collection<DisciplineRegistry>) disciplineRegistriesByDiscipline).size()) == 0) {
 			throw new FinderException("No Discipline in the database for this coach");
 		}
-		
+
 		List<Discipline> disciplineList = new ArrayList<Discipline>();
 
 		for (DisciplineRegistry discReg : disciplineRegistriesByDiscipline) {

@@ -32,7 +32,7 @@ public class Discussion implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "discussion_seq_gen")
 	private Long id;
-	
+
 	@Column(name = "CREATION_DATE")
 	private Date creationDate;
 
@@ -87,7 +87,6 @@ public class Discussion implements Serializable {
 	public void setSubject(String subject) {
 		this.subject = subject;
 	}
-
 
 	public Date getCreationDate() {
 		return creationDate;

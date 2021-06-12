@@ -13,7 +13,6 @@ import com.sport.training.domain.dto.FileDTO;
 import com.sport.training.domain.dto.MessageDTO;
 import com.sport.training.domain.dto.ActivityDTO;
 import com.sport.training.domain.dto.BookmarkDTO;
-import com.sport.training.domain.dto.DisciplineDTO;
 import com.sport.training.domain.dto.DisciplineRegistryDTO;
 import com.sport.training.domain.dto.DiscussionDTO;
 import com.sport.training.domain.model.Event;
@@ -22,7 +21,6 @@ import com.sport.training.domain.model.File;
 import com.sport.training.domain.model.Message;
 import com.sport.training.domain.model.Activity;
 import com.sport.training.domain.model.Bookmark;
-import com.sport.training.domain.model.Discipline;
 import com.sport.training.domain.model.DisciplineRegistry;
 import com.sport.training.domain.model.Discussion;
 
@@ -30,7 +28,7 @@ import com.sport.training.domain.model.Discussion;
 public class MapperConfig {
 
 	@Bean
-	public ModelMapper commonModelMapper() {		// Discipline, Address, CrediCard
+	public ModelMapper commonModelMapper() { // Discipline, Address, CrediCard
 		ModelMapper modelMapper = new ModelMapper();
 		return modelMapper;
 	}
@@ -43,7 +41,7 @@ public class MapperConfig {
 		typeMap.addMapping(src -> src.getRole().getName(), UserDTO::setRoleName);
 		return modelMapper;
 	}
-	
+
 	@Bean
 	public ModelMapper userDTOModelMapper() {
 		ModelMapper modelMapper = new ModelMapper();
@@ -54,7 +52,7 @@ public class MapperConfig {
 		typeMap.addMapping(src -> src.getRole().getName(), UserDTO::setRoleName);
 		return modelMapper;
 	}
-	
+
 	@Bean
 	public ModelMapper activityModelMapper() {
 		ModelMapper modelMapper = new ModelMapper();
@@ -62,7 +60,7 @@ public class MapperConfig {
 		typeMap.addMappings(mapper -> mapper.map(Activity::getDiscipline, ActivityDTO::setDisciplineDTO));
 		return modelMapper;
 	}
-	
+
 	@Bean
 	public ModelMapper eventModelMapper() {
 		ModelMapper modelMapper = new ModelMapper();
@@ -71,25 +69,28 @@ public class MapperConfig {
 		typeMap.addMappings(mapper -> mapper.map(Event::getActivity, EventDTO::setActivityDTO));
 		return modelMapper;
 	}
-	
+
 	@Bean
 	public ModelMapper eventRegistryModelMapper() {
 		ModelMapper modelMapper = new ModelMapper();
-		TypeMap<EventRegistry, EventRegistryDTO> typeMap = modelMapper.createTypeMap(EventRegistry.class, EventRegistryDTO.class);
+		TypeMap<EventRegistry, EventRegistryDTO> typeMap = modelMapper.createTypeMap(EventRegistry.class,
+				EventRegistryDTO.class);
 		typeMap.addMappings(mapper -> mapper.map(EventRegistry::getUser, EventRegistryDTO::setUserDTO));
 		typeMap.addMappings(mapper -> mapper.map(EventRegistry::getEvent, EventRegistryDTO::setEventDTO));
 		return modelMapper;
 	}
+
 	@Bean
 	public ModelMapper disciplineRegistryModelMapper() {
 		ModelMapper modelMapper = new ModelMapper();
-		TypeMap<DisciplineRegistry, DisciplineRegistryDTO> typeMap = modelMapper.createTypeMap(DisciplineRegistry.class, DisciplineRegistryDTO.class);
+		TypeMap<DisciplineRegistry, DisciplineRegistryDTO> typeMap = modelMapper.createTypeMap(DisciplineRegistry.class,
+				DisciplineRegistryDTO.class);
 		typeMap.addMappings(mapper -> mapper.map(DisciplineRegistry::getCoach, DisciplineRegistryDTO::setCoachDTO));
-		typeMap.addMappings(mapper -> mapper.map(DisciplineRegistry::getDiscipline, DisciplineRegistryDTO::setDisciplineDTO));
+		typeMap.addMappings(
+				mapper -> mapper.map(DisciplineRegistry::getDiscipline, DisciplineRegistryDTO::setDisciplineDTO));
 		return modelMapper;
 	}
 
-	
 	@Bean
 	public ModelMapper bookmarkModelMapper() {
 		ModelMapper modelMapper = new ModelMapper();
@@ -98,7 +99,7 @@ public class MapperConfig {
 		typeMap.addMappings(mapper -> mapper.map(Bookmark::getCoach, BookmarkDTO::setCoachDTO));
 		return modelMapper;
 	}
-	
+
 	@Bean
 	public ModelMapper messageModelMapper() {
 		ModelMapper modelMapper = new ModelMapper();
@@ -108,7 +109,7 @@ public class MapperConfig {
 		typeMap.addMappings(mapper -> mapper.map(Message::getDiscussion, MessageDTO::setDiscussionDTO));
 		return modelMapper;
 	}
-	
+
 	@Bean
 	public ModelMapper discussionModelMapper() {
 		ModelMapper modelMapper = new ModelMapper();

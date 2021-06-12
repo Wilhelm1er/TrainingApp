@@ -18,41 +18,37 @@ import com.sport.training.domain.service.ShoppingCartServiceImpl;
 @Configuration
 @EnableGlobalMethodSecurity(securedEnabled = true) // permettra @Secured ({"ROLE_ATHLETE"}) ...
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(WebSecurityConfig.class);
-	
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		final String mname = "configure";
-		LOGGER.debug("entering "+mname);
-		
-		String[] staticResources = { "/img/**"};
+		LOGGER.debug("entering " + mname);
 
-        http
-        	.csrf()
-        		.and()
-	        .formLogin()
-	        	.loginPage("/login")				// the custom login page
-	        	.defaultSuccessUrl("/")				// the landing page after a successful login
-	        	.and()								// possible : failureUrl() : the landing page after an unsuccessful login
-	        .logout()								// must be a POST with csrf on
-	        	.logoutSuccessUrl("/")
-	        	.and()
-	        .authorizeRequests()
-	        	.antMatchers(staticResources).permitAll()
-	        	.antMatchers("/", "/login","/new-athlete","bookmark/*","/new-coach","/find-activities","/find-events","/find-events/*","/find-event","/find-coachs","/disciplines","/discipline/*","/activities","/activities/*","/activity/*","/coachs","/credit","/create-activity/*","/create-event/*","/events/*").permitAll()
-	        	.anyRequest().authenticated();
+		String[] staticResources = { "/img/**" };
+
+		http.csrf().and().formLogin().loginPage("/login") // the custom login page
+				.defaultSuccessUrl("/") // the landing page after a successful login
+				.and() // possible : failureUrl() : the landing page after an unsuccessful login
+				.logout() // must be a POST with csrf on
+				.logoutSuccessUrl("/").and().authorizeRequests().antMatchers(staticResources).permitAll()
+				.antMatchers("/", "/login", "/new-athlete", "bookmark/*", "/new-coach", "/find-activities",
+						"/find-events", "/find-events/*", "/find-event", "/find-coachs", "/disciplines",
+						"/discipline/*", "/activities", "/activities/*", "/activity/*", "/coachs", "/credit",
+						"/create-activity/*", "/create-event/*", "/events/*")
+				.permitAll().anyRequest().authenticated();
 	}
-	
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
-    // https://www.baeldung.com/spring-mvc-session-attributes
-    @Bean
-    @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
-    public ShoppingCartService shoppingCartService() {
-        return new ShoppingCartServiceImpl();
-    }    
+	@Bean
+	public BCryptPasswordEncoder bCryptPasswordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+
+	// https://www.baeldung.com/spring-mvc-session-attributes
+	@Bean
+	@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
+	public ShoppingCartService shoppingCartService() {
+		return new ShoppingCartServiceImpl();
+	}
 }

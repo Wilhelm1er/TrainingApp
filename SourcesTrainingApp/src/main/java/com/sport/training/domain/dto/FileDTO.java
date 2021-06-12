@@ -3,8 +3,6 @@ package com.sport.training.domain.dto;
 import java.util.Arrays;
 import java.util.Date;
 
-import javax.persistence.Lob;
-
 import com.sport.training.authentication.domain.dto.UserDTO;
 
 public class FileDTO {
@@ -19,15 +17,15 @@ public class FileDTO {
 	private byte[] data;
 
 	// ======================================
-		// = Constructors =
-		// ======================================
+	// = Constructors =
+	// ======================================
 	public FileDTO() {
 		id = 0L;
 		this.date = new Date();
 		userDTO = new UserDTO();
 	}
 
-	public FileDTO(String name, String type,UserDTO userDTO, byte[] data) {
+	public FileDTO(String name, String type, UserDTO userDTO, byte[] data) {
 		setName(name);
 		setType(type);
 		setData(data);
@@ -35,8 +33,8 @@ public class FileDTO {
 	}
 
 	// ======================================
-		// = Getters and Setters =
-		// ======================================
+	// = Getters and Setters =
+	// ======================================
 	public Long getId() {
 		return id;
 	}
@@ -68,6 +66,7 @@ public class FileDTO {
 	public void setType(String type) {
 		this.type = type;
 	}
+
 	public UserDTO getUserDTO() {
 		return userDTO;
 	}
@@ -89,6 +88,5 @@ public class FileDTO {
 		return "FileDTO [id=" + id + ", date=" + date + ", name=" + name + ", type=" + type + ", userDTO=" + userDTO
 				+ ", data=" + Arrays.toString(data) + "]";
 	}
-
 
 }

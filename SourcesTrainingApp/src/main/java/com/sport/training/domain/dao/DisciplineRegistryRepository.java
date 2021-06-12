@@ -9,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import com.sport.training.authentication.domain.model.User;
 import com.sport.training.domain.model.Discipline;
 import com.sport.training.domain.model.DisciplineRegistry;
-import com.sport.training.domain.model.Event;
 
 public interface DisciplineRegistryRepository extends CrudRepository<DisciplineRegistry, Long> {
 
@@ -21,7 +20,7 @@ public interface DisciplineRegistryRepository extends CrudRepository<DisciplineR
 
 	@Query("select MAX(id) from DisciplineRegistry d")
 	public Optional<Long> findLastId();
-	
+
 	@Query("SELECT d.discipline FROM DisciplineRegistry d WHERE d.coach= :coach")
 	public Iterable<Discipline> findDisciplinesByCoach(@Param("coach") User coach);
 

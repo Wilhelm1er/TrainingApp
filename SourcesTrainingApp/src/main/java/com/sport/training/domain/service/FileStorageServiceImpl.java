@@ -1,10 +1,8 @@
 package com.sport.training.domain.service;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -41,10 +39,10 @@ public class FileStorageServiceImpl implements FileStorageService {
 
 	@Autowired
 	private FileRepository fileRepository;
-	
+
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileStorageServiceImpl.class);
 
 	// =====================================
@@ -59,9 +57,9 @@ public class FileStorageServiceImpl implements FileStorageService {
 
 	@Override
 	public File store(MultipartFile fileSend, UserDTO userDTO) throws IOException {
-		
+
 		String fileName = StringUtils.cleanPath(fileSend.getOriginalFilename());
-		System.out.println("fileName: "+fileName);
+		System.out.println("fileName: " + fileName);
 		FileDTO fileDTO = new FileDTO(fileName, fileSend.getContentType(), userDTO, fileSend.getBytes());
 
 		// :::::::::::::::: We change DTO to model ::::::::::::::: //
@@ -74,14 +72,14 @@ public class FileStorageServiceImpl implements FileStorageService {
 	}
 
 	@Override
-	public File getFile(String name) throws FinderException{
+	public File getFile(String name) throws FinderException {
 		final String mname = "getFile";
 		LOGGER.debug("entering " + mname);
-		
+
 		Long id;
-		
-		id=fileRepository.findFileIdByName(name);
-		
+
+		id = fileRepository.findFileIdByName(name);
+
 		LOGGER.debug("exiting " + mname);
 		return fileRepository.findById(id).get();
 	}
@@ -105,13 +103,13 @@ public class FileStorageServiceImpl implements FileStorageService {
 		if ((size = ((Collection<String>) fileNames).size()) == 0) {
 			throw new FinderException("No file names in the database");
 		}
-		
+
 		Set<String> names = new HashSet<String>();
-		
-		for(String l : fileNames) {
+
+		for (String l : fileNames) {
 			names.add(l);
 		}
-		
+
 		int size2;
 		if ((size2 = (names).size()) == 0) {
 			throw new FinderException("No file names in the database");
@@ -120,7 +118,7 @@ public class FileStorageServiceImpl implements FileStorageService {
 		LOGGER.debug("exiting " + mname + " size of collection : " + size);
 		return names;
 	}
-	
+
 	@Override
 	public Set<UserDTO> getAllUsers() throws FinderException {
 		final String mname = "getAllUsers";
@@ -132,14 +130,14 @@ public class FileStorageServiceImpl implements FileStorageService {
 		if ((size = ((Collection<User>) users).size()) == 0) {
 			throw new FinderException("No file names in the database");
 		}
-		
+
 		Set<UserDTO> userDTOs = (users.stream().map(user -> userModelMapper.map(user, UserDTO.class))
 				.collect(Collectors.toSet()));
 
 		LOGGER.debug("exiting " + mname + " size of collection : " + size);
 		return userDTOs;
 	}
-	
+
 	// ======================================
 	// = Private Methods =
 	// ======================================

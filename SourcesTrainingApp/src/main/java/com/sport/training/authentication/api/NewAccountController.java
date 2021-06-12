@@ -37,8 +37,6 @@ public class NewAccountController {
 	@Autowired
 	private SportService sportService;
 
-	private final String UPLOAD_DIR = "./uploads/";
-
 	@GetMapping(path = "/new-athlete")
 	public String newAthlete(Model model) {
 		final String mname = "newAthlete";
