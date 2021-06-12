@@ -9,6 +9,7 @@ import com.sport.training.authentication.domain.dto.UserDTO;
 import com.sport.training.authentication.domain.model.User;
 import com.sport.training.domain.dto.EventDTO;
 import com.sport.training.domain.dto.EventRegistryDTO;
+import com.sport.training.domain.dto.FileDTO;
 import com.sport.training.domain.dto.MessageDTO;
 import com.sport.training.domain.dto.ActivityDTO;
 import com.sport.training.domain.dto.BookmarkDTO;
@@ -17,6 +18,7 @@ import com.sport.training.domain.dto.DisciplineRegistryDTO;
 import com.sport.training.domain.dto.DiscussionDTO;
 import com.sport.training.domain.model.Event;
 import com.sport.training.domain.model.EventRegistry;
+import com.sport.training.domain.model.File;
 import com.sport.training.domain.model.Message;
 import com.sport.training.domain.model.Activity;
 import com.sport.training.domain.model.Bookmark;
@@ -115,4 +117,11 @@ public class MapperConfig {
 		return modelMapper;
 	}
 
+	@Bean
+	public ModelMapper fileModelMapper() {
+		ModelMapper modelMapper = new ModelMapper();
+		TypeMap<File, FileDTO> typeMap = modelMapper.createTypeMap(File.class, FileDTO.class);
+		typeMap.addMappings(mapper -> mapper.map(File::getUser, FileDTO::setUserDTO));
+		return modelMapper;
+	}
 }

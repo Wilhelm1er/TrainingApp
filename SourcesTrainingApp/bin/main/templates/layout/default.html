@@ -61,6 +61,9 @@
 							th:text="#{coachs.list}" sec:authorize="hasRole('ADMIN')"></a> <a
 							class="dropdown-item" th:href="@{/display-athletes}"
 							th:text="#{athletes.list}" sec:authorize="hasAnyRole('ADMIN')"></a>
+							<a
+							class="dropdown-item" th:href="@{/document-users}"
+							th:text="#{documents}" sec:authorize="hasAnyRole('ADMIN')"></a>
 						<!--  Partie ATHLETE ET COACH   -->
 						<a class="dropdown-item" 
 							th:href="@{'/account/'+${#authentication.getPrincipal().getUsername()}}"

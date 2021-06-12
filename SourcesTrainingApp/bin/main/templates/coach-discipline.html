@@ -11,22 +11,19 @@
 	<div class="container">
 		<br> <br> <br>
 		<h3 th:text="#{manage.sport}">Gestion des disciplines</h3>
-		
-		<div th:if="${message}">
-		<h2 th:text="${message}"/></h2>
-	</div>
-	
+
 		<br>
-		<h5 th:if="${!disciplineDTOsCoach.empty}" th:text="#{coachs.your.discipline}"></h5>
+		<h5 th:if="${!disciplineDTOsCoach.empty}"
+			th:text="#{coachs.your.discipline}"></h5>
 		<div id="decision" class="row" style="margin-top: 1%;">
 			<div class="col-md-4"
 				th:each="disciplineDTO : ${disciplineDTOsCoach}">
-				<label th:text="${disciplineDTO.name}"></label><br> </label>	
-					</div></div>
-			
-		
-		
-		
+				<label th:text="${disciplineDTO.name}"></label><br>
+			</div>
+		</div>
+
+		<br>
+
 		<form class="form-horizontal" method="post" name="userForm"
 			th:action="@{/coach-discipline}" th:object="${disciplineDTO}"
 			enctype="multipart/form-data">
@@ -42,7 +39,6 @@
 				</div>
 			</div>
 
-			<br>
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-5">
 					<button type="submit" class="btn btn-primary"
@@ -50,37 +46,33 @@
 				</div>
 			</div>
 		</form>
-
-		<h5 th:if="${!disciplineDTOsToCheckCoach.empty}" th:text="#{user.discipline}"></h5>
+		<br>
+		<h5 th:if="${!disciplineDTOsToCheckCoach.empty}"
+			th:text="#{user.discipline}"></h5>
 
 		<div id="decision" class="row" style="margin-top: 1%;">
-			<div class="col-md-4"
+			<div class="col-md-6"
 				th:each="disciplineDTO : ${disciplineDTOsToCheckCoach}">
 				<label th:text="${disciplineDTO.name}"></label><br> <label
 					style="text-decoration: underline;" th:text="'Documents: '"></label>
-				<label th:text="${disciplineDTO.documents}"></label>	
-					
-				<div th:if="${message}">
-		<h2 th:text="${message}"/></h2>
-	</div>
+				<label th:text="${disciplineDTO.documents}"></label>
+				
+				<div>
 
-	<div>
-		<form method="POST" enctype="multipart/form-data" action="/">
-			<table>
-				<tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr>
-				<tr><td></td><td><input type="submit" value="Upload" /></td></tr>
-			</table>
-		</form>
-	</div>
-
-	<div>
-		<ul>
-			<li th:each="file : ${files}">
-				<a th:href="${file}" th:text="${file}" ></a>
-			</li>
-		</ul>
-	</div>
-
+					<form method="POST" enctype="multipart/form-data"
+						th:action="@{/upload}">
+						<table>
+							<tr>
+								<td>File to upload:</td>
+								<td><input type="file" name="file" /></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td><input type="submit" value="Upload" /></td>
+							</tr>
+						</table>
+					</form>
+				</div>
 
 			</div>
 		</div>

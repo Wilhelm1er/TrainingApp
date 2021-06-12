@@ -34,6 +34,7 @@ import com.sport.training.domain.dto.DisciplineDTO;
 import com.sport.training.domain.dto.DisciplineRegistryDTO;
 import com.sport.training.domain.dto.DiscussionDTO;
 import com.sport.training.domain.dto.EventDTO;
+import com.sport.training.domain.dto.FileDTO;
 import com.sport.training.domain.dto.MessageDTO;
 import com.sport.training.domain.service.CoachService;
 import com.sport.training.domain.service.RegistryService;
