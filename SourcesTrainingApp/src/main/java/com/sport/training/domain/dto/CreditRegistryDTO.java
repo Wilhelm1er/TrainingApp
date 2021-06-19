@@ -19,12 +19,12 @@ public class CreditRegistryDTO implements Serializable {
 	private Long id;
 	private Date mouvementDate;
 	private UserDTO userDTO;
-	private int credit;
+	private Double credit;
 
 	// ======================================
 	// = Constructors =
 	// ======================================
-	public CreditRegistryDTO(final UserDTO userDTO, final int credit) {
+	public CreditRegistryDTO(final UserDTO userDTO, final Double credit) {
 		setUserDTO(userDTO);
 		setCredit(credit);
 	}
@@ -44,11 +44,11 @@ public class CreditRegistryDTO implements Serializable {
 		return mouvementDate;
 	}
 
-	public int getCredit() {
+	public Double getCredit() {
 		return credit;
 	}
 
-	public void setCredit(int credit) {
+	public void setCredit(Double credit) {
 		this.credit = credit;
 	}
 

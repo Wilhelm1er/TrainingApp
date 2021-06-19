@@ -54,6 +54,6 @@ public interface ShoppingCartService {
 	 */
 	public void empty();
 
-	public int getTotal();
+	public Double getTotal();
 
 }

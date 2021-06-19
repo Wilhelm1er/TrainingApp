@@ -33,9 +33,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.and() // possible : failureUrl() : the landing page after an unsuccessful login
 				.logout() // must be a POST with csrf on
 				.logoutSuccessUrl("/").and().authorizeRequests().antMatchers(staticResources).permitAll()
-				.antMatchers("/", "/login", "/new-athlete", "bookmark/*", "/new-coach", "/find-activities",
-						"/find-events", "/find-events/*", "/find-event", "/find-coachs", "/disciplines",
-						"/discipline/*", "/activities", "/activities/*", "/activity/*", "/coachs", "/credit",
+				.antMatchers("/", "/login", "/new-athlete", "/bookmark/*", "/new-coach", "/find-activities",
+						"/find-events", "/find-events/*", "/find-event", "/find-coachs", "/disciplines", "/update-event", "/delete-event",
+						"/discipline/*", "/activities", "/activities/*", "/activity/*", "/coachs", "/credit", 
+						"/update-event/*", "/delete-event/*",
 						"/create-activity/*", "/create-event/*", "/events/*")
 				.permitAll().anyRequest().authenticated();
 	}

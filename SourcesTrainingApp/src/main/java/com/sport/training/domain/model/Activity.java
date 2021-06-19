@@ -13,6 +13,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
+import org.hibernate.annotations.Cascade;
+
 /**
  * This class represents an Activity in the sport system. The sport system is
  * divided into disciplines. Each one divided into activities and each activity
@@ -38,11 +40,11 @@ public class Activity implements Serializable {
 
 	@Column(name = "CREDITCOSTMIN")
 	@Positive(message = "invalid Creditcost min")
-	private int creditcostMin;
+	private Double creditcostMin;
 
 	@Column(name = "CREDITCOSTMAX")
 	@Positive(message = "invalid Creditcost max")
-	private int creditcostMax;
+	private Double creditcostMax;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "DISCIPLINE_FK")
@@ -94,19 +96,19 @@ public class Activity implements Serializable {
 		this.description = description;
 	}
 
-	public int getCreditcostMin() {
+	public Double getCreditcostMin() {
 		return creditcostMin;
 	}
 
-	public void setCreditcostMin(int creditcostMin) {
+	public void setCreditcostMin(Double creditcostMin) {
 		this.creditcostMin = creditcostMin;
 	}
 
-	public int getCreditcostMax() {
+	public Double getCreditcostMax() {
 		return creditcostMax;
 	}
 
-	public void setCreditcostMax(int creditcostMax) {
+	public void setCreditcostMax(Double creditcostMax) {
 		this.creditcostMax = creditcostMax;
 	}
 

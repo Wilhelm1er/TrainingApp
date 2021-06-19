@@ -6,50 +6,61 @@
 </head>
 <body>
 	<nav th:insert="layout/default.html :: navbar"></nav>
-	
-		<br> <br> <br>
-<div class="erreur" th:if="${error}" th:text="${error}"></div>
+
+	<br>
+	<br>
+	<br>
+	<div class="erreur" th:if="${error}" th:text="${error}"></div>
 
 
-<div class="container" >
-<div class="row justify-content-start">
-					<table border="1">
-						<tr>
-						<th class="col-sm-2" th:text="#{discussion.creationdate}"></th>
-							<th class="col-sm-2" th:text="#{discussion.subject}"></th>
-							<th class="col-sm-2" th:text="#{discussion.user}" sec:authorize="hasAnyRole('ADMIN')"></th>
-						</tr>
-						<tr th:each="discussion : ${discussionDTOs}">
-						<th class="col-sm-2" th:text="${discussion.creationDate}"></th>
-							<th class="col-sm-2" th:text="${discussion.subject}"></th>
-							<td class="col-sm-2" th:text="${discussion.userDTO.username}" sec:authorize="hasAnyRole('ADMIN')"></td>
-							<td><a th:href="@{'/messages/'+${discussion.id}}">
-									<button type="button" class="btn btn-sm btn-outline-secondary">Voir la discussion</button>
-							</a></td>
-						</tr>
-					</table>
-				</div>
-	 </div>
-	 
-	 <br> <br> 
-	 
-	<form method="post" th:action="@{/discussion}" th:object="${coachDTO}" sec:authorize="hasAnyRole('ADMIN')">
-	<div class="col-md-4">
-	<h5 th:text=#{discussion.text} ></h5>
-	<input class="form-control"
-           type="text" id="subject" name="subject"
-           th:value="${subject}" />
-           <h5 th:text=#{discussion.coach} ></h5>
-	<select class="form-control selectpicker" th:field="*{username}" id="username">
-						<option th:each="coachDTO : ${coachesList}"
-							th:text="${coachDTO.username}" th:value="${coachDTO.username}" />
-					</select>
-		<button type="submit" class="btn btn-sm btn-outline-secondary">Nouvelle discussion</button>
+	<div class="container">
+		<div class="row justify-content-start">
+			<table border="1">
+				<tr>
+					<th class="col-sm-2" th:text="#{discussion.creationdate}"></th>
+					<th class="col-sm-2" th:text="#{discussion.subject}"></th>
+					<th class="col-sm-2" th:text="#{discussion.user}"
+						sec:authorize="hasAnyRole('ADMIN')"></th>
+				</tr>
+				<tr th:each="discussion : ${discussionDTOs}">
+					<th class="col-sm-2" th:text="${discussion.creationDate}"></th>
+					<th class="col-sm-2" th:text="${discussion.subject}"></th>
+					<td class="col-sm-2" th:text="${discussion.userDTO.username}"
+						sec:authorize="hasAnyRole('ADMIN')"></td>
+					<td><a th:href="@{'/messages/'+${discussion.id}}">
+							<button type="button" class="btn btn-sm btn-outline-secondary">Voir
+								la discussion</button>
+					</a></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+	<br>
+	<br>
+
+	<form method="post" th:action="@{/discussion}" th:object="${coachDTO}"
+		sec:authorize="hasAnyRole('ADMIN')">
+		<div class="col-md-4">
+			<h5 th:text=#{discussion.text}></h5>
+			<input class="form-control" type="text" id="subject" name="subject"
+				th:value="${subject}" />
+			<h5 th:text=#{discussion.coach}></h5>
+			<select class="form-control selectpicker" th:field="*{username}"
+				id="username">
+				<option th:each="coachDTO : ${coachesList}"
+					th:text="${coachDTO.username}" th:value="${coachDTO.username}" />
+			</select>
+			<button type="submit" class="btn btn-sm btn-outline-secondary">Nouvelle
+				discussion</button>
 		</div>
 	</form>
 
-		<br> <br> <br> <br>
-	
+	<br>
+	<br>
+	<br>
+	<br>
+
 	<th:block th:insert="layout/default.html :: footer"></th:block>
 	<th:block th:insert="layout/default.html :: scripts"></th:block>
 </body>

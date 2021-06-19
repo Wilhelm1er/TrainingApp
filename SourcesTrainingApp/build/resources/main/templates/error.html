@@ -1,7 +1,7 @@
-<!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-<th:block th:insert="layout/default.html :: headerfiles"></th:block>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
+<head th:replace="layout/default.html :: header">
 </head>
 <body>
 	<nav th:insert="layout/default.html :: navbar"></nav>
@@ -21,13 +21,11 @@
 				</tbody>
 			</table>
 		</div>
-
-		<div th:insert="layout/default.html :: footer"></div>
 	</div>
 	<br>
 	<br>
 	<br>
-	<nav th:insert="layout/default.html :: footernavbar"></nav>
+	<div th:insert="layout/default.html :: footer"></div>
 	<div th:insert="layout/default.html :: scripts"></div>
 </body>
 </html>

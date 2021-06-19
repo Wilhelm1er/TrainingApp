@@ -23,13 +23,13 @@ public class ShoppingCartEventDTO {
 	@NotBlank(message = "invalid Description")
 	private String eventDescription;
 	@Positive(message = "invalid credit cost")
-	private int creditCost;
+	private Double creditCost;
 
 	// ======================================
 	// = Constructors =
 	// ======================================
 	public ShoppingCartEventDTO(final Long eventId, final String eventName, final LocalDateTime localDateTime,
-			final String eventDescription, final int creditCost) {
+			final String eventDescription, final Double creditCost) {
 		this.eventId = eventId;
 		this.eventName = eventName;
 		this.eventDateTime = localDateTime;
@@ -56,7 +56,7 @@ public class ShoppingCartEventDTO {
 		return eventDescription;
 	}
 
-	public double getCreditCost() {
+	public Double getCreditCost() {
 		return creditCost;
 	}
 

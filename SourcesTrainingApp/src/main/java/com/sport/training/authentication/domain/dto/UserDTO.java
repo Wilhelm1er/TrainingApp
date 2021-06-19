@@ -21,7 +21,7 @@ public class UserDTO implements Serializable {
     private String telephone;
     private String email;
     private String password;
-    private int credit;
+    private Double credit;
     private String statut;
 	private AddressDTO addressDTO = new AddressDTO();
     private String roleName;
@@ -41,6 +41,7 @@ public class UserDTO implements Serializable {
         setUsername(username);
         setFirstname(firstname);
         setLastname(lastname);
+        setCredit(0.0);
     }
 
     // ======================================
@@ -142,11 +143,11 @@ public class UserDTO implements Serializable {
         addressDTO.setCountry(country);
     }
     
-    public int getCredit() {
+    public Double getCredit() {
   		return credit;
   	}
 
-  	public void setCredit(int credit) {
+  	public void setCredit(Double credit) {
   		this.credit = credit;
   	}
   	

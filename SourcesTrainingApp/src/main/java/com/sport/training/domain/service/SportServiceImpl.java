@@ -382,12 +382,12 @@ public class SportServiceImpl implements SportService {
 	public void deleteEvent(final Long eventId) throws FinderException, RemoveException {
 		final String mname = "deleteEvent";
 		LOGGER.debug("entering : " + mname + " with id" + eventId);
-
+		System.out.println("event Id:" +eventId);
 		checkId(eventId);
 
 		Event event = null;
 		if (!eventRepository.findById(eventId).isPresent())
-			throw new RemoveException("Item must exist to be deleted");
+			throw new RemoveException("Event must exist to be deleted");
 		else
 			event = eventRepository.findById(eventId).get();
 		eventRepository.delete(event);

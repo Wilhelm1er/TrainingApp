@@ -2,75 +2,30 @@
 <html lang="fr" xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
 
-<head th:fragment="headerfiles">
+<head th:fragment="header">
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no" />
 <title th:text="#{title}"></title>
 <link rel="stylesheet"
-	th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css}">
+	href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+
+<title>TrainingApp</title>
 </head>
 
 <body>
 
-	<!-- Fixed navbar -->
 	<nav th:fragment="navbar"
-		class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-		<!-- <a class="navbar-brand" th:href="@{/}">YAPS</a> -->
-		<a th:href="@{/}"><img style="height: 3em; border: 0px"
-			th:src="@{/img/banner_logo.gif}" /></a>
+		class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+		<a class="navbar-brand" th:href="@{/}">Home</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse"
 			data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown"
 			aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
+
 		<div class="collapse navbar-collapse" id="navbarNavDropdown">
-			<ul class="navbar-nav ml-auto">
-
-				<li class="nav-item active" sec:authorize="isAnonymous()"><a
-					class="nav-link" th:href="@{/login}" th:text="#{menu.login}"></a></li>
-
-				<li class="nav-item dropdown" sec:authorize="isAuthenticated()">
-					<a class="nav-link dropdown-toggle" th:href="@{/#}"
-					id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
-					aria-haspopup="true" aria-expanded="false"><span
-						sec:authentication="name"></span></a>
-					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-						<a class="dropdown-item" th:href="@{/}" th:text="#{menu.accueil}">Accueil</a>
-						<a class="dropdown-item" th:href="@{/price-search}"
-							th:text="#{menu.price.search}"></a> <a class="dropdown-item"
-							th:href="@{/manage-categories}" th:text="#{manage.catalog}"
-							sec:authorize="hasRole('ADMIN')"></a> <a class="dropdown-item"
-							th:href="@{/display-franchisees}" th:text="#{franchisees.list}"
-							sec:authorize="hasRole('ADMIN')"></a> <a class="dropdown-item"
-							th:href="@{/display-customers}" th:text="#{customers.list}"
-							sec:authorize="hasAnyRole('ADMIN','FRANCHISEE')"></a> <a
-							class="dropdown-item"
-							th:href="@{'/update-account/'+${#authentication.getPrincipal().getUsername()}}"
-							th:text="#{menu.edit.account}"
-							sec:authorize="hasAnyRole('USER','FRANCHISEE')"></a> <a
-							class="dropdown-item" id="logout"
-							href="javascript:document.logoutForm.submit()"
-							th:text="#{menu.logout}">Logout</a>
-					</div>
-					<form name="logoutForm" th:action="@{/logout}" method="post"
-						th:hidden="true">
-						<input th:hidden="true" type="submit" value="logout" />
-					</form>
-				</li>
-
-				<li class="nav-item dropdown" sec:authorize="isAuthenticated()">
-					<form class="form-inline" method="post"
-						th:action="@{/search-items}">
-						<input class="form-control mr-sm-2" type="search" name="keyword"
-							placeholder="Search" aria-label="Search">
-						<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-					</form>
-				</li>
-
-				<!-- <li class="nav-item active" sec:authorize="isAuthenticated()">  -->
-				<li class="nav-item active" sec:authorize="hasRole('USER')"><a
-					class="nav-link" th:href="@{/view-cart}" th:text="#{cart}"></a></li>
+			<ul class="navbar-nav mr-auto">
 
 				<li class="nav-item dropdown active"><a
 					class="nav-link dropdown-toggle" th:href="@{/#}"
@@ -79,59 +34,143 @@
 						th:text="#{menu.dropdown}"></span></a>
 					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 						<a class="dropdown-item"
-							th:href="@{/find-products?categoryId=BIRDS}"
-							th:text="#{menu.birds}"></a> <a class="dropdown-item"
-							th:href="@{/find-products?categoryId=CATS}"
-							th:text="#{menu.cats}"></a> <a class="dropdown-item"
-							th:href="@{/find-products?categoryId=DOGS}"
-							th:text="#{menu.dogs}"></a> <a class="dropdown-item"
-							th:href="@{/find-products?categoryId=FISH}"
-							th:text="#{menu.fish}"></a> <a class="dropdown-item"
-							th:href="@{/find-products?categoryId=REPTILES}"
-							th:text="#{menu.reptiles}"></a>
+							th:href="@{/find-activities?disciplineId=BOXE}"
+							th:text="#{menu.boxe}"></a> <a class="dropdown-item"
+							th:href="@{/find-activities?disciplineId=MUSCU}"
+							th:text="#{menu.muscu}"></a> <a class="dropdown-item"
+							th:href="@{/find-activities?disciplineId=CARDIO}"
+							th:text="#{menu.cardio}"></a> <a class="dropdown-item"
+							th:href="@{/find-activities?disciplineId=GYM}"
+							th:text="#{menu.gym}"></a> <a class="dropdown-item"
+							th:href="@{/find-activities?disciplineId=DANSE}"
+							th:text="#{menu.danse}"></a><a class="dropdown-item"
+							th:href="@{/find-activities?disciplineId=YOGA}"
+							th:text="#{menu.yoga}"></a>
 					</div></li>
+
+				<li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+					<a class="nav-link dropdown-toggle" th:href="@{/#}"
+					id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
+					aria-haspopup="true" aria-expanded="false"><span
+						sec:authentication="name"></span></a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+						<!--  Partie ADMIN    -->
+						<a class="dropdown-item" th:href="@{/manage-disciplines}"
+							th:text="#{manage.sport}" sec:authorize="hasRole('ADMIN')"></a> <a
+							class="dropdown-item" th:href="@{/display-coachs}"
+							th:text="#{coachs.list}" sec:authorize="hasRole('ADMIN')"></a> <a
+							class="dropdown-item" th:href="@{/display-athletes}"
+							th:text="#{athletes.list}" sec:authorize="hasAnyRole('ADMIN')"></a>
+							<a
+							class="dropdown-item" th:href="@{/document-users}"
+							th:text="#{documents}" sec:authorize="hasAnyRole('ADMIN')"></a>
+						<!--  Partie ATHLETE ET COACH   -->
+						<a class="dropdown-item" 
+							th:href="@{'/account/'+${#authentication.getPrincipal().getUsername()}}"
+							th:text="#{view.account.title}"
+							sec:authorize="hasAnyRole('ATHLETE','COACH')"></a>
+						<!--  Partie ATHLETE      -->
+						<a class="dropdown-item" th:if="${#authentication.getPrincipal().getStatut()}=='VALIDE'" th:href="@{/bookmark}"
+							th:text="#{menu.bookmark}" sec:authorize="hasAnyRole('ATHLETE')"></a>
+						<a class="dropdown-item" th:if="${#authentication.getPrincipal().getStatut()}=='VALIDE'"
+							th:href="@{'/athlete-events/'+${#authentication.getPrincipal().getUsername()}}"
+							th:text="#{menu.sessions}" sec:authorize="hasAnyRole('ATHLETE')"></a>
+						<!--  Partie COACH        -->
+						<a class="dropdown-item" 
+							th:href="@{/coach-discipline/}"
+							th:text="#{coachs.discipline}"
+							sec:authorize="hasAnyRole('COACH')"></a> 
+						<a class="dropdown-item" th:if="${#authentication.getPrincipal().getStatut()}=='VALIDE'"
+							th:href="@{'/select-activity/'+${#authentication.getPrincipal().getUsername()}}"
+							th:text="#{coachs.event}" sec:authorize="hasAnyRole('COACH')"></a>
+						<a class="dropdown-item" th:if="${#authentication.getPrincipal().getStatut()}=='VALIDE'"
+							th:href="@{'/events/'+${#authentication.getPrincipal().getUsername()}}"
+							th:text="#{coachs.event.list}"
+							sec:authorize="hasAnyRole('COACH')"></a>
+						<!--  Partie Pour tous     -->
+						<a class="dropdown-item"
+							th:href="@{/messagerie}"
+							th:text="#{menu.messages}"></a> <a class="dropdown-item"
+							id="logout" href="javascript:document.logoutForm.submit()"
+							th:text="#{menu.logout}">Se déconnecter</a>
+					</div>
+
+					<form name="logoutForm" th:action="@{/logout}" method="post"
+						th:hidden="true">
+						<input th:hidden="true" type="submit" value="logout" />
+					</form>
+
+				</li>
+				<li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+					<a class="nav-link dropdown-toggle" th:href="@{/#}"
+					id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
+					aria-haspopup="true" aria-expanded="false"><span
+						th:text="'Solde: '+${#authentication.getPrincipal().getCredit()}+ ' Cr'"></span></a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+						<a class="nav-item dropdown-item"></a> <a class="dropdown-item"
+							th:href="@{'/credit/'+${#authentication.getPrincipal().getUsername()}}"
+							th:text="#{credit.gestion}">Credit</a>
+
+					</div>
+				</li>
+
 			</ul>
 		</div>
+		<div style="color: #FFFFFF" class="nav-item active"></div>
+		<form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+			<input type="search" class="form-control form-control-dark"
+				placeholder="Rechercher...">
+		</form>
+		<div class="nav-item active" sec:authorize="hasRole('ATHLETE')">
+			<a class="nav-link" th:href="@{/view-cart}" th:text="#{cart}"></a>
+		</div>
+
+
+
+		<form class="nav-item active" sec:authorize="isAnonymous()">
+			<a class="nav-link" th:href="@{/login}" th:text="#{menu.login}">
+			</a>
+		</form>
+
+
+
+		<form class="nav-item dropdown" sec:authorize="isAnonymous()">
+			<a class="nav-link dropdown-toggle" th:href="@{/#}"
+				id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
+				aria-haspopup="true" aria-expanded="false"><span
+				th:text="#{menu.register}"></span></a>
+			<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+				<a class="nav-item dropdown-item"></a> <a class="dropdown-item"
+					th:href="@{/new-athlete}">Athlète</a> <a
+					class="nav-item dropdown-item"></a> <a class="dropdown-item"
+					th:href="@{/new-coach}">Entraîneur</a>
+			</div>
+		</form>
 	</nav>
 
 
-	<table th:fragment="footer" style="width: 100%">
-		<tr>
-			<td>
-				<hr noShade SIZE=1>
-			</td>
-		</tr>
-		<tr>
-			<td align="center" th:text="#{footer.demo}"></td>
-		</tr>
-		<tr>
-			<td>
-				<hr noShade SIZE=1>
-			</td>
-		</tr>
-		<tr>
-			<td align="center"><a th:href="@{http://java.sun.com/}"
-				target="_blank"><img border="0" th:src="@{/img/java.gif}" /></a>&nbsp;&nbsp;&nbsp;
-				<a th:href="@{https://spring.io/projects/spring-boot}"
-				target="_blank"><img width="100em" th:src="@{/img/sboot.png}" /></a>&nbsp;&nbsp;&nbsp;
-				<a th:href="@{http://www.mysql.com/}" target="_blank"><img
-					border="0" th:src="@{/img/mysql.gif}" /></a>&nbsp;&nbsp;&nbsp; <a
-				th:href="@{http://jakarta.apache.org/tomcat/}" target="_blank"><img
-					border="0" th:src="@{/img/tomcat.gif}" /></a>
-			<td>
-		</tr>
-	</table>
+	<footer th:fragment="footer"
+		class="my-5 pt-5 text-muted text-center text-small">
 
-	<nav th:fragment="footernavbar"
-		class="navbar navbar-expand-lg navbar-light bg-light fixed-bottom">
-		<a class="navbar-brand" th:href="@{/}" th:text="#{menu.bottom}"></a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse"
-			data-target="navbarSupportedContent"
-			aria-controls="navbarSupportedContent" aria-expanded="false"
-			aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-	</nav>
+		<ul class="list-inline" th:text="#{footer.txt}">
+
+		</ul>
+		<ul class="list-inline">
+			<li class="nav-item"><a th:href="@{https://www.facebook.com/}"
+				target="_blank"><img width=20 height=20 alt="facebook"
+					th:src="@{/img/fb.png}" /></a>&nbsp;&nbsp;&nbsp; <a
+				th:href="@{https://twitter.com/}" target="_blank"><img width=20
+					height=20 alt="twitter" th:src="@{/img/twitter.png}" /></a>&nbsp;&nbsp;&nbsp;
+				<a th:href="@{https://www.instagram.com/}" target="_blank"><img
+					width=20 height=20 alt="instagram" th:src="@{/img/insta.png}" /></a>&nbsp;&nbsp;&nbsp;
+			</li>
+		</ul>
+		<ul class="list-inline">
+			<li class="list-inline-item"><a href="#">Privacy</a></li>
+			<li class="list-inline-item"><a href="#">Terms</a></li>
+			<li class="list-inline-item"><a href="#">Nous contacter</a></li>
+		</ul>
+	</footer>
 
 	<div th:fragment="scripts">
 		<script th:src="@{https://code.jquery.com/jquery-3.5.1.slim.min.js}"></script>

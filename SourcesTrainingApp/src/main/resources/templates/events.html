@@ -41,18 +41,17 @@
 												th:text="#{cart.add}"></a>
 										</div>
 									</div>
-									
 									<div class="d-flex justify-content-between align-items-center">
 										<div sec:authorize="hasRole('COACH')">
 											<a 
-												th:href="@{'/update-event?eventId='+${eventDTO.id}}"
+												th:href="@{'/update-event/'+${eventDTO.id}}"
 												th:text="#{events.modify}"></a>
 										</div>
 									</div>
 									<div class="d-flex justify-content-between align-items-center">
 										<div sec:authorize="hasRole('COACH')">
 											<a
-												th:href="@{'/delete-event?eventId='+${eventDTO.id}}"
+												th:href="@{'/delete-event/'+${eventDTO.id}}"
 												th:text="#{events.delete}"></a>
 										</div>
 									</div>
@@ -64,9 +63,10 @@
 			</div>
 		</div>
 	</form>
-
-
-
+	
+	<div class="deleted" th:if="${eventDeleted != null}" th:text="${eventDeleted}"></div>
+	<div class="updated" th:if="${eventUpdated != null}" th:text="${eventUpdated}"></div>
+	
 	<br>
 	<br>
 	<br>

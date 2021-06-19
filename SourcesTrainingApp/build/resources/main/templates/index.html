@@ -1,45 +1,171 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-<th:block th:insert="layout/default.html :: headerfiles"></th:block>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
+<head th:replace="layout/default.html :: header">
 </head>
+
 <body>
-	<div class="navbar navbar-inverse navbar-fixed-top"
-		th:fragment="header">
-		<div class="container">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse"
-					data-target=".nav-collapse">
-					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
-						class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand" href="#">Sports Training Group OnLine
-					CSS</a>
-			</div>
-			<div class="navbar-collapse collapse">
-				<ul class="nav navbar-nav">
-					<li th:classappend="${module == 'home' ? 'active' : ''}"><a
-						href="#" th:href="@{/}">Home</a></li>
-					<li th:classappend="${module == 'tasks' ? 'active' : ''}"><a
-						href="#" th:href="@{/task}">Tasks</a></li>
-				</ul>
-				<ul class="nav navbar-nav navbar-right">
-					<li th:if="${#authorization.expression('!isAuthenticated()')}">
-						<a href="/signin" th:href="@{/signin}"> <span
-							class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;Sign
-							in
-					</a>
-					</li>
-					<li th:if="${#authorization.expression('isAuthenticated()')}">
-						<a href="/logout" th:href="@{#}" onclick="$('#form').submit();">
-							<span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Logout
-					</a>
-						<form style="visibility: hidden" id="form" method="post"
-							action="#" th:action="@{/logout}"></form>
-					</li>
-				</ul>
+	<nav th:insert="layout/default.html :: navbar"></nav>
+
+	<section class="py-3 text-center container">
+		<div class="row py-lg-5">
+			<div class="col-lg-6 col-md-8 mx-auto">
+				<h1 class="fw-light">
+					<br>Centre d'entraînements
+				</h1>
+				<p class="lead text-muted">Vous trouverez ici les multiples
+					disciplines dispensées, sur notre plateforme, en direct vidéo.</p>
 			</div>
 		</div>
+	</section>
+
+	<div class="album py-5 bg-light">
+		<div class="container">
+
+			<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+				<div class="col">
+					<div class="card shadow-sm">
+
+						<a th:href="@{/find-activities?disciplineId=BOXE}"> <img
+							th:src="@{'/img/boxe.png'}" width=348 height=200 alt="boxe" />
+						</a>
+
+						<div class="card-body">
+							<p class="card-text">
+								BOXE <br> Renforcez votre détermination et l’ensemble de
+								votre corps.
+							</p>
+							<div class="d-flex justify-content-between align-items-center">
+								<div class="btn-group">
+
+									<a th:href="@{/find-activities?disciplineId=BOXE}">
+										<button type="button" class="btn btn-sm btn-outline-secondary">Activités</button>
+									</a> <a th:href="@{/find-coachs?disciplineId=BOXE}">
+										<button type="button" class="btn btn-sm btn-outline-secondary">Entraineurs</button>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col">
+					<div class="card shadow-sm">
+						<a th:href="@{/find-activities?disciplineId=MUSCU}"> <img
+							th:src="@{'/img/musculation.png'}" width=348 height=200
+							alt="boxe" />
+						</a>
+						<div class="card-body">
+							<p class="card-text">
+								MUSCULATION <br> Sculptez votre corps et gagnez en force au
+								quotidien.
+							</p>
+							<div class="d-flex justify-content-between align-items-center">
+								<div class="btn-group">
+									<a th:href="@{/find-activities?disciplineId=MUSCU}">
+										<button type="button" class="btn btn-sm btn-outline-secondary">Activités</button>
+									</a> <a th:href="@{/find-coachs?disciplineId=MUSCU}">
+										<button type="button" class="btn btn-sm btn-outline-secondary">Entraineurs</button>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col">
+					<div class="card shadow-sm">
+						<a th:href="@{/find-activities?disciplineId=CARDIO}"> <img
+							th:src="@{'/img/cardio.jpg'}" width=348 height=200 alt="cardio" />
+						</a>
+						<div class="card-body">
+							<p class="card-text">
+								CARDIO-TRAINING <br> Libérez vos endorphines: Bien-être
+								assuré.
+							</p>
+							<div class="d-flex justify-content-between align-items-center">
+								<div class="btn-group">
+									<a th:href="@{/find-activities?disciplineId=CARDIO}">
+										<button type="button" class="btn btn-sm btn-outline-secondary">Activités</button>
+									</a> <a th:href="@{/find-coachs?disciplineId=CARDIO}">
+										<button type="button" class="btn btn-sm btn-outline-secondary">Entraineurs</button>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col">
+					<div class="card shadow-sm">
+						<a th:href="@{/find-activities?disciplineId=GYM}"> <img
+							th:src="@{'/img/pilate.png'}" width=348 height=200 alt="pilates" />
+						</a>
+						<div class="card-body">
+							<p class="card-text">
+								GYM - PILATES <br> Renforcez votre corps pour une meilleure
+								posture.
+							</p>
+							<div class="d-flex justify-content-between align-items-center">
+								<div class="btn-group">
+									<a th:href="@{/find-activities?disciplineId=GYM}">
+										<button type="button" class="btn btn-sm btn-outline-secondary">Activités</button>
+									</a> <a th:href="@{/find-coachs?disciplineId=GYM}">
+										<button type="button" class="btn btn-sm btn-outline-secondary">Entraineurs</button>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col">
+					<div class="card shadow-sm">
+						<a th:href="@{/find-activities?disciplineId=DANSE}"> <img
+							th:src="@{'/img/danse.jpg'}" width=348 height=200 alt="danse" />
+						</a>
+						<div class="card-body">
+							<p class="card-text">
+								DANSE <br> Laissez-vous emporter par le tempo de la
+								musique.
+							</p>
+							<div class="d-flex justify-content-between align-items-center">
+								<div class="btn-group">
+									<a th:href="@{/find-activities?disciplineId=DANSE}">
+										<button type="button" class="btn btn-sm btn-outline-secondary">Activités</button>
+									</a> <a th:href="@{/find-coachs?disciplineId=DANSE}">
+										<button type="button" class="btn btn-sm btn-outline-secondary">Entraineurs</button>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col">
+					<div class="card shadow-sm">
+						<a th:href="@{/find-activities?disciplineId=YOGA}"> <img
+							th:src="@{'/img/yoga.jpg'}" width=348 height=200 alt="yoga" />
+						</a>
+						<div class="card-body">
+							<p class="card-text">
+								YOGA <br> Ecoutez vous et prenez le temps de déconnecter.
+							</p>
+							<div class="d-flex justify-content-between align-items-center">
+								<div class="btn-group">
+									<a th:href="@{/find-activities?disciplineId=YOGA}">
+										<button type="button" class="btn btn-sm btn-outline-secondary">Activités</button>
+									</a> <a th:href="@{/find-coachs?disciplineId=YOGA}">
+										<button type="button" class="btn btn-sm btn-outline-secondary">Entraineurs</button>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<br>
+
+		<div th:insert="layout/default.html :: footer"></div>
 	</div>
+	<div th:insert="layout/default.html :: scripts"></div>
 </body>
 </html>

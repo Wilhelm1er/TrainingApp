@@ -56,16 +56,7 @@ public class GestionCoachController {
 	private RegistryService registryService;
 
 	@Autowired
-	private EventRepository eventRepository;
-
-	@Autowired
-	private RoleRepository roleRepository;
-
-	@Autowired
 	private SportService sportService;
-
-	@Autowired
-	private CoachService coachService;
 
 	@GetMapping(path = "/select-activity/{username}")
 	public String showSelectActivity(Model model, @PathVariable String username) {
@@ -77,7 +68,7 @@ public class GestionCoachController {
 		HashMap<String, List<ActivityDTO>> activityByDisciplinesCoach = new HashMap<String, List<ActivityDTO>>();
 		try {
 			userDTO = userService.findUser(username);
-			disciplineDTOsCoach = registryService.findDisciplinesByCoach(username);
+			disciplineDTOsCoach = registryService.findDisciplineOkByCoach(username);
 			if (disciplineDTOsCoach != null) {
 				for (DisciplineDTO disciplineDTO : disciplineDTOsCoach) {
 					List<ActivityDTO> list = new ArrayList<ActivityDTO>(
@@ -106,12 +97,12 @@ public class GestionCoachController {
 
 		ActivityDTO sActivityDTO;
 		UserDTO userDTO;
-		Long eventId = null;
+		// Long eventId = null;
 		try {
-			if (Objects.isNull(eventRepository.findLastId().get().longValue())) {
-				eventId = 1L;
-			}
-			eventId = eventRepository.findLastId().get().longValue() + 1;
+			/*
+			 * if (Objects.isNull(eventRepository.findLastId().get().longValue())) { eventId
+			 * = 1L; } eventId = eventRepository.findLastId().get().longValue() + 1;
+			 */
 			userDTO = userService.findUser(userId);
 			sActivityDTO = sportService.findActivity(activityDTO.getId());
 			model.addAttribute("eventDate", new String());
@@ -119,7 +110,7 @@ public class GestionCoachController {
 			model.addAttribute("eventDTO", new EventDTO());
 			model.addAttribute("activityDTO", sActivityDTO);
 			model.addAttribute("userDTO", userDTO);
-			model.addAttribute("eventId", eventId.toString());
+			// model.addAttribute("eventId", new String());
 			return "create-event";
 
 		} catch (Exception e) {
@@ -160,15 +151,16 @@ public class GestionCoachController {
 	}
 
 	@GetMapping("/delete-event/{eventId}")
-	public String deleteEvent(@PathVariable Long eventId, Model model) {
+	public String deleteEvent(@PathVariable(value= "eventId") Long eventId, Model model) {
 		final String mname = "deleteEvent";
 		LOGGER.debug("entering " + mname);
 		try {
+			System.out.println("eventId: "+eventId);
 			sportService.deleteEvent(eventId);
 			model.addAttribute("eventDeleted", eventId);
 		} catch (RemoveException | FinderException e) {
 			LOGGER.error("exception in " + mname + " : " + e.getMessage());
-			model.addAttribute("exception", e.getClass().getName());
+			model.addAttribute("exception", e.getMessage());
 			return "error";
 		} catch (Exception e) {
 			LOGGER.error("exception in " + mname + " : " + e.getMessage());
@@ -198,8 +190,8 @@ public class GestionCoachController {
 	}
 
 	@GetMapping("/update-event/{eventId}")
-	public String showEvent(@PathVariable Long eventId, Model model) {
-		final String mname = "showEvent";
+	public String showUpdateEvent(@PathVariable(value= "eventId") Long eventId, Model model) {
+		final String mname = "showUpdateEvent";
 		LOGGER.debug("entering " + mname);
 		try {
 			EventDTO eventDTO = sportService.findEvent(eventId);
@@ -238,7 +230,7 @@ public class GestionCoachController {
 		}
 		return "events";
 	}
-
+	
 	@GetMapping(path = "/coach-discipline")
 	public String showDisciplineChoice(Model model, Authentication authentication) throws FinderException {
 		final String mname = "showDisciplineChoice";
@@ -296,173 +288,5 @@ public class GestionCoachController {
 			model.addAttribute("exception", exc.getMessage());
 			return "error";
 		}
-	}
-
-	@GetMapping(path = "/messagerie")
-	public String getMessagerie(Authentication authentication, Model model) {
-		final String mname = "getMessagerie";
-		LOGGER.debug("entering " + mname);
-
-		List<DiscussionDTO> discussionDTOs = null;
-		UserDTO userDTO;
-
-		List<UserDTO> coachesList;
-		Role role;
-		try {
-			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-			userDTO = userService.findUser(userDetails.getUsername());
-
-			role = roleRepository.findByName("ROLE_COACH");
-
-			coachesList = userService.findUsersByRole(role);
-
-			if (userDTO.getRoleName().equals("ROLE_ADMIN")) {
-				discussionDTOs = coachService.findDiscussions();
-
-			} else {
-
-				discussionDTOs = coachService.findDiscussionsByUser(userDTO.getUsername());
-			}
-
-		} catch (Exception exc) {
-			model.addAttribute("error", exc.getMessage());
-			return "messagerie";
-		}
-		model.addAttribute("discussionDTO", new DiscussionDTO());
-		model.addAttribute("coachesList", coachesList);
-		model.addAttribute("discussionDTOs", discussionDTOs);
-		model.addAttribute("coachDTO", new UserDTO());
-
-		return "messagerie";
-	}
-
-	@Secured("ROLE_ADMIN")
-	@GetMapping(path = "/discussion/{username}")
-	public String getDiscussion(@PathVariable String username, Model model) {
-		final String mname = "getDiscussion";
-		LOGGER.debug("entering " + mname);
-
-		List<DiscussionDTO> discussionDTOs = null;
-		// UserDTO adminDTO;
-		UserDTO userDTO;
-		try {
-			userDTO = userService.findUser(username);
-			System.out.println("userDTO : " + userDTO);
-			discussionDTOs = coachService.findDiscussionsByUser(username);
-		} catch (Exception exc) {
-			model.addAttribute("error", exc.getMessage());
-			return "discussion";
-		}
-		model.addAttribute("username", userDTO.getUsername());
-		model.addAttribute("discussionDTOs", discussionDTOs);
-
-		return "discussion";
-	}
-
-	@PostMapping("/discussion")
-	public String newDiscussion(@Valid @ModelAttribute DiscussionDTO discussionDTO,
-			@ModelAttribute("coachDTO") UserDTO coachDTO, @ModelAttribute("subject") String subject, Model model)
-			throws CreateException {
-		final String mname = "newDiscussion";
-		LOGGER.debug("entering " + mname);
-
-		try {
-			discussionDTO.setSubject(subject);
-			discussionDTO = coachService.createDiscussion(new DiscussionDTO(coachDTO, subject));
-		} catch (Exception exc) {
-			model.addAttribute("error", exc.getMessage());
-			return "redirect:/messagerie";
-		}
-		model.addAttribute("username", coachDTO.getUsername());
-		model.addAttribute("discussionDTO", discussionDTO);
-
-		return "redirect:/messagerie";
-	}
-
-	@GetMapping("/messages/{discussionId}")
-	public String showMessages(@PathVariable String discussionId, Model model) throws CreateException {
-		final String mname = "showMessages";
-		LOGGER.debug("entering " + mname);
-
-		List<MessageDTO> messageDTOs = null;
-		DiscussionDTO discussionDTO;
-		try {
-			discussionDTO = coachService.findDiscussion(Long.valueOf(discussionId));
-		} catch (Exception exc) {
-			model.addAttribute("error", exc.getMessage());
-			return "messages";
-		}
-		try {
-			messageDTOs = coachService.findMessagesByDiscussion(Long.valueOf(discussionId));
-		} catch (Exception exc) {
-			model.addAttribute("subject", discussionDTO.getSubject());
-			model.addAttribute("error", exc.getMessage());
-			return "messages";
-		}
-		model.addAttribute("subject", discussionDTO.getSubject());
-		model.addAttribute("discussionDTO", discussionDTO);
-		model.addAttribute("messageDTO", new MessageDTO());
-		model.addAttribute("messageDTOs", messageDTOs);
-		model.addAttribute("texte", new String());
-
-		return "messages";
-	}
-
-	@GetMapping("/new-message/{discussionId}")
-	public String newMessage(@PathVariable String discussionId, Model model) throws CreateException {
-		final String mname = "newMessage";
-		LOGGER.debug("entering " + mname);
-
-		model.addAttribute("messageDTO", new MessageDTO());
-		model.addAttribute("texte", new String());
-
-		return "new-message";
-	}
-
-	@PostMapping("/new-message/{discussionId}")
-	public String sendMessage(@PathVariable String discussionId, @Valid @ModelAttribute("texte") String texte,
-			@Valid @ModelAttribute MessageDTO messageDTO, Authentication authentication, Model model)
-			throws CreateException {
-		final String mname = "sendMessage";
-		LOGGER.debug("entering " + mname);
-
-		UserDTO senderDTO;
-		UserDTO adminDTO;
-
-		Role role;
-		List<UserDTO> adminsList;
-		Random rand = new Random();
-
-		try {
-			// Choix admin random
-			role = roleRepository.findByName("ROLE_ADMIN");
-			adminsList = userService.findUsersByRole(role);
-			adminDTO = adminsList.get(rand.nextInt(adminsList.size()));
-
-			// Determination du sender
-			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-			senderDTO = userService.findUser(userDetails.getUsername());
-
-			// set dans le message
-			messageDTO.setDiscussionDTO(coachService.findDiscussion(Long.valueOf(discussionId)));
-			messageDTO.setSenderDTO(senderDTO);
-			if (senderDTO.getRoleName().equals("ROLE_ADMIN")) {
-				messageDTO.setRecipientDTO(messageDTO.getDiscussionDTO().getUserDTO());
-			}
-			if (senderDTO.getRoleName().equals("ROLE_COACH")) {
-				messageDTO.setRecipientDTO(adminDTO);
-			}
-			if (texte.isEmpty()) {
-				model.addAttribute("error", "message vide");
-			} else {
-				coachService.createMessage(messageDTO);
-			}
-
-		} catch (Exception exc) {
-			model.addAttribute("error", exc.getMessage());
-			return "redirect:/messages/{discussionId}";
-		}
-
-		return "redirect:/messages/{discussionId}";
 	}
 }

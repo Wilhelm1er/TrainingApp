@@ -57,7 +57,7 @@
 						<!--  Partie ADMIN    -->
 						<a class="dropdown-item" th:href="@{/manage-disciplines}"
 							th:text="#{manage.sport}" sec:authorize="hasRole('ADMIN')"></a> <a
-							class="dropdown-item" th:href="@{/display-coachs}"
+							class="dropdown-item" th:href="@{/display-coaches}"
 							th:text="#{coachs.list}" sec:authorize="hasRole('ADMIN')"></a> <a
 							class="dropdown-item" th:href="@{/display-athletes}"
 							th:text="#{athletes.list}" sec:authorize="hasAnyRole('ADMIN')"></a>

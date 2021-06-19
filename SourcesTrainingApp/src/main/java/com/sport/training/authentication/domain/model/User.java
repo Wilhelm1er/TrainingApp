@@ -46,7 +46,7 @@ public class User implements Serializable {
 	@Size(min=4, message="password's length exception (mini. of 4 char. required)")
 	private String password;
 	
-	private int credit;
+	private Double credit;
 	
 	private String statut;
 	
@@ -71,6 +71,7 @@ public class User implements Serializable {
     	this.username=username;
     	this.firstname = firstname;
     	this.lastname = lastname;
+    	setCredit(0.0);
     }
 
     // ======================================
@@ -125,11 +126,11 @@ public class User implements Serializable {
 		this.password = password;
 	}
 	
-	public int getCredit() {
+	public Double getCredit() {
 		return credit;
 	}
 
-	public void setCredit(int credit) {
+	public void setCredit(Double credit) {
 		this.credit= credit;
 	}
 	

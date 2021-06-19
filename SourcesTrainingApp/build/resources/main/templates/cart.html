@@ -1,67 +1,59 @@
-<!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-<th:block th:insert="layout/default.html :: headerfiles"></th:block>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
+<head th:replace="layout/default.html :: header">
 </head>
 <body>
 	<nav th:insert="layout/default.html :: navbar"></nav>
-	<div class="container">
-		<br> <br> <br> <br>
-		<h3 th:text="#{cart}"></h3>
-		<br>
-		<div style="border: 2px solid gray; border-radius: 4px; padding: 5px">
-
-			<div th:if="${cart !=null and cart.size()>0}">
-				<div th:each="cartItem : ${cart}">
-					<form method="post" name="updateCartForm"
-						th:action="@{/update-cart}">
-						<table>
-							<tr>
-								<td style="width: 50%"><a
-									th:href="@{'/find-item?itemId='+${cartItem.itemId}}"
-									th:text="${cartItem.itemName}"></a>
-									<p th:text="${cartItem.productDescription}" /> <input
-									type="hidden" name="itemId" th:value="${cartItem.itemId}">
-								</td>
-								<td style="padding-right: 0.5em"><a
-									th:href="@{'/remove-from-cart?itemId='+${cartItem.itemId}}"
-									th:text="#{cart.remove}">Remove</a></td>
-								<td style="padding-right: 0.5em"><input type="submit"
-									th:value="#{cart.update}"></td>
-								<td style="padding-right: 0.5em"><input type="text"
-									name="quantity" size="3" maxlength="3"
-									th:value="${cartItem.quantity}"></td>
-								<td align="center">x</td>
-								<td align="right" th:text="${cartItem.unitCost}"></td>
-								<td align="center">=</td>
-								<td align="right" th:text="${cartItem.totalCost}"></td>
-							</tr>
-						</table>
-					</form>
-				</div>
-				<table>
-					<tr>
-						<td style="width: 85%"></td>
-						<td style="font-weight: bold"
-							th:text="#{cart.total}+' '+${cartValue}"></td>
-					</tr>
-				</table>
-			</div>
-
-			<h3 th:if="${cart == null or cart.size()==0}" th:text="#{cart.empty}"></h3>
-
-		</div>
-		<div align="right">
-			<a th:href="@{/checkout}" th:text="#{cart.checkout}"></a>
-		</div>
-
-		<br>
-		<div th:insert="layout/default.html :: footer"></div>
+	<br>
+	<br>
+	<br>
+<div class="container">
+<br><br><br><br>
+	<h3 th:text="#{cart}"></h3>
+	<br>
+	<div style="border: 2px solid gray;border-radius: 4px;padding:5px">
+	
+	<div th:if="${cart !=null and cart.size()>0}" >
+	<div th:each="cartEvent : ${cart}">
+	<form method="post" name="updateCartForm" th:action="@{/update-cart}" >
+	<table >
+		<tr>
+		<td style="width:50%"> 
+			<a th:href="@{'/find-event?eventId='+${cartEvent.eventId}}" th:text="${cartEvent.eventName}"></a>
+			<p th:text="${cartEvent.eventDescription}"/>
+			<p th:text="${cartEvent.eventDateTime}"/>
+            <input type="hidden" name="eventId" th:value="${cartEvent.eventId}">
+		</td>
+		<td style="padding-right:0.5em">
+            <a th:href="@{'/remove-from-cart?eventId='+${cartEvent.eventId}}" th:text="#{cart.remove}">Remove</a>
+        </td>
+       
+        
+       
+        <td align="center">=</td>
+        <td align="right" th:text="${cartEvent.creditCost}"></td>
+		</tr>
+	</table>
+	</form>
 	</div>
-	<br>
-	<br>
-	<br>
-	<nav th:insert="layout/default.html :: footernavbar"></nav>
+	<table>
+	<tr>
+	<td style="width:85%"> </td>
+	<td style="font-weight:bold"th:text="#{cart.total}+' '+${cartValue}"></td>
+	</tr>
+	</table>
+	</div>
+	
+	<h3 th:if="${cart == null or cart.size()==0}" th:text="#{cart.empty}"></h3>
+	
+	</div>
+	<div align="right"> <a th:href="@{/checkout}" th:text="#{cart.checkout}"></a></div>
+	
+</div>
+	<br> <br> <br> <br>
+		<div th:insert="layout/default.html :: footer"></div>
+	
 	<div th:insert="layout/default.html :: scripts"></div>
 </body>
 </html>

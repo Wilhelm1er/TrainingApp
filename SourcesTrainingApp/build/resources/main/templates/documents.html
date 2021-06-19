@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
+<head th:replace="layout/default.html :: header">
+</head>
+<body>
+	<nav th:insert="layout/default.html :: navbar"></nav>
+	<br>
+	<br>
+	<br>
+
+<h3 th:text="#{file.user}+${userId}"></h3>
+	<div class="row justify-content-start">
+		<table>
+			<tr>
+				<th class="col-sm-2" th:text="#{file.name}"></th>
+			</tr>
+			<tr th:each="file : ${fileNames}">
+				<td><a class="col-sm-2" th:href="@{'/files/'+${file}}"
+					th:text="${file}" sec:authorize="hasRole('ADMIN')"></a></td>
+			</tr>
+		</table>
+	</div>
+
+	<br>
+	<br>
+	<br>
+	<br>
+	<div th:insert="layout/default.html :: footer"></div>
+
+	<div th:insert="layout/default.html :: scripts"></div>
+</body>
+</html>

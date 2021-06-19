@@ -30,9 +30,9 @@ public class FindUserController {
 	private RoleService roleService;
 
 	@Secured("ROLE_ADMIN")
-	@GetMapping("/display-coachs")
-	public String showCoachs(Model model) {
-		final String mname = "showCoachs";
+	@GetMapping("/display-coaches")
+	public String showCoaches(Model model) {
+		final String mname = "showCoaches";
 		LOGGER.debug("entering " + mname);
 
 		List<UserDTO> coachDTOs = null;

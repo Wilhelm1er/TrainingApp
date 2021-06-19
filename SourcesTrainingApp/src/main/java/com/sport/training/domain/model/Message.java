@@ -49,7 +49,7 @@ public class Message implements Serializable {
 	@JoinColumn(name = "RECIPIENT")
 	@NotNull(message = "invalid Recipient")
 	private User recipient;
-
+ 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "DISCUSSION_FK")
 	@NotNull(message = "invalid Discussion")
@@ -58,7 +58,7 @@ public class Message implements Serializable {
 	// ======================================
 	// = Constructors =
 	// ======================================
-
+ 
 	public Message() {
 		id = 0L;
 		this.date = new Date();

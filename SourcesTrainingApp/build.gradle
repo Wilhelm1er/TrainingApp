@@ -25,7 +25,6 @@ dependencies {
 	implementation 'org.springframework.session:spring-session-core'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	implementation 'org.flywaydb:flyway-core'
 	compile 'org.modelmapper:modelmapper:2.3.8'
 	runtimeOnly 'mysql:mysql-connector-java'

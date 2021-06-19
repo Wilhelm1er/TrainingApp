@@ -16,11 +16,11 @@ public class CustomUserDetails implements UserDetails {
 	
 	private String username;
 	private String password;
-	private int credit;
+	private Double credit;
 	private String statut;
 	private List<SimpleGrantedAuthority> grantedAuthorities;
 
-	public CustomUserDetails(String username, String password, List<SimpleGrantedAuthority> grantedAuthorities, int credit, String statut) {
+	public CustomUserDetails(String username, String password, List<SimpleGrantedAuthority> grantedAuthorities, Double credit, String statut) {
 		this.username=username;
 		this.password=password;
 		this.grantedAuthorities=grantedAuthorities;
@@ -68,10 +68,10 @@ public class CustomUserDetails implements UserDetails {
 	    return true;
 	}
 
-	public int getCredit() {
+	public Double getCredit() {
 	    return this.credit;
 	}
-	public int setCredit(int credit) {
+	public Double setCredit(Double credit) {
 	    return this.credit = credit;
 	}
 	

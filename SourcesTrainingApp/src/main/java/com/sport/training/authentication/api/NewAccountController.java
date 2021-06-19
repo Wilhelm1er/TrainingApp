@@ -31,12 +31,6 @@ public class NewAccountController {
 	@Autowired
 	private UserService userService;
 
-	@Autowired
-	private RegistryService registryService;
-
-	@Autowired
-	private SportService sportService;
-
 	@GetMapping(path = "/new-athlete")
 	public String newAthlete(Model model) {
 		final String mname = "newAthlete";
@@ -72,36 +66,20 @@ public class NewAccountController {
 		final String mname = "newCoach";
 		LOGGER.debug("entering " + mname);
 
-		List<DisciplineDTO> disciplineDTOs = null;
-		List<String> disciplineDTOsChoice = null;
-		try {
-			disciplineDTOs = sportService.findDisciplines();
-		} catch (FinderException e) {
-			model.addAttribute("exception", e.getMessage());
-			return "error";
-		}
-
-		model.addAttribute("disciplineDTOsChoice", disciplineDTOsChoice);
-		model.addAttribute("disciplineDTOs", disciplineDTOs);
 		model.addAttribute("userDTO", new UserDTO());
 
 		return "new-coach";
 	}
 
 	@PostMapping(path = "/new-coach")
-	public String createCoach(@Valid UserDTO userDTO,
-			@RequestParam(value = "discipline.id", required = false) String[] disciplineId, BindingResult bindingResult,
-			Model model) {
+	public String createCoach(@Valid UserDTO userDTO, Model model) {
 		final String mname = "createCoach";
 		LOGGER.debug("entering " + mname);
 
 		try {
 			userDTO.setRoleName("ROLE_COACH");
 			userService.createUser(userDTO);
-			for (String disciplineIdChecked : disciplineId) {
-				registryService.createDisciplineRegistry(
-						new DisciplineRegistryDTO(sportService.findDiscipline(disciplineIdChecked), userDTO));
-			}
+			
 			model.addAttribute("message", "Coach account created");
 			return "index";
 		} catch (CreateException e) {

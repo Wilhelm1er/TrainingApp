@@ -1,136 +1,200 @@
-com/sport/training/api/ManageCategoryController.java
- com.sport.training.api.ManageCategoryController
- com.sport.training.api.ManageCategoryController$1
-com/sport/training/domain/model/Address.java
- com.sport.training.domain.model.Address
-com/sport/training/authentication/domain/service/UserServiceImpl.java
- com.sport.training.authentication.domain.service.UserServiceImpl
-com/sport/training/catalogRestApi/DisciplineRestController.java
- com.sport.training.catalogRestApi.DisciplineRestController
-com/sport/training/domain/dto/ActivityDTO.java
- com.sport.training.domain.dto.ActivityDTO
 com/sport/training/Application.java
  com.sport.training.Application
+com/sport/training/domain/dto/MessageDTO.java
+ com.sport.training.domain.dto.MessageDTO
+com/sport/training/authentication/domain/service/CustomUserDetails.java
+ com.sport.training.authentication.domain.service.CustomUserDetails
 com/sport/training/domain/model/Discipline.java
  com.sport.training.domain.model.Discipline
-com/sport/training/exception/RemoveException.java
- com.sport.training.exception.RemoveException
-com/sport/training/configuration/DefaultViewConfig.java
- com.sport.training.configuration.DefaultViewConfig
+com/sport/training/domain/service/CoachService.java
+ com.sport.training.domain.service.CoachService
+com/sport/training/domain/service/RegistryService.java
+ com.sport.training.domain.service.RegistryService
+com/sport/training/domain/message/ResponseFile.java
+ com.sport.training.domain.message.ResponseFile
 com/sport/training/domain/model/CreditCard.java
  com.sport.training.domain.model.CreditCard
-com/sport/training/authentication/domain/service/UserService.java
- com.sport.training.authentication.domain.service.UserService
-com/sport/training/domain/dao/EventRepository.java
- com.sport.training.domain.dao.EventRepository
+com/sport/training/api/FindCoachController.java
+ com.sport.training.api.FindCoachController
+com/sport/training/domain/dao/CreditRegistryRepository.java
+ com.sport.training.domain.dao.CreditRegistryRepository
 com/sport/training/domain/dto/CreditCardDTO.java
  com.sport.training.domain.dto.CreditCardDTO
-com/sport/training/domain/constant/AmericanStates.java
- com.sport.training.domain.constant.AmericanStates
-com/sport/training/domain/dao/ActivityRepository.java
- com.sport.training.domain.dao.ActivityRepository
-com/sport/training/domain/constant/CreditCardStatus.java
- com.sport.training.domain.constant.CreditCardStatus
-com/sport/training/authentication/domain/service/RoleServiceImpl.java
- com.sport.training.authentication.domain.service.RoleServiceImpl
-com/sport/training/api/FindActivityController.java
- com.sport.training.api.FindActivityController
- com.sport.training.api.FindActivityController$1
-com/sport/training/configuration/RestClientConfig.java
- com.sport.training.configuration.RestClientConfig
-com/sport/training/domain/constant/CreditCardTypes.java
- com.sport.training.domain.constant.CreditCardTypes
-com/sport/training/exception/DuplicateKeyException.java
- com.sport.training.exception.DuplicateKeyException
-com/sport/training/api/FindUserController.java
- com.sport.training.api.FindUserController
+com/sport/training/api/ManageActivityController.java
+ com.sport.training.api.ManageActivityController
+ com.sport.training.api.ManageActivityController$1
+ com.sport.training.api.ManageActivityController$2
+com/sport/training/domain/dto/DisciplineRegistryDTO.java
+ com.sport.training.domain.dto.DisciplineRegistryDTO
 com/sport/training/authentication/domain/model/Role.java
  com.sport.training.authentication.domain.model.Role
-com/sport/training/authentication/domain/model/User.java
- com.sport.training.authentication.domain.model.User
-com/sport/training/api/SearchEventController.java
- com.sport.training.api.SearchEventController
-com/sport/training/authentication/domain/dao/UserRepository.java
- com.sport.training.authentication.domain.dao.UserRepository
-com/sport/training/authentication/domain/dto/UserDTO.java
- com.sport.training.authentication.domain.dto.UserDTO
-com/sport/training/exception/ObjectNotFoundException.java
- com.sport.training.exception.ObjectNotFoundException
-com/sport/training/domain/service/CreditCardServiceImpl.java
- com.sport.training.domain.service.CreditCardServiceImpl
-com/sport/training/authentication/api/NewAccountController.java
- com.sport.training.authentication.api.NewAccountController
-com/sport/training/domain/model/Activity.java
- com.sport.training.domain.model.Activity
-com/sport/training/authentication/domain/dao/RoleRepository.java
- com.sport.training.authentication.domain.dao.RoleRepository
-com/sport/training/authentication/domain/service/RoleService.java
- com.sport.training.authentication.domain.service.RoleService
+com/sport/training/domain/model/Bookmark.java
+ com.sport.training.domain.model.Bookmark
+com/sport/training/configuration/MapperConfig.java
+ com.sport.training.configuration.MapperConfig
+com/sport/training/domain/dao/DisciplineRegistryRepository.java
+ com.sport.training.domain.dao.DisciplineRegistryRepository
+com/sport/training/domain/dao/EventRegistryRepository.java
+ com.sport.training.domain.dao.EventRegistryRepository
 com/sport/training/domain/service/ShoppingCartService.java
  com.sport.training.domain.service.ShoppingCartService
 com/sport/training/exception/CreateException.java
  com.sport.training.exception.CreateException
 com/sport/training/authentication/domain/service/UserDetailsServiceImpl.java
  com.sport.training.authentication.domain.service.UserDetailsServiceImpl
-com/sport/training/domain/service/CreditCardService.java
- com.sport.training.domain.service.CreditCardService
-com/sport/training/exception/UpdateException.java
- com.sport.training.exception.UpdateException
 com/sport/training/exception/api/ExceptionControllerAdvice.java
  com.sport.training.exception.api.ExceptionControllerAdvice
-com/sport/training/authentication/api/AuthenticationController.java
- com.sport.training.authentication.api.AuthenticationController
-com/sport/training/domain/dto/DisciplineDTO.java
- com.sport.training.domain.dto.DisciplineDTO
-com/sport/training/domain/dao/DisciplineRepository.java
- com.sport.training.domain.dao.DisciplineRepository
+com/sport/training/domain/message/ResponseMessage.java
+ com.sport.training.domain.message.ResponseMessage
 com/sport/training/domain/dao/CounterRepository.java
  com.sport.training.domain.dao.CounterRepository
-com/sport/training/domain/dto/AddressDTO.java
- com.sport.training.domain.dto.AddressDTO
-com/sport/training/domain/constant/Countries.java
- com.sport.training.domain.constant.Countries
-com/sport/training/configuration/WebSecurityConfig.java
- com.sport.training.configuration.WebSecurityConfig
-com/sport/training/domain/service/CounterService.java
- com.sport.training.domain.service.CounterService
-com/sport/training/exception/DataAccessException.java
- com.sport.training.exception.DataAccessException
-com/sport/training/domain/model/Counter.java
- com.sport.training.domain.model.Counter
-com/sport/training/api/ManageProductController.java
- com.sport.training.api.ManageProductController
- com.sport.training.api.ManageProductController$1
- com.sport.training.api.ManageProductController$2
-com/sport/training/exception/ApplicationException.java
- com.sport.training.exception.ApplicationException
-com/sport/training/catalogRestApi/ActivityRestController.java
- com.sport.training.catalogRestApi.ActivityRestController
-com/sport/training/domain/dto/ShoppingCartEventDTO.java
- com.sport.training.domain.dto.ShoppingCartEventDTO
-com/sport/training/exception/FinderException.java
- com.sport.training.exception.FinderException
-com/sport/training/domain/service/CounterServiceImpl.java
- com.sport.training.domain.service.CounterServiceImpl
-com/sport/training/api/ManageItemController.java
- com.sport.training.api.ManageItemController
-com/sport/training/domain/dto/NotationDTO.java
- com.sport.training.domain.dto.NotationDTO
-com/sport/training/domain/dao/NotationRepository.java
- com.sport.training.domain.dao.NotationRepository
-com/sport/training/domain/service/ShoppingCartServiceImpl.java
- com.sport.training.domain.service.ShoppingCartServiceImpl
-com/sport/training/domain/service/SportServiceImpl.java
- com.sport.training.domain.service.SportServiceImpl
-com/sport/training/configuration/MapperConfig.java
- com.sport.training.configuration.MapperConfig
-com/sport/training/domain/model/Notation.java
- com.sport.training.domain.model.Notation
-com/sport/training/domain/service/SportService.java
- com.sport.training.domain.service.SportService
-com/sport/training/domain/dto/EventDTO.java
- com.sport.training.domain.dto.EventDTO
 com/sport/training/api/FindEventController.java
  com.sport.training.api.FindEventController
 com/sport/training/domain/model/Event.java
  com.sport.training.domain.model.Event
+com/sport/training/domain/service/CounterService.java
+ com.sport.training.domain.service.CounterService
+com/sport/training/domain/service/FileStorageServiceImpl.java
+ com.sport.training.domain.service.FileStorageServiceImpl
+com/sport/training/domain/dto/BookmarkDTO.java
+ com.sport.training.domain.dto.BookmarkDTO
+com/sport/training/domain/model/EventRegistry.java
+ com.sport.training.domain.model.EventRegistry
+com/sport/training/domain/dto/ShoppingCartEventDTO.java
+ com.sport.training.domain.dto.ShoppingCartEventDTO
+com/sport/training/domain/dto/NotationDTO.java
+ com.sport.training.domain.dto.NotationDTO
+com/sport/training/exception/FileUploadExceptionAdvice.java
+ com.sport.training.exception.FileUploadExceptionAdvice
+com/sport/training/domain/service/RegistryServiceImpl.java
+ com.sport.training.domain.service.RegistryServiceImpl
+com/sport/training/api/FindUserController.java
+ com.sport.training.api.FindUserController
+com/sport/training/configuration/RestClientConfig.java
+ com.sport.training.configuration.RestClientConfig
+com/sport/training/domain/dao/MessageRepository.java
+ com.sport.training.domain.dao.MessageRepository
+com/sport/training/exception/ObjectNotFoundException.java
+ com.sport.training.exception.ObjectNotFoundException
+com/sport/training/domain/model/File.java
+ com.sport.training.domain.model.File
+com/sport/training/exception/FinderException.java
+ com.sport.training.exception.FinderException
+com/sport/training/domain/dto/EventRegistryDTO.java
+ com.sport.training.domain.dto.EventRegistryDTO
+com/sport/training/domain/dao/NotationRepository.java
+ com.sport.training.domain.dao.NotationRepository
+com/sport/training/authentication/domain/service/UserServiceImpl.java
+ com.sport.training.authentication.domain.service.UserServiceImpl
+com/sport/training/catalogRestApi/DisciplineRestController.java
+ com.sport.training.catalogRestApi.DisciplineRestController
+com/sport/training/domain/dto/ActivityDTO.java
+ com.sport.training.domain.dto.ActivityDTO
+com/sport/training/domain/model/Message.java
+ com.sport.training.domain.model.Message
+com/sport/training/domain/dao/DiscussionRepository.java
+ com.sport.training.domain.dao.DiscussionRepository
+com/sport/training/exception/RemoveException.java
+ com.sport.training.exception.RemoveException
+com/sport/training/configuration/DefaultViewConfig.java
+ com.sport.training.configuration.DefaultViewConfig
+com/sport/training/authentication/domain/service/UserService.java
+ com.sport.training.authentication.domain.service.UserService
+com/sport/training/domain/service/FileStorageService.java
+ com.sport.training.domain.service.FileStorageService
+com/sport/training/domain/dao/EventRepository.java
+ com.sport.training.domain.dao.EventRepository
+com/sport/training/api/ManageDisciplineController.java
+ com.sport.training.api.ManageDisciplineController
+ com.sport.training.api.ManageDisciplineController$1
+com/sport/training/api/FileController.java
+ com.sport.training.api.FileController
+com/sport/training/api/ShoppingCartController.java
+ com.sport.training.api.ShoppingCartController
+com/sport/training/domain/dao/ActivityRepository.java
+ com.sport.training.domain.dao.ActivityRepository
+com/sport/training/authentication/domain/service/RoleServiceImpl.java
+ com.sport.training.authentication.domain.service.RoleServiceImpl
+com/sport/training/api/FindActivityController.java
+ com.sport.training.api.FindActivityController
+ com.sport.training.api.FindActivityController$1
+com/sport/training/domain/service/SportService.java
+ com.sport.training.domain.service.SportService
+com/sport/training/exception/DuplicateKeyException.java
+ com.sport.training.exception.DuplicateKeyException
+com/sport/training/domain/dto/EventDTO.java
+ com.sport.training.domain.dto.EventDTO
+com/sport/training/domain/service/CoachServiceImpl.java
+ com.sport.training.domain.service.CoachServiceImpl
+com/sport/training/authentication/domain/model/User.java
+ com.sport.training.authentication.domain.model.User
+com/sport/training/api/SearchEventController.java
+ com.sport.training.api.SearchEventController
+com/sport/training/domain/dto/FileDTO.java
+ com.sport.training.domain.dto.FileDTO
+com/sport/training/authentication/domain/dao/UserRepository.java
+ com.sport.training.authentication.domain.dao.UserRepository
+com/sport/training/authentication/domain/dto/UserDTO.java
+ com.sport.training.authentication.domain.dto.UserDTO
+com/sport/training/authentication/api/NewAccountController.java
+ com.sport.training.authentication.api.NewAccountController
+com/sport/training/authentication/domain/dao/RoleRepository.java
+ com.sport.training.authentication.domain.dao.RoleRepository
+com/sport/training/domain/model/Activity.java
+ com.sport.training.domain.model.Activity
+com/sport/training/authentication/domain/service/RoleService.java
+ com.sport.training.authentication.domain.service.RoleService
+com/sport/training/exception/UpdateException.java
+ com.sport.training.exception.UpdateException
+com/sport/training/domain/dto/DiscussionDTO.java
+ com.sport.training.domain.dto.DiscussionDTO
+com/sport/training/api/GestionCreditController.java
+ com.sport.training.api.GestionCreditController
+com/sport/training/domain/service/SportServiceImpl.java
+ com.sport.training.domain.service.SportServiceImpl
+com/sport/training/domain/model/Notation.java
+ com.sport.training.domain.model.Notation
+com/sport/training/domain/dao/DisciplineRepository.java
+ com.sport.training.domain.dao.DisciplineRepository
+com/sport/training/domain/dao/BookmarkRepository.java
+ com.sport.training.domain.dao.BookmarkRepository
+com/sport/training/domain/dto/AddressDTO.java
+ com.sport.training.domain.dto.AddressDTO
+com/sport/training/api/GestionAthleteController.java
+ com.sport.training.api.GestionAthleteController
+com/sport/training/exception/DataAccessException.java
+ com.sport.training.exception.DataAccessException
+com/sport/training/domain/model/Counter.java
+ com.sport.training.domain.model.Counter
+com/sport/training/domain/dto/CreditRegistryDTO.java
+ com.sport.training.domain.dto.CreditRegistryDTO
+com/sport/training/exception/ApplicationException.java
+ com.sport.training.exception.ApplicationException
+com/sport/training/catalogRestApi/ActivityRestController.java
+ com.sport.training.catalogRestApi.ActivityRestController
+com/sport/training/domain/model/DisciplineRegistry.java
+ com.sport.training.domain.model.DisciplineRegistry
+com/sport/training/domain/service/CounterServiceImpl.java
+ com.sport.training.domain.service.CounterServiceImpl
+com/sport/training/configuration/WebSecurityConfig.java
+ com.sport.training.configuration.WebSecurityConfig
+com/sport/training/domain/service/ShoppingCartServiceImpl.java
+ com.sport.training.domain.service.ShoppingCartServiceImpl
+com/sport/training/domain/dto/DisciplineDTO.java
+ com.sport.training.domain.dto.DisciplineDTO
+com/sport/training/domain/model/Discussion.java
+ com.sport.training.domain.model.Discussion
+com/sport/training/domain/dao/FileRepository.java
+ com.sport.training.domain.dao.FileRepository
+com/sport/training/authentication/api/AuthenticationController.java
+ com.sport.training.authentication.api.AuthenticationController
+com/sport/training/api/ShoppingCartCheckoutController.java
+ com.sport.training.api.ShoppingCartCheckoutController
+com/sport/training/domain/model/Address.java
+ com.sport.training.domain.model.Address
+com/sport/training/api/ManageUserController.java
+ com.sport.training.api.ManageUserController
+com/sport/training/domain/model/CreditRegistry.java
+ com.sport.training.domain.model.CreditRegistry
+com/sport/training/api/GestionCoachController.java
+ com.sport.training.api.GestionCoachController

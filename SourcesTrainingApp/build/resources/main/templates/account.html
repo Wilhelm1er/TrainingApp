@@ -1,0 +1,140 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
+<head>
+<th:block th:insert="layout/default.html :: header"></th:block>
+</head>
+<body>
+	<nav th:insert="layout/default.html :: navbar"></nav>
+	<div class="container">
+		<br> <br> <br>
+		<h3 th:text="#{view.account.title}">Your Account</h3>
+		<hr />
+		<br>
+			<div class="form-group">
+				<label for="username" style="text-decoration: underline;"  class="col-sm-2 control-label"
+					th:text="#{new.account.id}"></label>
+				<div class="col-sm-5">
+					<label  id="username"
+						th:text="${userDTO.username}"
+						 ></label>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="firstname"style="text-decoration: underline;"  class="col-sm-2 control-label"
+					th:text="#{new.account.firstname}">Firstname</label>
+				<div class="col-sm-5">
+					<label id="firstname"
+						th:text="${userDTO.firstname}" ></label>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="lastname" style="text-decoration: underline;" class="col-sm-2 control-label"
+					th:text="#{new.account.name}">Name</label>
+				<div class="col-sm-5">
+					<label id="lastname"
+					th:text="${userDTO.lastname}" ></label>
+				</div>
+			</div>
+
+
+
+			<div class="form-group">
+				<label for="email" style="text-decoration: underline;" class="col-sm-2 control-label"
+					th:text="#{user.email}"></label>
+				<div class="col-sm-5">
+					<label id="email"
+						th:text="${userDTO.email}" ></label>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="telephone" style="text-decoration: underline;" class="col-sm-2 control-label"
+					th:text="#{user.telephone}"></label>
+				<div class="col-sm-5">
+					<label  id="telephone"
+						th:text="${userDTO.telephone}" ></label>
+				</div>
+			</div>
+			<!-- Address -->
+			<h5 th:text="#{user.address}"></h5>
+			<div class="form-group">
+				<label for="address1" style="text-decoration: underline;" class="col-sm-2 control-label"
+					th:text="#{user.address1}"></label>
+				<div class="col-sm-5">
+					<label  id="address1"
+						th:text="${userDTO.address1}" ></label>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="address2" style="text-decoration: underline;" class="col-sm-2 control-label"
+					th:text="#{user.address2}"></label>
+				<div class="col-sm-5">
+					<label  id="address2"
+						th:text="${userDTO.address2}" ></label>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="city" style="text-decoration: underline;" class="col-sm-2 control-label"
+					th:text="#{user.city}"></label>
+				<div class="col-sm-5">
+					<label id="city" th:value="${userDTO.city}" ></label>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="state" style="text-decoration: underline;" class="col-sm-2 control-label"
+					th:text="#{user.state}"></label>
+				<div class="col-sm-5">
+					<label id="state"
+					 th:text="${userDTO.state}" ></label>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="zipcode" style="text-decoration: underline;" class="col-sm-2 control-label"
+					th:text="#{user.zipcode}"></label>
+				<div class="col-sm-5">
+					<label id="zipcode"
+						th:text="${userDTO.zipcode}" ></label>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="country" style="text-decoration: underline;" class="col-sm-2 control-label"
+					th:text="#{user.country}"></label>
+				<div class="col-sm-5">
+					<label  id="country"
+						th:text="${userDTO.country}" ></label>
+				</div>
+			</div>
+			<div class="form-group" sec:authorize="hasAnyRole('ATHLETE','COACH')">
+				<label for="statut" style="text-decoration: underline;" class="col-sm-2 control-label"
+					th:text="#{user.statut}"></label>
+				<div class="col-sm-5">
+					<label id="statut" th:text="${userDTO.statut}" ></label>
+				</div>
+			</div>
+			<div class="form-group" sec:authorize="hasAnyRole('ADMIN')">
+				<label for="statut" style="text-decoration: underline;" class="col-sm-2 control-label"
+					th:text="#{user.statut}"></label>
+				<div class="col-sm-5">
+					<label  id="statut"
+						th:text="${userDTO.statut}"></label>
+				</div>
+			</div>
+			<br>
+			
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-5">
+				<a th:href="@{'/update-account/'+${userDTO.username}}">
+					<button type="button" name="update-account-button"
+						class="btn btn-primary" th:text="#{update.account}">Apply
+						changes</button></a>
+				</div>
+			</div>
+
+		<br> <br> <br> <br>
+	
+	<th:block th:insert="layout/default.html :: footer"></th:block>
+	<th:block th:insert="layout/default.html :: scripts"></th:block>
+</body>
+</html>

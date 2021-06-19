@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
+<head th:replace="layout/default.html :: header">
+</head>
+<body>
+	<nav th:insert="layout/default.html :: navbar"></nav>
+	<br>
+	<br>
+	<br>
+	<br>
+
+
+	<br>
+	<br>
+	<br>
+	<br>
+	<div>
+		<table>
+			<tr style="border-bottom: 0.5px solid grey">
+				<td width="20%"><img th:src="@{'/img/ecran.jpg'}" /></td>
+				<td style="padding-right: 1em; padding-bottom: 0.5em"><a
+					th:href="@{'/find-event?eventId='+${eventDTO.id}}"
+					th:text="${eventDTO.name}"></a> <span
+					th:text="${eventDTO.dateTime}"></span> </td>
+					<tr th:each="userDTO : ${userDTOs}">
+
+				<td class="col-sm-2" th:text="${userDTO.username}"></td>
+							<td th:if="${userDTO.username}==${athleteDTO.username}"
+					class="col-sm-2" th:text="#{user.present}"></td>
+		</tr>
+
+		</table>
+	</div>
+
+
+
+
+		<br> <br> <br> <br>
+		<div th:insert="layout/default.html :: footer"></div>
+	
+	<div th:insert="layout/default.html :: scripts"></div>
+</body>
+</html>

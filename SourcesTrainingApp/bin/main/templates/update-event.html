@@ -11,49 +11,83 @@
 		<br>
 		<form class="form-horizontal" name="actUpdateForm" method="post"
 			th:action="@{/update-activity}" th:object="${activityDTO}">
-			<div class="form-group">
-				<label for="id" class="col-sm-2 control-label" th:text="#{sport.id}"></label>
-				<div class="col-sm-5">
-					<input th:field="${activityDTO.id}" type="text" id="id" name="id"
-						th:value="${activityDTO.id}" class="form-control" readonly />
-				</div>
-			</div>
-			<div class="form-group">
+		<div class="form-group">
 				<label for="name" class="col-sm-2 control-label"
-					th:text="#{sport.name}"></label>
+					th:text="#{events.name}"></label>
 				<div class="col-sm-5">
-					<input th:field="${activityDTO.name}" type="text" id="name"
-						name="name" class="form-control" th:value="${activityDTO.name}" />
+					<input th:field="${eventDTO.name}" type="text" id="name"
+						name="name" class="form-control" th:value="${eventDTO.name}" />
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="description" class="col-sm-2 control-label"
-					th:text="#{sport.description}"></label>
+				<label for="date" class="col-sm-6 control-label"
+					th:text="#{events.date}"></label>
 				<div class="col-sm-5">
-					<input th:field="${activityDTO.description}" type="text"
-						id="description" name="description" class="form-control"
-						th:value="${activityDTO.description}" />
+					<input type="date" id="eventDate"
+						name="eventDate" class="form-control" th:value="${eventDate}" />
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label for="time" class="col-sm-6 control-label"
+					th:text="#{events.time}"></label>
+				<div class="col-sm-5">
+					<input type="time" id="eventTime"
+						name="eventTime" class="form-control" th:value="${eventTime}" />
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="disciplineId" class="col-sm-4 control-label"
-					th:text="#{sport.disciplineId}"></label>
+				<label for="creditCost" class="col-sm-2 control-label"
+					th:text="#{events.cost}"></label>
 				<div class="col-sm-5">
-					<input th:field="${activityDTO.disciplineDTO.id}" type="text"
-						id="disciplineId" name="disciplineId" class="form-control"
-						th:value="${activityDTO.disciplineDTO.id}" readonly />
+					<input type="number" step="0.1" min="${activityDTO.creditcostMin}"
+						id="creditCost" name="creditCost"
+						max="${activityDTO.creditcostMax}"
+						th:field="${eventDTO.creditCost}"
+						th:value="${eventDTO.creditCost}" class="form-control" />
+
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="disciplineName" class="col-sm-4 control-label"
-					th:text="#{sport.disciplineName}"></label>
+				<label for="duration" class="col-sm-2 control-label"
+					th:text="#{events.duration}"></label>
 				<div class="col-sm-5">
-					<input th:field="${activityDTO.disciplineDTO.name}" type="text"
-						id="disciplineName" name="disciplineName" class="form-control"
-						th:value="${activityDTO.disciplineDTO.name}" readonly />
+					<input type="number" step="1" min="0" max="200" id="duration"
+						name="duration" th:field="${eventDTO.duration}"
+						th:value="${eventDTO.duration}" class="form-control" />
 				</div>
 			</div>
 
+			<div class="form-group">
+				<label for="description" class="col-sm-2 control-label"
+					th:text="#{events.description}"></label>
+				<div class="col-sm-5">
+					<input type="text" id="description" name="description"
+						th:field="${eventDTO.description}"
+						th:value="${eventDTO.description}" class="form-control" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="intensity" class="col-sm-2 control-label"
+					th:text="#{events.intensity}"></label>
+				<div class="col-sm-5">
+					<input type="number" step="1" min="1" max="5" id="intensity"
+						name="intensity" th:field="${eventDTO.intensity}"
+						th:value="${eventDTO.intensity}" class="form-control" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="equipment" class="col-sm-2 control-label"
+					th:text="#{events.equipment}"></label>
+				<div class="col-sm-5">
+					<input type="text" id="equipment" name="equipment"
+						th:field="${eventDTO.equipment}" th:value="${eventDTO.equipment}"
+						class="form-control" />
+				</div>
+			</div>
+
+			
+		
 			<br>
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-5">

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
+<html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="layout/default.html :: header">
 <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
 <script type="text/javascript" src="js/show.js"></script>
@@ -14,7 +13,7 @@
 		<hr />
 		<br>
 		<form class="form-horizontal" method="post" name="userForm"
-			th:action="@{/new-coach}" th:object="${userDTO}" enctype="multipart/form-data">
+			th:action="@{/new-coach}" th:object="${userDTO}">
 
 			<div class="form-group">
 				<label for="username" class="col-sm-2 control-label"

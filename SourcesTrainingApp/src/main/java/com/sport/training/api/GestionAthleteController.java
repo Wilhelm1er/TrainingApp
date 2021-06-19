@@ -47,64 +47,55 @@ public class GestionAthleteController {
 	private RegistryService registryService;
 
 	@GetMapping(path = "/bookmark")
-	public String showBookmark(Model model, @RequestParam String coachId, Authentication authentication)
+	public String showBookmark(Model model, Authentication authentication)
 			throws CreateException {
 		final String mname = "showBookmark";
 		LOGGER.debug("entering " + mname);
 
 		UserDTO athleteDTO = null;
-		UserDTO coachDTO;
-		System.out.println("coachID: " + coachId);
 		List<BookmarkDTO> bookmarkDTOs = new ArrayList<BookmarkDTO>();
 
 		try {
 			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 			athleteDTO = userService.findUser(userDetails.getUsername());
 			bookmarkDTOs = coachService.findBookmarksByAthlete(athleteDTO.getUsername());
-			if (coachId != null) {
-				coachDTO = userService.findUser(coachId);
-				if (bookmarkDTOs.isEmpty()) {
-					coachService.createBookmark(new BookmarkDTO(athleteDTO, coachDTO));
-				}
-				for (BookmarkDTO bookmark : bookmarkDTOs) {
-					if (bookmark.getCoachDTO() == null) {
-						coachService.createBookmark(new BookmarkDTO(athleteDTO, coachDTO));
-					}
-				}
-				model.addAttribute("bookmarkDTOs", bookmarkDTOs);
-			}
+			
+			model.addAttribute("bookmarkDTOs", bookmarkDTOs);
 		} catch (FinderException e) {
 			LOGGER.error("exception in " + mname + " : " + e.getMessage());
-			model.addAttribute("exception", e.getClass().getName());
+			model.addAttribute("exception", e.getMessage());
 			return "error";
 		}
 
-		return "index";
+		return "bookmark";
 	}
+	@GetMapping(path = "/add-bookmark/{coachId}")
+	public String addBookmark(Model model, @PathVariable(value= "coachId") String coachId, Authentication authentication)
+			throws CreateException {
+		final String mname = "addBookmark";
+		LOGGER.debug("entering " + mname);
 
-	/*
-	 * @PostMapping(path = "/bookmark") public String addBookmark(Model
-	 * model, @Valid @ModelAttribute("coachDTO") UserDTO coachDTO, Authentication
-	 * authentication) throws CreateException { final String mname = "addBookmark";
-	 * LOGGER.debug("entering " + mname);
-	 * 
-	 * List<BookmarkDTO> bookmarkDTOs = null; UserDTO userDTO;
-	 * 
-	 * System.out.println("coach: " + coachDTO);
-	 * 
-	 * try { UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-	 * userDTO = userService.findUser(userDetails.getUsername()); bookmarkDTOs =
-	 * coachService.findBookmarksByAthlete(userDetails.getUsername()); for
-	 * (BookmarkDTO bookmark : bookmarkDTOs) { if (bookmark.getCoachDTO() == null) {
-	 * coachService.createBookmark(new BookmarkDTO(userDTO, coachDTO)); } }
-	 * 
-	 * } catch (FinderException e) { LOGGER.error("exception in " + mname + " : " +
-	 * e.getMessage()); model.addAttribute("exception", e.getClass().getName());
-	 * return "error"; } model.addAttribute("userDTO", userDTO);
-	 * model.addAttribute("bookmarkDTOs", bookmarkDTOs);
-	 * 
-	 * return "bookmark"; }
-	 */
+		UserDTO athleteDTO = null;
+		UserDTO coachDTO;
+		System.out.println("coachID: " + coachId);
+
+		try {
+			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+			athleteDTO = userService.findUser(userDetails.getUsername());
+			
+				coachDTO = userService.findUser(coachId);
+				
+					coachService.createBookmark(new BookmarkDTO(athleteDTO, coachDTO));
+				
+			
+		} catch (FinderException e) {
+			LOGGER.error("exception in " + mname + " : " + e.getMessage());
+			model.addAttribute("exception", e.getMessage());
+			return "error";
+		}
+
+		return "bookmark";
+	}
 
 	@GetMapping(path = "/athlete-events/{username}")
 	public String showEventsByAthlete(Model model, @PathVariable String username) {
@@ -124,7 +115,7 @@ public class GestionAthleteController {
 			}
 		} catch (FinderException e) {
 			LOGGER.error("exception in " + mname + " : " + e.getMessage());
-			model.addAttribute("exception", e.getClass().getName());
+			model.addAttribute("exception", e.getMessage());
 			return "error";
 		}
 		model.addAttribute("eventDTOs", eventDTOs);
@@ -148,7 +139,7 @@ public class GestionAthleteController {
 		UserDTO athleteDTO;
 		EventRegistryDTO eventReg;
 		EventDTO eventDTO = null;
-		int newSolde;
+		Double newSolde;
 		try {
 			athleteDTO = userService.findUser(username);
 			eventReg = registryService.findEventRegistryByAthleteAndEvent(userDetails.getUsername(), eventId);
@@ -160,7 +151,7 @@ public class GestionAthleteController {
 
 		} catch (FinderException e) {
 			LOGGER.error("exception in " + mname + " : " + e.getMessage());
-			model.addAttribute("exception", e.getClass().getName());
+			model.addAttribute("exception", e.getMessage());
 			return "error";
 		}
 		LOGGER.debug("exiting " + mname);
@@ -190,7 +181,7 @@ public class GestionAthleteController {
 
 		} catch (FinderException e) {
 			LOGGER.error("exception in " + mname + " : " + e.getMessage());
-			model.addAttribute("exception", e.getClass().getName());
+			model.addAttribute("exception", e.getMessage());
 			return "error";
 		}
 		model.addAttribute("athleteDTO", athleteDTO);

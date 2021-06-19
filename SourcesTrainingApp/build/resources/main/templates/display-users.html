@@ -1,51 +1,69 @@
-<!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-<th:block th:insert="layout/default.html :: headerfiles"></th:block>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
+<head th:replace="layout/default.html :: header">
 </head>
 <body>
 	<nav th:insert="layout/default.html :: navbar"></nav>
 	<div class="container">
 		<br> <br> <br> <br>
-		<div class="container"
-			sec:authorize="hasAnyRole('ADMIN','FRANCHISEE')">
-			<div th:if="${customerDTOs} !=null">
-				<h3 th:text="#{customers.list}"></h3>
+		<div class="container" sec:authorize="hasAnyRole('ADMIN')">
+			<div th:if="${athleteDTOs} !=null">
+				<h3 th:text="#{athletes.list}"></h3>
 				<br>
 				<div class="row justify-content-start">
 					<table>
 						<tr>
-							<th class="col-sm-2" th:text="#{login.username}"></th>
+							<th class="col-sm-2" th:text="#{login.id}"></th>
 							<th class="col-sm-2" th:text="#{new.account.firstname}"></th>
 							<th class="col-sm-2" th:text="#{new.account.name}"></th>
-							<th class="col-sm-3" th:text="#{customer.email}"></th>
+							<th class="col-sm-3" th:text="#{user.email}"></th>
+							<th class="col-sm-3" th:text="#{user.statut}"></th>
 						</tr>
-						<tr th:each="customer : ${customerDTOs}">
-							<td class="col-sm-2" th:text="${customer.username}"></td>
-							<td class="col-sm-2" th:text="${customer.firstname}"></td>
-							<td class="col-sm-2" th:text="${customer.lastname}"></td>
-							<td class="col-sm-3" th:text="${customer.email}"></td>
+						<tr th:each="athlete : ${athleteDTOs}">
+							<td class="col-sm-2" th:text="${athlete.username}"></td>
+							<td class="col-sm-2" th:text="${athlete.firstname}"></td>
+							<td class="col-sm-2" th:text="${athlete.lastname}"></td>
+							<td class="col-sm-3" th:text="${athlete.email}"></td>
+							<td class="col-sm-3" th:text="${athlete.statut}"></td>
+							<td><a th:href="@{'/update-account/'+${athlete.username}}">
+									<button type="button" class="btn btn-sm btn-outline-secondary">Modifier</button>
+							</a></td>
 						</tr>
 					</table>
 				</div>
 			</div>
-			<div th:if="${franchiseeDTOs} !=null">
+			<div th:if="${coachDTOs} !=null">
 
-				<h3 th:text="#{franchisees.list}"></h3>
+				<h3 th:text="#{coachs.list}"></h3>
 				<br>
 				<div class="row justify-content-start">
 					<table>
 						<tr>
-							<th class="col-sm-2" th:text="#{login.username}"></th>
+							<th class="col-sm-2" th:text="#{login.id}"></th>
 							<th class="col-sm-2" th:text="#{new.account.firstname}"></th>
 							<th class="col-sm-2" th:text="#{new.account.name}"></th>
-							<th class="col-sm-3" th:text="#{customer.email}"></th>
+							<th class="col-sm-3" th:text="#{user.email}"></th>
+							<th class="col-sm-3" th:text="#{user.statut}"></th>
+
 						</tr>
-						<tr th:each="franchisee : ${franchiseeDTOs}">
-							<td class="col-sm-2" th:text="${franchisee.username}"></td>
-							<td class="col-sm-2" th:text="${franchisee.firstname}"></td>
-							<td class="col-sm-2" th:text="${franchisee.lastname}"></td>
-							<td class="col-sm-3" th:text="${franchisee.email}"></td>
+						<tr th:each="coach : ${coachDTOs}">
+							<td><a class="col-sm-2"
+								th:href="@{'/find-events/'+${coach.username}}"
+								th:text="${coach.username}" sec:authorize="isAuthenticated()"></a></td>
+							<td class="col-sm-2" th:text="${coach.firstname}"></td>
+							<td class="col-sm-2" th:text="${coach.lastname}"></td>
+							<td class="col-sm-3" th:text="${coach.email}"></td>
+							<td class="col-sm-3" th:text="${coach.statut}"></td>
+							<td><a th:href="@{'/update-account/'+${coach.username}}">
+									<button type="button" class="btn btn-sm btn-outline-secondary">Modifier</button>
+							</a></td>
+							<td><a th:href="@{'/discussion/'+${coach.username}}">
+									<button type="button" class="btn btn-sm btn-outline-secondary">Discussions</button>
+							</a></td>
+							<td><a th:href="@{'/documents/'+${coach.username}}">
+									<button type="button" class="btn btn-sm btn-outline-secondary">Documents</button>
+							</a></td>
 						</tr>
 					</table>
 				</div>
@@ -55,7 +73,6 @@
 		<br> <br> <br> <br> <br>
 		<div th:insert="layout/default.html :: footer"></div>
 	</div>
-	<nav th:insert="layout/default.html :: footernavbar"></nav>
 	<div th:insert="layout/default.html :: scripts"></div>
 </body>
 </html>

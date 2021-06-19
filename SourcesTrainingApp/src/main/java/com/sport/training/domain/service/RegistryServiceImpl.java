@@ -283,7 +283,43 @@ public class RegistryServiceImpl implements RegistryService {
 		LOGGER.debug("exiting " + mname);
 		return disciplineDTOs;
 	}
+	@Override
+	@Transactional(readOnly = true)
+	public List<DisciplineDTO> findDisciplineOkByCoach(String coachId) throws FinderException {
+		final String mname = "findDisciplineOkByCoach";
+		LOGGER.debug("entering " + mname);
 
+		checkStringId(coachId);
+
+		User coach = null;
+		if (!userRepository.findById(coachId).isPresent())
+			throw new FinderException("Coach must exist to be found");
+		else
+			coach = userRepository.findById(coachId).get();
+
+		// Finds all the objects
+		final Iterable<DisciplineRegistry> disciplineRegistriesByDiscipline = disciplineRegistryRepository
+				.findAllByCoach(coach);
+
+		int size;
+		if ((size = ((Collection<DisciplineRegistry>) disciplineRegistriesByDiscipline).size()) == 0) {
+			throw new FinderException("No Discipline in the database for this coach");
+		}
+
+		List<Discipline> disciplineList = new ArrayList<Discipline>();
+
+		for (DisciplineRegistry discReg : disciplineRegistriesByDiscipline) {
+			if (discReg.getDocStatut().equals("ok")) {
+				disciplineList.add(discReg.getDiscipline());
+			}
+		}
+
+		List<DisciplineDTO> disciplineDTOs = (disciplineList).stream()
+				.map(discipline -> commonModelMapper.map(discipline, DisciplineDTO.class)).collect(Collectors.toList());
+
+		LOGGER.debug("exiting " + mname);
+		return disciplineDTOs;
+	}
 	@Override
 	@Transactional(readOnly = true)
 	public List<DisciplineDTO> findDisciplineToCheckByCoach(String coachId) throws FinderException {

@@ -59,7 +59,7 @@ public class ShoppingCartCheckoutController {
 		String username = userDetails.getUsername();
 		UserDTO athleteDTO;
 		CreditRegistryDTO creditRegistryDTO;
-		int newSolde;
+		Double newSolde;
 		try {
 
 			athleteDTO = userService.findUser(username);

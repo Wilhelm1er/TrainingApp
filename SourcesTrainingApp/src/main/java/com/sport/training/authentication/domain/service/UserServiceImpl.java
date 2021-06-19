@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 		
-		// make sure that coach has a discipline
+		// set Statut by default for coach and athlete
 		if (user.getRole().getId() ==  2 || user.getRole().getName() == "ROLE_COACH") {
 				user.setStatut("INVALIDE");
 			} 
@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService {
 			
 			user.setStatut("VALIDE");
 		} 
-
+	
 		// Creates the object
 		userRepository.save(user);
 

@@ -16,8 +16,8 @@ public class ActivityDTO implements Serializable {
 	private String id;
 	private String name;
 	private String description;
-	private int creditcostMin;
-	private int creditcostMax;
+	private Double creditcostMin;
+	private Double creditcostMax;
 	private DisciplineDTO disciplineDTO;
 
 	// ======================================
@@ -64,19 +64,19 @@ public class ActivityDTO implements Serializable {
 		this.description = documents;
 	}
 
-	public int getCreditcostMin() {
+	public Double getCreditcostMin() {
 		return creditcostMin;
 	}
 
-	public void setCreditcostMin(int creditcostMin) {
+	public void setCreditcostMin(Double creditcostMin) {
 		this.creditcostMin = creditcostMin;
 	}
 
-	public int getCreditcostMax() {
+	public Double getCreditcostMax() {
 		return creditcostMax;
 	}
 
-	public void setCreditcostMax(int creditcostMax) {
+	public void setCreditcostMax(Double creditcostMax) {
 		this.creditcostMax = creditcostMax;
 	}
 

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
+<head th:replace="layout/default.html :: header">
+</head>
+<body>
+	<nav th:insert="layout/default.html :: navbar"></nav>
+	
+	
+	<div class="album py-5 bg-light">
+			<div class="container">
+			<br>
+				<h3 th:text="#{events.listAthlete}"></h3>
+				
+					<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+					<div th:each="eventDTO : ${eventDTOs}">
+						<div class="col">
+						
+							<div class="card shadow-sm">
+
+								<div class="card-body">
+									<a th:href="@{'/find-event?eventId='+${eventDTO.id}}"
+										th:text="${eventDTO.name}"></a>
+									<p th:text="#{events.activity}+' '+${eventDTO.activityDTO.name}"></p>
+									<p th:text="#{events.coach}+' '+${eventDTO.coachDTO.username}"></p>
+									<p th:text="#{events.dateTime}+' '+${eventDTO.dateTime}"></p>
+									<p th:text="#{events.description}+' '+${eventDTO.description}"></p>
+									<p th:text="#{events.duration}+' '+${eventDTO.duration}"></p>
+									<p
+										th:text="#{events.intensity}+' '+${eventDTO.intensity}+' /5'"></p>
+									<p th:text="#{events.equipment}+' '+${eventDTO.equipment}"></p>
+
+									<p th:text="#{events.cost}"></p>
+									<span th:text="${eventDTO.creditCost}+' crédits'"></span>
+									<div class="d-flex justify-content-between align-items-center">
+										<div th:if="${eventDTO.voidable}==0" sec:authorize="hasRole('ATHLETE')">
+											<a
+												th:href="@{'/cancel-event/'+${eventDTO.id}}"
+												th:text="#{events.cancel}"></a>
+										</div>
+									</div>
+									
+									<div class="d-flex justify-content-between align-items-center">
+										<div th:if="${eventDTO.voidable}==1" sec:authorize="hasRole('ATHLETE')">
+											<a
+												th:href="@{'/display-event/'+${eventDTO.id}}"
+												th:text="#{events.display}"></a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div></div>
+	
+	
+	
+	
+	
+	
+	
+	
+	<br>
+	<br>
+	<br>
+	<div th:insert="layout/default.html :: footer"></div>
+
+	<div th:insert="layout/default.html :: scripts"></div>
+</body>
+</html>

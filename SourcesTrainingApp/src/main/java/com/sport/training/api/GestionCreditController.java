@@ -90,7 +90,7 @@ public class GestionCreditController {
 	}
 
 	@PostMapping(path = "/add-credit")
-	public String addCredit(@Valid @ModelAttribute UserDTO userDTO, @Valid @ModelAttribute int addCredit, Model model) {
+	public String addCredit(@Valid @ModelAttribute UserDTO userDTO, @Valid @ModelAttribute Double addCredit, Model model) {
 		final String mname = "addCredit";
 		LOGGER.debug("entering " + mname);
 		try {
@@ -110,7 +110,7 @@ public class GestionCreditController {
 	}
 
 	@PostMapping(path = "/withdraw-credit")
-	public String withdrawCredit(@Valid @ModelAttribute UserDTO userDTO, @Valid @ModelAttribute int withdrawCredit,
+	public String withdrawCredit(@Valid @ModelAttribute UserDTO userDTO, @Valid @ModelAttribute Double withdrawCredit,
 			Model model) {
 		final String mname = "withdrawCredit";
 		LOGGER.debug("entering " + mname);

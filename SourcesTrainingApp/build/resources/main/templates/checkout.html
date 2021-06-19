@@ -1,25 +1,31 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-<th:block th:insert="layout/default.html :: headerfiles"></th:block>
+<head th:replace="layout/default.html :: header">
 </head>
 <body>
 	<nav th:insert="layout/default.html :: navbar"></nav>
-	<div class="container">
-		<br> <br> <br> <br>
-		<h3 th:text="#{order.complete}"></h3>
-		<br>
+<div class="container">
+<br><br><br><br>
+	<h3 th:text="#{order.complete}"></h3>
+	<br>
 
-		<p th:text="#{order.id}+' '+${orderId}" style="font-weight: bold" />
-		<p th:text="#{Thanks.for.shopping}" />
 
-		<br>
-		<div th:insert="layout/default.html :: footer"></div>
-	</div>
+
+
+	<p th:text="#{Thanks.for.shopping}" />
+	<p th:text="#{cart.newSolde}+${athleteCredit}" />
+	
+	<a th:href="@{'/athlete-events/'+${#authentication.getPrincipal().getUsername()}}"
+							th:text="#{menu.sessions}"></a>
+
+
+</div>
 	<br>
 	<br>
 	<br>
-	<nav th:insert="layout/default.html :: footernavbar"></nav>
+	<br>
+	<div th:insert="layout/default.html :: footer"></div>
+
 	<div th:insert="layout/default.html :: scripts"></div>
 </body>
 </html>

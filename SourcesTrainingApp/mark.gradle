@@ -19,6 +19,16 @@ flyway {
     password = dbPassword
 }
 
+task myTest(type: JavaExec){
+  dependsOn compileJava
+  dependsOn compileTestJava
+  group = 'verification'
+  description = 'Runs the unit tests in text mode.'
+  main = "AllTests"
+  classpath files([ "${buildDir}/classes/java/main", "${buildDir}/classes/java/test" ])
+  classpath sourceSets.test.runtimeClasspath // required to find JUnit
+}
+
 task zip_src {
   
 }

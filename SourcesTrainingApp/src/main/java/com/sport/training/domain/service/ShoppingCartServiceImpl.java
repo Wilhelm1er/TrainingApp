@@ -87,8 +87,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 	}
 
 	@Override
-	public int getTotal() {
-		int total = 0;
+	public Double getTotal() {
+		Double total = 0.0;
 		Collection<ShoppingCartEventDTO> cartEvents = getEvents();
 		Iterator<ShoppingCartEventDTO> it = cartEvents.iterator();
 		while (it.hasNext()) {

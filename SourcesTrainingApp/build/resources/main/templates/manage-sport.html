@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
+<head th:replace="layout/default.html :: header">
+</head>
+<body>
+	<nav th:insert="layout/default.html :: navbar"></nav>
+	<br>
+	<br>
+	<br>
+	<br>
+	<div class="container" sec:authorize="hasRole('ADMIN')">
+		<h3 th:text=#{manage.sport}></h3>
+
+		<!-- ---------------------------------------------------- DISCIPLINE ---------------------------------------------------- -->
+		<div th:if="${disciplineDTOs !=null}">
+			<div th:if="${disciplineDeleted != null}">
+				<h4 class="alert alert-success"
+					th:text="${disciplineDeleted}+' '+#{sport.deleted}"></h4>
+			</div>
+			<div th:if="${disciplineUpdated != null}">
+				<h4 class="alert alert-success"
+					th:text="${disciplineUpdated}+' '+#{sport.updated}"></h4>
+			</div>
+			<div th:if="${activityDeleted != null}">
+				<h4 class="alert alert-success"
+					th:text="${activityDeleted}+' '+#{sport.deleted}"></h4>
+			</div>
+			<div th:if="${activityUpdated != null}">
+				<h4 class="alert alert-success"
+					th:text="${activityUpdated}+' '+#{sport.updated}"></h4>
+			</div>
+
+			<h3 th:text="#{discipline.list}"></h3>
+			<br>
+			<div class="row justify-content-start">
+				<table>
+					<tr class="bg-light">
+						<th class="col-sm-1" th:text="#{sport.id}"></th>
+						<th class="col-sm-3" th:text="#{sport.name}"></th>
+						<th class="col-sm-1"></th>
+						<th class="col-sm-1"></th>
+					</tr>
+					<tr th:if="${disciplineDTOs.size()>0}"
+						th:each="disciplineDTO: ${disciplineDTOs}">
+						<td class="col-sm-1"><a
+							th:href="@{'/manage-activities/'+${disciplineDTO.id}}"
+							th:text="${disciplineDTO.id}"></a></td>
+						<td class="col-sm-3" th:text="${disciplineDTO.name}"></td>
+
+						<th class="col-sm-1"><a class="btn btn-primary"
+							th:href="@{'/create-activity/'+${disciplineDTO.id}}"
+							th:text="#{sport.create}"></a></th>
+
+						<th class="col-sm-1"><a class="btn btn-primary"
+							th:href="@{'/update-discipline/'+${disciplineDTO.id}}"
+							th:text="#{sport.update}"></a></th>
+
+						<th class="col-sm-1"><a class="btn btn-primary"
+							th:href="@{'/delete-discipline/'+${disciplineDTO.id}}"
+							th:text="#{sport.delete}"></a></th>
+					</tr>
+					<tr th:if="${disciplineDTOs.size()==0}">
+						<td class="col-sm-7" th:text=#{discipline.empty}></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<!-- ---------------------------------------------------- ACTIVITY ---------------------------------------------------- -->
+
+		<div th:if="${activityDTOs !=null}">
+			<h3 th:text="#{activity.list}"></h3>
+			<br>
+			<div class="row justify-content-start">
+				<table>
+					<tr class="bg-light">
+						<th class="col-sm-1" th:text="#{sport.id}"></th>
+						<th class="col-sm-3" th:text="#{sport.name}"></th>
+						<th class="col-sm-1"></th>
+						<th class="col-sm-1"></th>
+					</tr>
+					<tr th:if="${activityDTOs.size()>0}"
+						th:each="activityDTO: ${activityDTOs}">
+						<td class="col-sm-1"><a th:text="${activityDTO.id}"></a></td>
+						<td class="col-sm-3" th:text="${activityDTO.name}"></td>
+						<th class="col-sm-1"><a class="btn btn-primary"
+							th:href="@{'/update-activity/'+${activityDTO.id}}"
+							th:text="#{sport.update}"></a></th>
+						<th class="col-sm-1"><a class="btn btn-primary"
+							th:href="@{'/delete-activity/'+${activityDTO.id}}"
+							th:text="#{sport.delete}"></a></th>
+					</tr>
+					<tr th:if="${activityDTOs.size()==0}">
+						<td class="col-sm-7" th:text=#{activity.empty}></td>
+					</tr>
+				</table>
+			</div>
+
+
+
+		</div>
+
+		<br> <br> <br> <br>
+		<div th:insert="layout/default.html :: footer"></div>
+	</div>
+	<div th:insert="layout/default.html :: scripts"></div>
+</body>
+</html>

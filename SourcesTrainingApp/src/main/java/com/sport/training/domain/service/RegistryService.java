@@ -39,6 +39,9 @@ public interface RegistryService {
 	public List<DisciplineDTO> findDisciplinesByCoach(String coachId) throws FinderException;
 
 	public List<DisciplineDTO> findDisciplineToCheckByCoach(String coachId) throws FinderException;
+	
+	public List<DisciplineDTO> findDisciplineOkByCoach(String coachId) throws FinderException;
+	
 
 	// ======================================
 	// = EventRegistry Business methods =
@@ -74,5 +77,7 @@ public interface RegistryService {
 	public List<CreditRegistryDTO> findCreditRegistries() throws FinderException;
 
 	public Map<Date, Integer> findDateAndCreditByUser(final String userId) throws FinderException;
+
+
 
 }

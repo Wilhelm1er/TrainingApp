@@ -13,6 +13,10 @@ import com.sport.training.domain.model.Activity;
 public interface EventRepository extends CrudRepository<Event, Long> {
 
 	Iterable<Event> findAllByActivity(Activity activity);
+	
+	void deleteByName(String name);
+	
+	Event findByName(String name);
 
 	@Query("select distinct e from Event e where upper(e.id) like upper(concat('%', :keyword,'%')) or upper(e.name) like upper(concat('%', :keyword,'%'))")
 	Iterable<Event> findByIdOrNameContaining(@Param("keyword") String keyword);

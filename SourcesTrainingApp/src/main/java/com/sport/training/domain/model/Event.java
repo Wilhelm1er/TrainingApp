@@ -2,8 +2,8 @@ package com.sport.training.domain.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,6 +16,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+
+import org.hibernate.annotations.Cascade;
 
 import com.sport.training.authentication.domain.model.User;
 
@@ -44,7 +46,7 @@ public class Event implements Serializable {
 
 	@Column(name = "CREDITCOST")
 	@Positive(message = "invalid Creditcost")
-	private int creditCost;
+	private Double creditCost;
 
 	@Column(name = "DURATION")
 	@Positive(message = "invalid Duration")
@@ -52,7 +54,7 @@ public class Event implements Serializable {
 
 	@Column(name = "DESCRIPTION")
 	private String description;
-
+ 
 	@Column(name = "INTENSITY")
 	private int intensity;
 
@@ -78,7 +80,7 @@ public class Event implements Serializable {
 	public Event() {
 	}
 
-	public Event(final String name, final LocalDateTime datetime, final Date time, final int creditCost,
+	public Event(final String name, final LocalDateTime datetime, final Double creditCost,
 			final User coach, final Activity activity) {
 		setVoidable(0);
 		setName(name);
@@ -124,11 +126,11 @@ public class Event implements Serializable {
 		this.voidable = voidable;
 	}
 
-	public int getCreditCost() {
+	public Double getCreditCost() {
 		return creditCost;
 	}
 
-	public void setCreditCost(int creditCost) {
+	public void setCreditCost(Double creditCost) {
 		this.creditCost = creditCost;
 	}
 
