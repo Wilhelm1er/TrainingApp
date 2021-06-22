@@ -49,13 +49,13 @@ public class DisciplineRestTestClient {
 				.andExpect(status().isOk()).andReturn();
 		assertTrue(result.getResponse().getContentAsString().contains("BOXE"));
 		assertTrue(result.getResponse().getContentAsString().contains(
-				"Any of the class Aves of warm-blooded, egg-laying, feathered vertebrates with forelimbs modified to form wings"));
-		assertTrue(result.getResponse().getContentAsString().contains("CATS"));
-		assertTrue(result.getResponse().getContentAsString().contains("DOGS"));
-		assertTrue(result.getResponse().getContentAsString().contains("FISH"));
-		assertTrue(result.getResponse().getContentAsString().contains("REPTILES"));
+				"Renforcement du corps, canaliser son énergie et se surpasser"));
+		assertTrue(result.getResponse().getContentAsString().contains("CARDIO"));
+		assertTrue(result.getResponse().getContentAsString().contains("DANSE"));
+		assertTrue(result.getResponse().getContentAsString().contains("YOGA"));
+		assertTrue(result.getResponse().getContentAsString().contains("GYM"));
 		assertTrue(result.getResponse().getContentAsString().contains(
-				"Any of various cold-blooded, usually egg-laying vertebrates, such as a snake, lizard, crocodile, turtle"));
+				"Entretenez votre forme physique par des assouplissements, des etirements et des exercices de tonicite musculaire"));
 	}
 
 	@Test
@@ -65,24 +65,24 @@ public class DisciplineRestTestClient {
 				.andExpect(status().isOk()).andReturn();
 		assertTrue(result.getResponse().getContentAsString().contains("BOXE"));
 		assertTrue(result.getResponse().getContentAsString().contains(
-				"Any of the class Aves of warm-blooded, egg-laying, feathered vertebrates with forelimbs modified to form wings"));
-		assertFalse(result.getResponse().getContentAsString().contains("CATS"));
-		assertFalse(result.getResponse().getContentAsString().contains("DOGS"));
-		assertFalse(result.getResponse().getContentAsString().contains("FISH"));
-		assertFalse(result.getResponse().getContentAsString().contains("REPTILES"));
-		assertFalse(result.getResponse().getContentAsString().contains(
-				"Any of various cold-blooded, usually egg-laying vertebrates, such as a snake, lizard, crocodile, turtle"));
+				"Renforcement du corps, canaliser son énergie et se surpasser"));
+		assertTrue(result.getResponse().getContentAsString().contains("CARDIO"));
+		assertTrue(result.getResponse().getContentAsString().contains("DANSE"));
+		assertTrue(result.getResponse().getContentAsString().contains("YOGA"));
+		assertTrue(result.getResponse().getContentAsString().contains("GYM"));
+		assertTrue(result.getResponse().getContentAsString().contains(
+				"Entretenez votre forme physique par des assouplissements, des etirements et des exercices de tonicite musculaire"));
 	}
 
 	@Test
-	public void tesRestShowCategoryByUnknownCategoryId() throws Exception {
+	public void tesRestShowDisciplineByUnknownDisciplineId() throws Exception {
 		mockMvc.perform(
-				get("/discipline/BOXE").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+				get("/discipline/BOXXE").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNotFound());
 	}
 
 	@Test
-	@WithMockUser(username = "MrRobot", password = "cnam", roles = "ADMIN")
+	@WithMockUser(username = "root", password = "cnam", roles = "ADMIN")
 	public void testRestUpdateDiscipline() throws Exception {
 		DisciplineDTO boxe = sp.findDiscipline("BOXE");
 		boxe.setName("Boxe");
@@ -90,8 +90,8 @@ public class DisciplineRestTestClient {
 		MvcResult result = mockMvc.perform(put("/discipline/BOXE").with(csrf()).contentType(MediaType.APPLICATION_JSON)
 				.content(json).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
 		assertTrue(result.getResponse().getContentAsString().equals(
-				"{\"id\":\"BOXE\",\"name\":\"Boxe\",\"description\":\"Renforcement du corps, canaliser son énergie et se surpasser\"}"));
-	}
+				"{\"id\":\"BOXE\",\"name\":\"Boxe\",\"description\":\"Renforcement du corps, canaliser son énergie et se surpasser\",\"documents\":\"Brevet d Etat AGFF - Activites Gymniques de la Forme et de la Force\"}"));
+		}
 
 	@Test
 	public void testRestUpdateDisciplineNotAuthenticated() throws Exception {
@@ -104,7 +104,7 @@ public class DisciplineRestTestClient {
 	}
 
 	@Test
-	@WithMockUser(username = "MrRobot", password = "cnam", roles = "ADMIN")
+	@WithMockUser(username = "root", password = "cnam", roles = "ADMIN")
 	public void testRestUpdateDisciplineWithWrongId1() throws Exception {
 		DisciplineDTO boxe = sp.findDiscipline("BOXE");
 		boxe.setName("BOXXE");
@@ -114,7 +114,7 @@ public class DisciplineRestTestClient {
 	}
 
 	@Test
-	@WithMockUser(username = "MrRobot", password = "cnam", roles = "ADMIN")
+	@WithMockUser(username = "root", password = "cnam", roles = "ADMIN")
 	public void testRestUpdateDisciplineWithWrongId2() throws Exception {
 		DisciplineDTO boxe = sp.findDiscipline("BOXE");
 		boxe.setId("BOXXE");
@@ -124,7 +124,7 @@ public class DisciplineRestTestClient {
 	}
 
 	@Test
-	@WithMockUser(username = "MrRobot", password = "cnam", roles = "ADMIN")
+	@WithMockUser(username = "root", password = "cnam", roles = "ADMIN")
 	public void testRestUpdateDisciplineWithNullId() throws Exception {
 		DisciplineDTO boxe = sp.findDiscipline("BOXE");
 		boxe.setId(null);
@@ -134,15 +134,15 @@ public class DisciplineRestTestClient {
 	}
 
 	@Test
-	@WithMockUser(username = "MrRobot", password = "cnam", roles = "ADMIN")
-	public void testRestCreateCategory() throws Exception {
+	@WithMockUser(username = "root", password = "cnam", roles = "ADMIN")
+	public void testRestCreateDiscipline() throws Exception {
 		DisciplineDTO boxe = sp.findDiscipline("BOXE");
 		boxe.setId("BOXXE");
 		String json = objectMapper.writeValueAsString(boxe);
-		MvcResult result = mockMvc.perform(post("/category").with(csrf()).contentType(MediaType.APPLICATION_JSON)
+		MvcResult result = mockMvc.perform(post("/discipline").with(csrf()).contentType(MediaType.APPLICATION_JSON)
 				.content(json).accept(MediaType.APPLICATION_JSON)).andExpect(status().isCreated()).andReturn();
 		assertTrue(result.getResponse().getContentAsString().equals(
-				"{\"id\":\"BOXE\",\"name\":\"Boxe\",\"description\":\"Renforcement du corps, canaliser son énergie et se surpasser\"}"));
+				"{\"id\":\"BOXXE\",\"name\":\"Boxe\",\"description\":\"Renforcement du corps, canaliser son énergie et se surpasser\",\"documents\":\"Brevet d Etat AGFF - Activites Gymniques de la Forme et de la Force\"}"));
 	}
 
 	@Test
@@ -157,7 +157,7 @@ public class DisciplineRestTestClient {
 	}
 
 	@Test
-	@WithMockUser(username = "MrRobot", password = "cnam", roles = "ADMIN")
+	@WithMockUser(username = "root", password = "cnam", roles = "ADMIN")
 	public void testRestCreateInvalidDiscipline() throws Exception {
 		DisciplineDTO boxe = sp.findDiscipline("BOXE");
 		boxe.setId(null);
@@ -167,7 +167,7 @@ public class DisciplineRestTestClient {
 	}
 
 	@Test
-	@WithMockUser(username = "MrRobot", password = "cnam", roles = "ADMIN")
+	@WithMockUser(username = "root", password = "cnam", roles = "ADMIN")
 	public void testRestDeleteDiscipline() throws Exception {
 		MvcResult result = mockMvc.perform(delete("/discipline/BOXE").with(csrf())
 				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
@@ -180,7 +180,7 @@ public class DisciplineRestTestClient {
 	}
 
 	@Test
-	@WithMockUser(username = "MrRobot", password = "cnam", roles = "ADMIN")
+	@WithMockUser(username = "root", password = "cnam", roles = "ADMIN")
 	public void testRestFailedDeleteDiscipline() throws Exception {
 		MvcResult result = mockMvc.perform(delete("/discipline/BOXE") // No such category
 				.with(csrf()).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))

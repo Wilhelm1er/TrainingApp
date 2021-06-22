@@ -35,7 +35,7 @@ public class ManageDisciplineController {
 	@Autowired
 	private WebClient webClient;
 
-	@GetMapping("/manage-disciplines")
+	@GetMapping("/manage-sports")
 	public String manageDisciplines(Model model) {
 		final String mname = "manageDisciplines";
 		LOGGER.debug("entering " + mname);

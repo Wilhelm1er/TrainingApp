@@ -14,6 +14,8 @@ public interface MessageRepository extends CrudRepository<Message, Long> {
 	Message findBySenderAndRecipient(User sender, User recipient);
 
 	Iterable<Message> findAllByDiscussion(Discussion discussion);
+	
+	Iterable<Message> findAllBySender(User sender);
 
 	@Query("select MAX(id) from Event e")
 	public Optional<Long> findLastId();

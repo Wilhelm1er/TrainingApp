@@ -47,20 +47,20 @@ public class ActivityRestTestClient {
 		MvcResult result = mockMvc
 				.perform(get("/activities").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk()).andReturn();
+		assertTrue(result.getResponse().getContentAsString().contains("BODY"));
+		assertTrue(result.getResponse().getContentAsString().contains("Bodysculpt"));
+		assertTrue(result.getResponse().getContentAsString().contains("Tonifier sa silhouette, decharger son stress et perdre du poids"));
+		assertTrue(result.getResponse().getContentAsString().contains("BOXE"));
+		assertTrue(result.getResponse().getContentAsString().contains("Boxe"));
+		assertTrue(result.getResponse().getContentAsString().contains(
+				"Renforcement du corps, canaliser son énergie et se surpasser"));
 		assertTrue(result.getResponse().getContentAsString().contains("ABDOS"));
-		assertTrue(result.getResponse().getContentAsString().contains("Amazon Parrot"));
-		assertTrue(result.getResponse().getContentAsString().contains("Great companion for up to 75 years"));
-		assertTrue(result.getResponse().getContentAsString().contains("BIRDS"));
-		assertTrue(result.getResponse().getContentAsString().contains("Birds"));
+		assertTrue(result.getResponse().getContentAsString().contains("Abdominaux"));
+		assertTrue(result.getResponse().getContentAsString().contains("Permet de travailler l ensemble des muscles de la sangle abdominale sous la forme d exercices cibles"));
+		assertTrue(result.getResponse().getContentAsString().contains("GYM"));
+		assertTrue(result.getResponse().getContentAsString().contains("Gym"));
 		assertTrue(result.getResponse().getContentAsString().contains(
-				"Any of the class Aves of warm-blooded, egg-laying, feathered vertebrates with forelimbs modified to form wings"));
-		assertTrue(result.getResponse().getContentAsString().contains("RPSN01"));
-		assertTrue(result.getResponse().getContentAsString().contains("Rattlesnake"));
-		assertTrue(result.getResponse().getContentAsString().contains("Doubles as a watch dog"));
-		assertTrue(result.getResponse().getContentAsString().contains("REPTILES"));
-		assertTrue(result.getResponse().getContentAsString().contains("Reptiles"));
-		assertTrue(result.getResponse().getContentAsString().contains(
-				"Any of various cold-blooded, usually egg-laying vertebrates, such as a snake, lizard, crocodile, turtle"));
+				"Entretenez votre forme physique par des assouplissements, des etirements et des exercices de tonicite musculaire"));
 	}
 
 	@Test
@@ -83,54 +83,54 @@ public class ActivityRestTestClient {
 	@Test
 	public void tesRestShowActivityByUnknownDisciplineId() throws Exception {
 		mockMvc.perform(
-				get("/activitys/DINOS").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+				get("/activity/BOXXE").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNotFound());
 	}
 
 	@Test
 	public void tesRestShowActivityByActivityId() throws Exception {
 		MvcResult result = mockMvc.perform(
-				get("/activity/RPSN01").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+				get("/activity/ABDOS").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk()).andReturn();
-		assertFalse(result.getResponse().getContentAsString().contains("ABDOS"));
-		assertFalse(result.getResponse().getContentAsString().contains("Amazon Parrot"));
-		assertFalse(result.getResponse().getContentAsString().contains("Great companion for up to 75 years"));
-		assertFalse(result.getResponse().getContentAsString().contains("BIRDS"));
-		assertFalse(result.getResponse().getContentAsString().contains("Birds"));
+		assertFalse(result.getResponse().getContentAsString().contains("BODY"));
+		assertFalse(result.getResponse().getContentAsString().contains("Bodysculpt"));
+		assertFalse(result.getResponse().getContentAsString().contains("Tonifier sa silhouette, decharger son stress et perdre du poids"));
+		assertFalse(result.getResponse().getContentAsString().contains("BOXE"));
+		assertFalse(result.getResponse().getContentAsString().contains("Boxe"));
 		assertFalse(result.getResponse().getContentAsString().contains(
-				"Any of the class Aves of warm-blooded, egg-laying, feathered vertebrates with forelimbs modified to form wings"));
-		assertTrue(result.getResponse().getContentAsString().contains("RPSN01"));
-		assertTrue(result.getResponse().getContentAsString().contains("Rattlesnake"));
-		assertTrue(result.getResponse().getContentAsString().contains("Doubles as a watch dog"));
-		assertTrue(result.getResponse().getContentAsString().contains("REPTILES"));
-		assertTrue(result.getResponse().getContentAsString().contains("Reptiles"));
+				"Renforcement du corps, canaliser son énergie et se surpasser"));
+		assertTrue(result.getResponse().getContentAsString().contains("ABDOS"));
+		assertTrue(result.getResponse().getContentAsString().contains("Abdominaux"));
+		assertTrue(result.getResponse().getContentAsString().contains("Permet de travailler l ensemble des muscles de la sangle abdominale sous la forme d exercices cibles"));
+		assertTrue(result.getResponse().getContentAsString().contains("GYM"));
+		assertTrue(result.getResponse().getContentAsString().contains("Gym"));
 		assertTrue(result.getResponse().getContentAsString().contains(
-				"Any of various cold-blooded, usually egg-laying vertebrates, such as a snake, lizard, crocodile, turtle"));
+				"Entretenez votre forme physique par des assouplissements, des etirements et des exercices de tonicite musculaire"));
 	}
 
 	@Test
 	public void tesRestShowActivityByUnknownActivityId() throws Exception {
 		mockMvc.perform(
-				get("/activity/BODY").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+				get("/activity/BOODY").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNotFound());
 	}
 
 	@Test
-	@WithMockUser(username = "MrRobot", password = "cnam", roles = "ADMIN")
+	@WithMockUser(username = "root", password = "cnam", roles = "ADMIN")
 	public void testRestUpdateActivity() throws Exception {
 		ActivityDTO abdos = sS.findActivity("ABDOS");
-		abdos.setName("abdoso");
+		abdos.setName("Big Abdominaux");
 		String json = objectMapper.writeValueAsString(abdos);
 		MvcResult result = mockMvc.perform(put("/activity/ABDOS").with(csrf()).contentType(MediaType.APPLICATION_JSON)
 				.content(json).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
 		assertTrue(result.getResponse().getContentAsString().equals(
-				"{\"id\":\"ABDOS\",\"name\":\"Big Amazon Parrot\",\"description\":\"Great companion for up to 75 years\",\"categoryDTO\":{\"id\":\"BIRDS\",\"name\":\"Birds\",\"description\":\"Any of the class Aves of warm-blooded, egg-laying, feathered vertebrates with forelimbs modified to form wings\"}}"));
+				"{\"id\":\"ABDOS\",\"name\":\"Big Abdominaux\",\"description\":\"Permet de travailler\",\"creditcostmin\":0.0,\"creditcostmax\":2.0,\"disciplineDTO\":{\"id\":\"GYM\",\"name\":\"Gym\",\"description\":\"Entretenez votre forme physique par des assouplissements, des etirements et des exercices de tonicite musculaire\",\"documents\":\"Brevet d Etat AGFF - Activites Gymniques de la Forme et de la Force\"}}"));
 	}
 
 	@Test
 	public void testRestUpdateActivityNotAuthenticated() throws Exception {
 		ActivityDTO abdos = sS.findActivity("ABDOS");
-		abdos.setName("Abdoos");
+		abdos.setName("Abdominaux");
 		String json = objectMapper.writeValueAsString(abdos);
 		MvcResult result = mockMvc.perform(put("/activity/ABDOS").with(csrf()).contentType(MediaType.APPLICATION_JSON)
 				.content(json).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
@@ -138,27 +138,27 @@ public class ActivityRestTestClient {
 	}
 
 	@Test
-	@WithMockUser(username = "MrRobot", password = "cnam", roles = "ADMIN")
+	@WithMockUser(username = "root", password = "cnam", roles = "ADMIN")
 	public void testRestUpdateActivityWithWrongId1() throws Exception {
 		ActivityDTO abdos = sS.findActivity("ABDOS");
-		abdos.setName("Abdoos");
+		abdos.setName("Abdominaux");
 		String json = objectMapper.writeValueAsString(abdos);
-		mockMvc.perform(put("/activity/AVSB02").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(json)
+		mockMvc.perform(put("/activity/ABDOS2").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(json)
 				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
 	}
 
 	@Test
-	@WithMockUser(username = "MrRobot", password = "cnam", roles = "ADMIN")
+	@WithMockUser(username = "root", password = "cnam", roles = "ADMIN")
 	public void testRestUpdateActivityWithWrongId2() throws Exception {
 		ActivityDTO abdos = sS.findActivity("ABDOS");
-		abdos.setId("Abdoos");
+		abdos.setId("ABDOS1");
 		String json = objectMapper.writeValueAsString(abdos);
-		mockMvc.perform(put("/activity/AVCB101").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(json)
+		mockMvc.perform(put("/activity/ABDOS1").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(json)
 				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
 	}
 
 	@Test
-	@WithMockUser(username = "MrRobot", password = "cnam", roles = "ADMIN")
+	@WithMockUser(username = "root", password = "cnam", roles = "ADMIN")
 	public void testRestUpdateActivityWithNullId() throws Exception {
 		ActivityDTO abdos = sS.findActivity("ABDOS");
 		abdos.setId(null);
@@ -168,22 +168,22 @@ public class ActivityRestTestClient {
 	}
 
 	@Test
-	@WithMockUser(username = "MrRobot", password = "cnam", roles = "ADMIN")
+	@WithMockUser(username = "root", password = "cnam", roles = "ADMIN")
 	public void testRestCreateActivity() throws Exception {
 		ActivityDTO abdos = sS.findActivity("ABDOS");
-		abdos.setId("Abdoos");
+		abdos.setId("ABDOOS");
 		String json = objectMapper.writeValueAsString(abdos);
 		MvcResult result = mockMvc.perform(post("/activity").with(csrf()).contentType(MediaType.APPLICATION_JSON)
 				.content(json).accept(MediaType.APPLICATION_JSON)).andExpect(status().isCreated()).andReturn();
 		assertTrue(result.getResponse().getContentAsString().equals(
-				"{\"id\":\"AVCB001\",\"name\":\"Amazon Parrot\",\"description\":\"Great companion for up to 75 years\",\"categoryDTO\":{\"id\":\"BIRDS\",\"name\":\"Birds\",\"description\":\"Any of the class Aves of warm-blooded, egg-laying, feathered vertebrates with forelimbs modified to form wings\"}}"));
-	}
+				"{\"id\":\"ABDOOS\",\"name\":\"Abdominaux\",\"description\":\"Permet de travailler\",\"creditcostmin\":0.0,\"creditcostmax\":2.0,\"disciplineDTO\":{\"id\":\"GYM\",\"name\":\"Gym\",\"description\":\"Entretenez votre forme physique par des assouplissements, des etirements et des exercices de tonicite musculaire\",\"documents\":\"Brevet d Etat AGFF - Activites Gymniques de la Forme et de la Force\"}}"));
+		}
 
 	@Test
 	@WithMockUser(username = "coach1", password = "cnam", roles = "COACH")
 	public void testRestCreateActivityNotAutorized() throws Exception {
 		ActivityDTO abdos = sS.findActivity("ABDOS");
-		abdos.setId("Abdoos");
+		abdos.setId("ABDOOS");
 		String json = objectMapper.writeValueAsString(abdos);
 		MvcResult result = mockMvc.perform(post("/activity").with(csrf()).contentType(MediaType.APPLICATION_JSON)
 				.content(json).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
@@ -191,7 +191,7 @@ public class ActivityRestTestClient {
 	}
 
 	@Test
-	@WithMockUser(username = "MrRobot", password = "cnam", roles = "ADMIN")
+	@WithMockUser(username = "root", password = "cnam", roles = "ADMIN")
 	public void testRestCreateInvalidActivity() throws Exception {
 		ActivityDTO abdos = sS.findActivity("ABDOS");
 		abdos.setId(null);
@@ -201,7 +201,7 @@ public class ActivityRestTestClient {
 	}
 
 	@Test
-	@WithMockUser(username = "MrRobot", password = "cnam", roles = "ADMIN")
+	@WithMockUser(username = "root", password = "cnam", roles = "ADMIN")
 	public void testRestDeleteActivity() throws Exception {
 		MvcResult result = mockMvc.perform(delete("/activity/ABDOS").with(csrf())
 				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
@@ -214,9 +214,9 @@ public class ActivityRestTestClient {
 	}
 
 	@Test
-	@WithMockUser(username = "MrRobot", password = "cnam", roles = "ADMIN")
+	@WithMockUser(username = "root", password = "cnam", roles = "ADMIN")
 	public void testRestFailDeleteActivity() throws Exception {
-		MvcResult result = mockMvc.perform(delete("/activity/AVCB12") // AVCB12 activity does not exist
+		MvcResult result = mockMvc.perform(delete("/activity/ABDOMS") // AVCB12 activity does not exist
 				.with(csrf()).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNotFound()).andReturn();
 		assertTrue(result.getResponse().getStatus() == 404);

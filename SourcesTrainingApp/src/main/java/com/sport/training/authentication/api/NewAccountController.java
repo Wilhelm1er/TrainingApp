@@ -1,7 +1,5 @@
 package com.sport.training.authentication.api;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -9,16 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import com.sport.training.authentication.domain.dto.UserDTO;
 import com.sport.training.authentication.domain.service.UserService;
-import com.sport.training.domain.dto.DisciplineDTO;
-import com.sport.training.domain.dto.DisciplineRegistryDTO;
-import com.sport.training.domain.service.RegistryService;
-import com.sport.training.domain.service.SportService;
 import com.sport.training.exception.CreateException;
 import com.sport.training.exception.DuplicateKeyException;
 import com.sport.training.exception.FinderException;
@@ -79,7 +71,7 @@ public class NewAccountController {
 		try {
 			userDTO.setRoleName("ROLE_COACH");
 			userService.createUser(userDTO);
-			
+
 			model.addAttribute("message", "Coach account created");
 			return "index";
 		} catch (CreateException e) {

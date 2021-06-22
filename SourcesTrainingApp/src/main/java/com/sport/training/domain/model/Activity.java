@@ -13,8 +13,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
-import org.hibernate.annotations.Cascade;
-
 /**
  * This class represents an Activity in the sport system. The sport system is
  * divided into disciplines. Each one divided into activities and each activity

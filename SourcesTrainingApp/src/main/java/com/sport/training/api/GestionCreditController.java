@@ -90,7 +90,8 @@ public class GestionCreditController {
 	}
 
 	@PostMapping(path = "/add-credit")
-	public String addCredit(@Valid @ModelAttribute UserDTO userDTO, @Valid @ModelAttribute Double addCredit, Model model) {
+	public String addCredit(@Valid @ModelAttribute UserDTO userDTO, @Valid @ModelAttribute Double addCredit,
+			Model model) {
 		final String mname = "addCredit";
 		LOGGER.debug("entering " + mname);
 		try {

@@ -283,6 +283,7 @@ public class RegistryServiceImpl implements RegistryService {
 		LOGGER.debug("exiting " + mname);
 		return disciplineDTOs;
 	}
+
 	@Override
 	@Transactional(readOnly = true)
 	public List<DisciplineDTO> findDisciplineOkByCoach(String coachId) throws FinderException {
@@ -320,6 +321,7 @@ public class RegistryServiceImpl implements RegistryService {
 		LOGGER.debug("exiting " + mname);
 		return disciplineDTOs;
 	}
+
 	@Override
 	@Transactional(readOnly = true)
 	public List<DisciplineDTO> findDisciplineToCheckByCoach(String coachId) throws FinderException {

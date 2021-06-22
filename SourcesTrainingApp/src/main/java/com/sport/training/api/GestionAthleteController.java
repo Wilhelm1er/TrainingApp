@@ -13,8 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import com.sport.training.authentication.domain.dto.UserDTO;
 import com.sport.training.authentication.domain.service.CustomUserDetails;
 import com.sport.training.authentication.domain.service.UserService;
@@ -47,8 +45,7 @@ public class GestionAthleteController {
 	private RegistryService registryService;
 
 	@GetMapping(path = "/bookmark")
-	public String showBookmark(Model model, Authentication authentication)
-			throws CreateException {
+	public String showBookmark(Model model, Authentication authentication) throws CreateException {
 		final String mname = "showBookmark";
 		LOGGER.debug("entering " + mname);
 
@@ -59,7 +56,7 @@ public class GestionAthleteController {
 			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 			athleteDTO = userService.findUser(userDetails.getUsername());
 			bookmarkDTOs = coachService.findBookmarksByAthlete(athleteDTO.getUsername());
-			
+
 			model.addAttribute("bookmarkDTOs", bookmarkDTOs);
 		} catch (FinderException e) {
 			LOGGER.error("exception in " + mname + " : " + e.getMessage());
@@ -69,9 +66,10 @@ public class GestionAthleteController {
 
 		return "bookmark";
 	}
+
 	@GetMapping(path = "/add-bookmark/{coachId}")
-	public String addBookmark(Model model, @PathVariable(value= "coachId") String coachId, Authentication authentication)
-			throws CreateException {
+	public String addBookmark(Model model, @PathVariable(value = "coachId") String coachId,
+			Authentication authentication) throws CreateException {
 		final String mname = "addBookmark";
 		LOGGER.debug("entering " + mname);
 
@@ -82,12 +80,11 @@ public class GestionAthleteController {
 		try {
 			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 			athleteDTO = userService.findUser(userDetails.getUsername());
-			
-				coachDTO = userService.findUser(coachId);
-				
-					coachService.createBookmark(new BookmarkDTO(athleteDTO, coachDTO));
-				
-			
+
+			coachDTO = userService.findUser(coachId);
+
+			coachService.createBookmark(new BookmarkDTO(athleteDTO, coachDTO));
+
 		} catch (FinderException e) {
 			LOGGER.error("exception in " + mname + " : " + e.getMessage());
 			model.addAttribute("exception", e.getMessage());

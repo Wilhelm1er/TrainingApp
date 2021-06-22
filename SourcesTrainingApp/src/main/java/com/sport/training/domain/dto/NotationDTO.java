@@ -30,8 +30,9 @@ public class NotationDTO implements Serializable {
 	public NotationDTO() {
 	}
 
-	public NotationDTO(final int note, UserDTO coachDTO, UserDTO athleteDTO, EventDTO eventDTO) {
+	public NotationDTO(final int note, final String comments,  UserDTO athleteDTO, UserDTO coachDTO, EventDTO eventDTO) {
 		setNote(note);
+		setComments(comments);
 		setCoachDTO(coachDTO);
 		setAthleteDTO(athleteDTO);
 		setEventDTO(eventDTO);

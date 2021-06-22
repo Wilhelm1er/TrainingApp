@@ -2,8 +2,6 @@ package com.sport.training.domain.dto;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
-
 import com.sport.training.authentication.domain.dto.UserDTO;
 
 /**
@@ -35,8 +33,8 @@ public class EventDTO implements Serializable {
 	public EventDTO() {
 	}
 
-	public EventDTO(final String name, final LocalDateTime datetime,  final Double creditCost,
-			final UserDTO coachDTO, final ActivityDTO activityDTO) {
+	public EventDTO(final String name, final LocalDateTime datetime, final Double creditCost, final UserDTO coachDTO,
+			final ActivityDTO activityDTO) {
 		setVoidable(0);
 		setName(name);
 		setDateTime(datetime);

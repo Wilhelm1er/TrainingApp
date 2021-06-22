@@ -46,17 +46,17 @@ public class Notation implements Serializable {
 	private String comments;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "EVENT_FK")
+	@JoinColumn(name = "EVENT_FK", nullable = false)
 	@NotNull(message = "invalid Event")
 	private Event event;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "COACH_FK")
+	@JoinColumn(name = "COACH_FK", nullable = false)
 	@NotNull(message = "invalid Coach")
 	private User coach;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ATHLETE_FK")
+	@JoinColumn(name = "ATHLETE_FK", nullable = false)
 	@NotNull(message = "invalid Athlete")
 	private User athlete;
 
@@ -67,10 +67,12 @@ public class Notation implements Serializable {
 		this.notationDate = new Date();
 	}
 
-	public Notation(final int note, final User coach, final Event event) {
+	public Notation(final int note, final String comments, final User athlete, final User coach, final Event event) {
 		this.notationDate = new Date();
 		setNotationDate(notationDate);
 		setNote(note);
+		setComments(comments);
+		setAthlete(athlete);
 		setCoach(coach);
 		setEvent(event);
 	}

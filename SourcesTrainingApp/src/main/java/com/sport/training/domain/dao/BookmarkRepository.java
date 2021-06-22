@@ -12,6 +12,6 @@ public interface BookmarkRepository extends CrudRepository<Bookmark, Long> {
 
 	Iterable<Bookmark> findAllByAthlete(User athlete);
 	
-	@Query("select MAX(id) from Bookmark d")
+	@Query("select MAX(id) from Bookmark b")
 	public Optional<Long> findLastId();
 }

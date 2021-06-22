@@ -5,14 +5,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
-import java.util.Random;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -24,18 +21,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.sport.training.authentication.domain.dao.RoleRepository;
 import com.sport.training.authentication.domain.dto.UserDTO;
-import com.sport.training.authentication.domain.model.Role;
 import com.sport.training.authentication.domain.service.UserService;
-import com.sport.training.domain.dao.EventRepository;
 import com.sport.training.domain.dto.ActivityDTO;
 import com.sport.training.domain.dto.DisciplineDTO;
 import com.sport.training.domain.dto.DisciplineRegistryDTO;
-import com.sport.training.domain.dto.DiscussionDTO;
 import com.sport.training.domain.dto.EventDTO;
-import com.sport.training.domain.dto.MessageDTO;
-import com.sport.training.domain.service.CoachService;
 import com.sport.training.domain.service.RegistryService;
 import com.sport.training.domain.service.SportService;
 import com.sport.training.exception.CreateException;
@@ -78,7 +69,7 @@ public class GestionCoachController {
 			}
 		} catch (FinderException e) {
 			LOGGER.error("exception in " + mname + " : " + e.getMessage());
-			model.addAttribute("exception", e.getClass().getName());
+			model.addAttribute("exception", e.getMessage());
 			return "error";
 		}
 		model.addAttribute("userDTO", userDTO);
@@ -141,7 +132,7 @@ public class GestionCoachController {
 			return "event";
 		} catch (CreateException e) {
 			LOGGER.error("exception in " + mname + " : " + e.getMessage());
-			model.addAttribute("exception", e.getClass().getName());
+			model.addAttribute("exception", e.getMessage());
 			return "error";
 		} catch (Exception e) {
 			LOGGER.error("exception in " + mname + " : " + e.getMessage());
@@ -151,11 +142,11 @@ public class GestionCoachController {
 	}
 
 	@GetMapping("/delete-event/{eventId}")
-	public String deleteEvent(@PathVariable(value= "eventId") Long eventId, Model model) {
+	public String deleteEvent(@PathVariable(value = "eventId") Long eventId, Model model) {
 		final String mname = "deleteEvent";
 		LOGGER.debug("entering " + mname);
 		try {
-			System.out.println("eventId: "+eventId);
+			System.out.println("eventId: " + eventId);
 			sportService.deleteEvent(eventId);
 			model.addAttribute("eventDeleted", eventId);
 		} catch (RemoveException | FinderException e) {
@@ -180,7 +171,7 @@ public class GestionCoachController {
 			return "events";
 		} catch (UpdateException e) {
 			LOGGER.error("exception in " + mname + " : " + e.getMessage());
-			model.addAttribute("exception", e.getClass().getName());
+			model.addAttribute("exception", e.getMessage());
 			return "error";
 		} catch (Exception e) {
 			LOGGER.error("exception in " + mname + " : " + e.getMessage());
@@ -190,7 +181,7 @@ public class GestionCoachController {
 	}
 
 	@GetMapping("/update-event/{eventId}")
-	public String showUpdateEvent(@PathVariable(value= "eventId") Long eventId, Model model) {
+	public String showUpdateEvent(@PathVariable(value = "eventId") Long eventId, Model model) {
 		final String mname = "showUpdateEvent";
 		LOGGER.debug("entering " + mname);
 		try {
@@ -198,7 +189,7 @@ public class GestionCoachController {
 			model.addAttribute("eventDTO", eventDTO);
 		} catch (FinderException e) {
 			LOGGER.error("exception in " + mname + " : " + e.getMessage());
-			model.addAttribute("exception", e.getClass().getName());
+			model.addAttribute("exception", e.getMessage());
 			return "error";
 		} catch (Exception e) {
 			LOGGER.error("exception in " + mname + " : " + e.getMessage());
@@ -221,7 +212,7 @@ public class GestionCoachController {
 				return "events";
 			}
 			LOGGER.error("exception in " + mname + " : " + e.getMessage());
-			model.addAttribute("exception", e.getClass().getName());
+			model.addAttribute("exception", e.getMessage());
 			return "error";
 		} catch (Exception e) {
 			LOGGER.error("exception in " + mname + " : " + e.getMessage());
@@ -230,7 +221,7 @@ public class GestionCoachController {
 		}
 		return "events";
 	}
-	
+
 	@GetMapping(path = "/coach-discipline")
 	public String showDisciplineChoice(Model model, Authentication authentication) throws FinderException {
 		final String mname = "showDisciplineChoice";

@@ -1,11 +1,6 @@
 package com.sport.training.api;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 import javax.validation.Valid;
 
@@ -17,32 +12,21 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import com.sport.training.authentication.domain.dao.RoleRepository;
 import com.sport.training.authentication.domain.dto.UserDTO;
 import com.sport.training.authentication.domain.model.Role;
 import com.sport.training.authentication.domain.service.UserService;
 import com.sport.training.domain.dao.EventRepository;
-import com.sport.training.domain.dto.ActivityDTO;
-import com.sport.training.domain.dto.DisciplineDTO;
-import com.sport.training.domain.dto.DisciplineRegistryDTO;
 import com.sport.training.domain.dto.DiscussionDTO;
-import com.sport.training.domain.dto.EventDTO;
 import com.sport.training.domain.dto.MessageDTO;
 import com.sport.training.domain.service.CoachService;
 import com.sport.training.domain.service.RegistryService;
 import com.sport.training.domain.service.SportService;
 import com.sport.training.exception.CreateException;
-import com.sport.training.exception.DuplicateKeyException;
-import com.sport.training.exception.FinderException;
-import com.sport.training.exception.RemoveException;
-import com.sport.training.exception.UpdateException;
 
 @Controller
 public class MessagerieController {
@@ -86,7 +70,7 @@ public class MessagerieController {
 			coachesList = userService.findUsersByRole(role);
 			model.addAttribute("coachDTO", new UserDTO());
 			model.addAttribute("coachesList", coachesList);
-			
+
 			if (userDTO.getRoleName().equals("ROLE_ADMIN")) {
 				discussionDTOs = coachService.findDiscussions();
 
@@ -102,7 +86,6 @@ public class MessagerieController {
 		model.addAttribute("discussionDTO", new DiscussionDTO());
 		model.addAttribute("coachesList", coachesList);
 		model.addAttribute("discussionDTOs", discussionDTOs);
-		
 
 		return "messagerie";
 	}

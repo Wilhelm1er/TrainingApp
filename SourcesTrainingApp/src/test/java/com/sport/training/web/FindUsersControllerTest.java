@@ -35,42 +35,42 @@ public class FindUsersControllerTest {
 	@Test
 	@WithMockUser(roles = "ADMIN")
 	public void accesDisplayCoachesWithRoleAdmin() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get("/display-users").accept(MediaType.ALL))
+		mockMvc.perform(MockMvcRequestBuilders.get("/display-coaches").accept(MediaType.ALL))
 				.andExpect(status().isOk()).andExpect(content().string(containsString("username")));
 	}
 
 	@Test
 	@WithMockUser(roles = "COACH")
 	public void accesDisplayCoachesWithRoleCoach() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get("/display-users").accept(MediaType.ALL))
+		mockMvc.perform(MockMvcRequestBuilders.get("/display-coaches").accept(MediaType.ALL))
 				.andExpect(status().isOk()).andExpect(content().string(containsString("Exception")));
 	}
 	
 	@Test
 	@WithMockUser(roles = "ATHLETE")
 	public void accesDisplayCoachesWithRoleAthlete() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get("/display-users").accept(MediaType.ALL))
+		mockMvc.perform(MockMvcRequestBuilders.get("/display-coaches").accept(MediaType.ALL))
 				.andExpect(status().isOk()).andExpect(content().string(containsString("Exception")));
 	}
 
 	@Test
 	@WithMockUser(roles = "ADMIN")
 	public void accesDisplayAthletesWithRoleAdmin() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get("/display-users").accept(MediaType.ALL))
+		mockMvc.perform(MockMvcRequestBuilders.get("/display-athletes").accept(MediaType.ALL))
 				.andExpect(status().isOk()).andExpect(content().string(containsString("username")));
 	}
 
 	@Test
 	@WithMockUser(roles = "COACH")
 	public void accesDisplayAthletesWithRoleCoach() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get("/display-users").accept(MediaType.ALL))
+		mockMvc.perform(MockMvcRequestBuilders.get("/display-athletes").accept(MediaType.ALL))
 				.andExpect(status().isOk()).andExpect(content().string(containsString("Exception")));
 	}
 
 	@Test
 	@WithMockUser(roles = "ATHLETE")
 	public void accesDisplayAthletesWithRoleAthlete() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get("/display-users").accept(MediaType.ALL))
+		mockMvc.perform(MockMvcRequestBuilders.get("/display-athletes").accept(MediaType.ALL))
 				.andExpect(status().isOk()).andExpect(content().string(containsString("Exception")));
 	}
 

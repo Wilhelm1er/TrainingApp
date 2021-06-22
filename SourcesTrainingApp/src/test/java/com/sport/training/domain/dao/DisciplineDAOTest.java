@@ -41,7 +41,7 @@ public class DisciplineDAOTest {
 	 * This test tries to find an object with a invalid identifier.
 	 */
 	@Test
-	public void testDomainFindCategoryWithInvalidValues() throws Exception {
+	public void testDomainFindDisciplineWithInvalidValues() throws Exception {
 
 		// Finds an object with a unknown identifier
 		final String id = counterService.getUniqueId(COUNTER_NAME);
@@ -110,7 +110,7 @@ public class DisciplineDAOTest {
 		// Ensures that the object doesn't exist
 		try {
 			discipline = findDiscipline(id);
-			System.out.println("discipline: "+ discipline);
+			System.out.println("discipline: " + discipline);
 			fail("Object has not been created yet it shouldn't be found");
 		} catch (NoSuchElementException e) {
 		}

@@ -2,15 +2,12 @@ package com.sport.training.domain.dao;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.Random;
-
-import javax.transaction.Transactional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,10 +35,8 @@ import com.sport.training.exception.UpdateException;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Transactional
+//@Transactional
 public class EventDAOTest {
-
-	private static final String COUNTER_NAME = "Event";
 
 	private static Logger logger = LogManager.getLogger(EventDAOTest.class);
 
@@ -57,7 +52,7 @@ public class EventDAOTest {
 	private CounterService counterService;
 	@Autowired
 	private RoleService roleService;
-	
+
 	private Random random = new Random();
 
 	private final Double _defaultCreditCost = 1.0;
@@ -108,7 +103,7 @@ public class EventDAOTest {
 		final int firstSize = findAllEvents();
 		// Create an object
 		final long eventId = createEvent(id);
-		
+
 		// Ensures that the object exists
 		try {
 			findEvent(eventId);
@@ -121,7 +116,6 @@ public class EventDAOTest {
 
 		// Checks that the collection size has increase of one
 		if (firstSize + 1 != secondSize)
-			System.out.println("size 1: "+firstSize + "size 2: "+secondSize);
 			fail("The collection size should have increased by 1");
 
 		// Cleans the test environment
@@ -140,7 +134,6 @@ public class EventDAOTest {
 	 */
 	@Test
 	public void testDomainFindAllEventsForACoach() throws Exception {
-
 		User newCoach = createNewCoach();
 		final String coachId = newCoach.getUsername();
 
@@ -190,6 +183,7 @@ public class EventDAOTest {
 		eventRepository.delete(event2);
 		removeCoach(newCoach);
 	}
+
 	/**
 	 * This test ensures that the method findAll works. It does a first findAll,
 	 * creates a new object and does a second findAll.
@@ -256,6 +250,9 @@ public class EventDAOTest {
 		final Long id = eventRepository.findLastId().orElse(10000L) + 1;
 		Event event = null;
 
+		// Creates an object
+		final long eventId = createEvent(id);
+
 		// Ensures that the object doesn't exist
 		try {
 			event = findEvent(id);
@@ -263,24 +260,14 @@ public class EventDAOTest {
 		} catch (NoSuchElementException e) {
 		}
 
-		// Creates an object
-		createEvent(id);
-System.out.println("event: "+event);
-		// Ensures that the object exists
-		try {
-			event = findEvent(id);
-		} catch (NoSuchElementException e) {
-			fail("Object has been created it should be found");
-		}
-
 		// Checks that it's the right object
 		checkEvent(event, id);
 
 		// Cleans the test environment
-		removeEvent(id);
+		removeEvent(eventId);
 
 		try {
-			findEvent(id);
+			findEvent(eventId);
 			fail("Object has been deleted it shouldn't be found");
 		} catch (NoSuchElementException e) {
 		}
@@ -294,12 +281,12 @@ System.out.println("event: "+event);
 		final Long id = eventRepository.findLastId().orElse(10000L) + 1;
 
 		// Creates an object
-		createEvent(id);
+		final long eventId = createEvent(id);
 
 		// Ensures that the object exists
 		Event event = null;
 		try {
-			event = findEvent(id);
+			event = findEvent(eventId);
 		} catch (NoSuchElementException e) {
 			fail("Object has been created it should be found");
 		}
@@ -313,7 +300,7 @@ System.out.println("event: "+event);
 		// Ensures that the object still exists
 		Event eventUpdated = null;
 		try {
-			eventUpdated = findEvent(id);
+			eventUpdated = findEvent(eventId);
 		} catch (NoSuchElementException e) {
 			fail("Object should be found");
 		}
@@ -322,12 +309,25 @@ System.out.println("event: "+event);
 		checkEvent(eventUpdated, id + 1);
 
 		// Cleans the test environment
-		removeEvent(id);
+		removeEvent(eventId);
 
 		try {
-			findEvent(id);
+			findEvent(eventId);
 			fail("Object has been deleted it shouldn't be found");
 		} catch (NoSuchElementException e) {
+		}
+	}
+
+	/**
+	 * This test ensures that the system cannont remove an unknown object
+	 */
+	@Test
+	public void testDomainDeleteUnknownEvent() throws Exception {
+		// Removes an unknown object
+		try {
+			eventRepository.delete(null);
+			fail("Deleting an unknown object should break");
+		} catch (Exception e) {
 		}
 	}
 
@@ -356,58 +356,56 @@ System.out.println("event: "+event);
 			return 0;
 		}
 	}
-	
+
 	private int findAllEventsByCoach(String coachId) throws FinderException {
 		try {
-			User user= userRepository.findById(coachId).get();
+			User user = userRepository.findById(coachId).get();
 			return ((Collection<Event>) eventRepository.findAllByCoach(user)).size();
 		} catch (Exception e) {
 			return 0;
 		}
 	}
 
-	// Creates a discipline first, then a activity and then an event linked to this
-	// activity
+	// Creates a coach first, then a activity and then an event linked to this
+	// activity and coach
 	private long createEvent(final long id) throws CreateException, RemoveException, FinderException {
-		
-		  //Create Coach 
-		User coach = createNewCoach();
-		  
-		  // Create Activity 
-		Activity activity = createNewActivity();
-		 
-		
+
+		// Create Coach
+		final User coach = createNewCoach();
+
+		// Create Activity
+		final Activity activity = createNewActivity();
+
 		// Create Event
-		final Event event = new Event("name" + id, _defaultDate, _defaultCreditCost,
-				coach,activity);
-		
-		  event.setDuration(50); event.setIntensity(3); event.setEquipment("equipment"
-		  + String.valueOf(id)); event.setDescription("description" +
-		  String.valueOf(id));
-		 
-	
+		final Event event = new Event("name" + id, _defaultDate, _defaultCreditCost, coach, activity);
+
+		event.setDuration(50);
+		event.setIntensity(3);
+		event.setEquipment("equipment" + String.valueOf(id));
+		event.setDescription("description" + String.valueOf(id));
+
 		eventRepository.save(event);
 		return event.getId();
 	}
 
-	// Creates a discipline, an activity and updates the event with this new
-	// activity
+	// Creates a discipline, an activity and a coach, updates the event with this
+	// new
+	// activity and coach
 	private void updateEvent(final Event event, final long id)
 			throws UpdateException, CreateException, RemoveException, FinderException {
 		// get old activity
-		Activity activ = event.getActivity();
+		final Activity activ = event.getActivity();
 
 		// Create Activity
-		Activity activity  = createNewActivity();
+		final Activity activity = createNewActivity();
 
 		// get old activity
-		User coa = event.getCoach();
-				
+		final User coa = event.getCoach();
+
 		// Create Coach
-		User coach  = createNewCoach();
+		final User coach = createNewCoach();
 		// Updates the event
 		event.setName("name" + id);
-		event.setCreditCost(_defaultCreditCost);
 		event.setActivity(activity);
 		event.setCoach(coach);
 		eventRepository.save(event);
@@ -418,49 +416,43 @@ System.out.println("event: "+event);
 
 	private void checkEvent(final Event event, final Long id) {
 		assertEquals("name", "name" + id, event.getName());
-		assertTrue("creditCost", _defaultCreditCost == event.getCreditCost());
 		assertNotNull("activity", event.getActivity());
 		assertNotNull("coach", event.getCoach());
 	}
 
-	private void removeEvent(final long id) throws RemoveException, ObjectNotFoundException {
-		Event event = eventRepository.findByName("name" + id);
-		final String activityId = event.getActivity().getId();
-		Activity activity = activityRepository.findById(activityId).get();
-		final String disciplineId = activity.getDiscipline().getId();
-		Discipline discipline = disciplineRepository.findById(disciplineId).get();
-		final String userId = event.getCoach().getUsername();
-		User user = userRepository.findById(userId).get();
-		
-		disciplineRepository.delete(discipline);
-		activityRepository.delete(activity);
+	private void removeEvent(final long eventId) throws RemoveException, ObjectNotFoundException {
+		Event event = eventRepository.findById(eventId).get();
+		final Activity activity = event.getActivity();
+		final User user = event.getCoach();
+		eventRepository.deleteById(eventId);
 		userRepository.delete(user);
-		eventRepository.deleteByName("name" +id);
+		activityRepository.delete(activity);
 	}
 
 	// Creates a discipline first, then an activity and return it
 	private Activity createNewActivity() throws CreateException, ObjectNotFoundException {
-			// Create discipline
-			final String newdisciplineId = counterService.getUniqueId("discipline");
-			final Discipline discipline = new Discipline(newdisciplineId, "name" + newdisciplineId,
-					"description" + newdisciplineId);
-			discipline.setDocuments("documents" + newdisciplineId);
-			disciplineRepository.save(discipline);
-			// Create activity
-			final String newactivityId = counterService.getUniqueId("activity");
-			final Activity activity = new Activity(newactivityId, "name" + newactivityId, "description" + newactivityId, discipline);	
-			activity.setCreditcostMax(4.0);
-			activity.setCreditcostMin(1.0);
-			
-			try {
-				activityRepository.save(activity);
-			} catch (Exception e) {
-				// remove the added discipline object
-				disciplineRepository.deleteById(newdisciplineId);
-				// rethrow the exception
-				throw e;
-			}
-			System.out.println("activity:" +activity);
+		// Create discipline
+		final String newdisciplineId = counterService.getUniqueId("discipline");
+		final Discipline discipline = new Discipline(newdisciplineId, "name" + newdisciplineId,
+				"description" + newdisciplineId);
+		discipline.setDocuments("documents" + newdisciplineId);
+		disciplineRepository.save(discipline);
+		// Create activity
+		final String newactivityId = counterService.getUniqueId("activity");
+		final Activity activity = new Activity(newactivityId, "name" + newactivityId, "description" + newactivityId,
+				discipline);
+		activity.setCreditcostMax(4.0);
+		activity.setCreditcostMin(1.0);
+
+		try {
+			activityRepository.save(activity);
+		} catch (Exception e) {
+			// remove the added discipline object
+			disciplineRepository.deleteById(newdisciplineId);
+			// rethrow the exception
+			throw e;
+		}
+		System.out.println("activity:" + activity);
 		return activity;
 	}
 
@@ -487,21 +479,21 @@ System.out.println("event: "+event);
 
 	// Creates an event linked to an existing activity
 	private Event createEventForCoach(final User coach) throws CreateException, ObjectNotFoundException {
-		final String id = counterService.getUniqueId(COUNTER_NAME);
-		
+		final String id = counterService.getUniqueId("Coach");
+
 		// Create Activity
-		Activity activity  = createNewActivity();
-		
+		Activity activity = createNewActivity();
+
 		final Event event = new Event("name" + id, _defaultDate, _defaultCreditCost, coach, activity);
 		eventRepository.save(event);
 		return event;
 	}
-	
+
 	// Creates an event linked to an existing activity
 	private Event createEventForActivity(final Activity activity) throws CreateException, FinderException {
-		final String id = counterService.getUniqueId(COUNTER_NAME);
+		final String id = counterService.getUniqueId("Activity");
 		// Create Coach
-		User coach  = createNewCoach();
+		User coach = createNewCoach();
 		final Event event = new Event("name" + id, _defaultDate, _defaultCreditCost, coach, activity);
 		eventRepository.save(event);
 		return event;
@@ -510,8 +502,9 @@ System.out.println("event: "+event);
 	private void removeActivity(final Activity activity) throws RemoveException, ObjectNotFoundException {
 		final String categoryId = activity.getDiscipline().getId();
 		Discipline discipline = disciplineRepository.findById(categoryId).get();
-		disciplineRepository.delete(discipline);
 		activityRepository.delete(activity);
+		disciplineRepository.delete(discipline);
+
 	}
 
 	private void removeCoach(final User coach) throws RemoveException, ObjectNotFoundException {

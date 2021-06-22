@@ -3,7 +3,6 @@ package com.sport.training.domain.model;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,8 +15,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-
-import org.hibernate.annotations.Cascade;
 
 import com.sport.training.authentication.domain.model.User;
 
@@ -54,7 +51,7 @@ public class Event implements Serializable {
 
 	@Column(name = "DESCRIPTION")
 	private String description;
- 
+
 	@Column(name = "INTENSITY")
 	private int intensity;
 
@@ -65,12 +62,12 @@ public class Event implements Serializable {
 	private int voidable;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "COACH_FK")
+	@JoinColumn(name = "COACH_FK", nullable = false)
 	@NotNull(message = "invalid Coach")
 	private User coach;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ACTIVITY_FK")
+	@JoinColumn(name = "ACTIVITY_FK", nullable = false)
 	@NotNull(message = "invalid Activity")
 	private Activity activity;
 
@@ -80,8 +77,8 @@ public class Event implements Serializable {
 	public Event() {
 	}
 
-	public Event(final String name, final LocalDateTime datetime, final Double creditCost,
-			final User coach, final Activity activity) {
+	public Event(final String name, final LocalDateTime datetime, final Double creditCost, final User coach,
+			final Activity activity) {
 		setVoidable(0);
 		setName(name);
 		setDateTime(datetime);

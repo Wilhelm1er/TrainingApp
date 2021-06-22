@@ -95,7 +95,7 @@ public class ActivityDAOTest {
 
 		// second findAll
 		final int secondSize = findAllActivities();
-		
+
 		// Checks that the collection size has increase of one
 		if (firstSize + 1 != secondSize)
 			fail("The collection size should have increased by 1");

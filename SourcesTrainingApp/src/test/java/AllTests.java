@@ -5,11 +5,13 @@ import org.junit.runners.Suite;
 
 import com.sport.training.authentication.domain.dao.UserDAOTest;
 import com.sport.training.authentication.domain.service.UserServiceTest;
+import com.sport.training.configuration.TestConfig;
 import com.sport.training.domain.dao.DisciplineDAOTest;
 import com.sport.training.domain.dao.DisciplineRegistryDAOTest;
 import com.sport.training.domain.dao.DiscussionDAOTest;
 import com.sport.training.domain.dao.EventDAOTest;
 import com.sport.training.domain.dao.EventRegistryDAOTest;
+import com.sport.training.domain.dao.MessageDAOTest;
 import com.sport.training.domain.dao.NotationDAOTest;
 import com.sport.training.domain.dao.ActivityDAOTest;
 import com.sport.training.domain.dao.BookmarkDAOTest;
@@ -30,14 +32,15 @@ import com.sport.training.web.WebTestMockMvc;
 import junit.framework.JUnit4TestAdapter;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ UserDAOTest.class, UserServiceTest.class, DisciplineDAOTest.class, EventDAOTest.class,
-		DiscussionDAOTest.class, NotationDAOTest.class, ActivityDAOTest.class, SportServiceTest.class,
-		BookmarkDAOTest.class, DisciplineRegistryDAOTest.class, EventRegistryDAOTest.class, CreditCardServiceTest.class,
-		ShoppingCartTest.class, UniqueIdGeneratorTest.class, DisciplineRestTestClient.class,
-		CreateUserTestWebClient.class, FindUsersControllerTest.class, ManageSportTestWebClient.class,
-		ActivityRestTestClient.class, 
-		ShoppingCartWebTest.class, UpdateAccountTestWebClient.class, VisualiseCatalogTestWebClient.class,
-		WebTestMockMvc.class })
+@Suite.SuiteClasses({ UserDAOTest.class, UserServiceTest.class, TestConfig.class, 
+		ActivityDAOTest.class, BookmarkDAOTest.class, DisciplineDAOTest.class, DisciplineRegistryDAOTest.class,
+		DiscussionDAOTest.class, EventDAOTest.class, EventRegistryDAOTest.class, MessageDAOTest.class,
+		NotationDAOTest.class,  
+		CreditCardServiceTest.class, ShoppingCartTest.class, SportServiceTest.class,
+		UniqueIdGeneratorTest.class, 
+		ActivityRestTestClient.class, CreateUserTestWebClient.class, DisciplineRestTestClient.class,
+		FindUsersControllerTest.class, ManageSportTestWebClient.class, ShoppingCartWebTest.class, 
+		UpdateAccountTestWebClient.class, VisualiseCatalogTestWebClient.class, WebTestMockMvc.class })
 public class AllTests {
 
 	@Test

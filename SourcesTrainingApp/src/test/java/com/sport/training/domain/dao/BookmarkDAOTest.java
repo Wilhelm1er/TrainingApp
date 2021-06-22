@@ -1,14 +1,11 @@
 package com.sport.training.domain.dao;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.Random;
-
-import javax.transaction.Transactional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,7 +31,7 @@ import com.sport.training.exception.UpdateException;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Transactional
+//@Transactional
 public class BookmarkDAOTest {
 
 	private static Logger logger = LogManager.getLogger(BookmarkDAOTest.class);
@@ -44,7 +41,7 @@ public class BookmarkDAOTest {
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
-	CounterService counterService;
+	private CounterService counterService;
 	@Autowired
 	private RoleService roleService;
 
@@ -88,13 +85,11 @@ public class BookmarkDAOTest {
 	 */
 	@Test
 	public void testDomainFindAllBookmarks() throws Exception {
-		final Long id = bookmarkRepository.findLastId().orElse(10000L) + 1;
-
 		// First findAll
 		final int firstSize = findAllBookmarks();
 
 		// Create an object
-		final long bookmarkId = createBookmark(id);
+		final long bookmarkId = createBookmark();
 
 		// Ensures that the object exists
 		try {
@@ -109,6 +104,37 @@ public class BookmarkDAOTest {
 		// Checks that the collection size has increase of one
 		if (firstSize + 1 != secondSize)
 			fail("The collection size should have increased by 1");
+
+		// Cleans the test environment
+		removeBookmark(bookmarkId);
+
+		try {
+			findBookmark(bookmarkId);
+			fail("Object has been deleted it shouldn't be found");
+		} catch (NoSuchElementException e) {
+		}
+	}
+
+	/**
+	 * This method ensures that creating an object works. It first finds the object,
+	 * makes sure it doesn't exist, creates it and checks it then exists.
+	 */
+	@Test
+	public void testDomainCreateBookmark() throws Exception {
+		Bookmark bookmark = null;
+
+		// Creates an object
+		final long bookmarkId = createBookmark();
+
+		// Ensures that the object exists
+		try {
+			bookmark = findBookmark(bookmarkId);
+		} catch (NoSuchElementException e) {
+			fail("Object has been created it should be found");
+		}
+
+		// Checks that it's the right object
+		checkBookmark(bookmark);
 
 		// Cleans the test environment
 		removeBookmark(bookmarkId);
@@ -180,84 +206,43 @@ public class BookmarkDAOTest {
 	}
 
 	/**
-	 * This method ensures that creating an object works. It first finds the object,
-	 * makes sure it doesn't exist, creates it and checks it then exists.
-	 */
-	@Test
-	public void testDomainCreateBookmark() throws Exception {
-		final Long id = bookmarkRepository.findLastId().orElse(10000L) + 1;
-		Bookmark bookmark = null;
-
-		// Ensures that the object doesn't exist
-		try {
-			bookmark = findBookmark(id);
-			fail("Object has not been created yet it shouldn't be found");
-		} catch (NoSuchElementException e) {
-		}
-
-		// Creates an object
-		createBookmark(id);
-
-		// Ensures that the object exists
-		try {
-			bookmark = findBookmark(id);
-		} catch (NoSuchElementException e) {
-			fail("Object has been created it should be found");
-		}
-
-		// Checks that it's the right object
-		checkBookmark(bookmark, id);
-
-		// Cleans the test environment
-		removeBookmark(id);
-
-		try {
-			findBookmark(id);
-			fail("Object has been deleted it shouldn't be found");
-		} catch (NoSuchElementException e) {
-		}
-	}
-
-	/**
 	 * This test make sure that updating an object success
 	 */
 	@Test
 	public void testDomainUpdateBookmark() throws Exception {
-		final Long id = bookmarkRepository.findLastId().orElse(10000L) + 1;
-
 		// Creates an object
-		createBookmark(id);
+		final long bookmarkId = createBookmark();
 
 		// Ensures that the object exists
 		Bookmark bookmark = null;
 		try {
-			bookmark = findBookmark(id);
+			bookmark = findBookmark(bookmarkId);
 		} catch (NoSuchElementException e) {
 			fail("Object has been created it should be found");
 		}
 
 		// Checks that it's the right object
-		checkBookmark(bookmark, id);
+		checkBookmark(bookmark);
 
 		// Updates the object with new values
-		updateBookmark(bookmark, id + 1);
+		updateBookmark(bookmark);
 
 		// Ensures that the object still exists
 		Bookmark bookmarkUpdated = null;
 		try {
-			bookmarkUpdated = findBookmark(id);
+			bookmarkUpdated = findBookmark(bookmarkId);
 		} catch (NoSuchElementException e) {
 			fail("Object should be found");
 		}
 
 		// Checks that the object values have been updated
-		checkBookmark(bookmarkUpdated, id + 1);
+		checkBookmark(bookmarkUpdated);
 
 		// Cleans the test environment
-		removeBookmark(id);
+		removeBookmark(bookmarkId);
 
 		try {
-			findBookmark(id);
+			findBookmark(bookmarkId);
 			fail("Object has been deleted it shouldn't be found");
 		} catch (NoSuchElementException e) {
 		}
@@ -303,13 +288,21 @@ public class BookmarkDAOTest {
 	}
 
 	// Creates a discipline first and then a bookmark linked to this discipline
-	private long createBookmark(final long id) throws CreateException, ObjectNotFoundException {
+	private long createBookmark() throws CreateException, FinderException {
 		// Create user
-		final String newAthleteId = counterService.getUniqueId("athlete");
+		final String newAthleteId = counterService.getUniqueId("Athlete");
 		final User athlete = new User(newAthleteId, "firstname" + newAthleteId, "lastname" + newAthleteId);
+		athlete.setPassword("pwd" + newAthleteId);
+		athlete.setRole(roleService.findByRoleName("ROLE_ATHLETE"));
+		athlete.setStatut("VALIDE");
+		userRepository.save(athlete);
 		// Create user
-		final String newCoachId = counterService.getUniqueId("coach");
+		final String newCoachId = counterService.getUniqueId("Coach");
 		final User coach = new User(newCoachId, "firstname" + newCoachId, "lastname" + newCoachId);
+		coach.setPassword("pwd" + newCoachId);
+		coach.setRole(roleService.findByRoleName("ROLE_COACH"));
+		coach.setStatut("VALIDE");
+		userRepository.save(coach);
 		// Create bookmark
 		final Bookmark bookmark = new Bookmark(athlete, coach);
 
@@ -318,26 +311,26 @@ public class BookmarkDAOTest {
 	}
 
 	// Creates a discipline and updates the bookmark with this new discipline
-	private void updateBookmark(final Bookmark bookmark, final long id)
-			throws UpdateException, CreateException, FinderException {
+	private void updateBookmark(final Bookmark bookmark) throws UpdateException, CreateException, FinderException {
 		// get old athlete
 		User ath = bookmark.getAthlete();
-
 		// Create new athlete
 		final String athleteId = counterService.getUniqueId("athlete");
 		final User athlete = new User(athleteId, "firstname" + athleteId, "lastname" + athleteId);
 		athlete.setPassword("pwd" + athleteId);
 		athlete.setRole(roleService.findByRoleName("ROLE_ATHLETE"));
+		athlete.setStatut("VALIDE");
 		userRepository.save(athlete);
 
 		// get old coach
 		User coa = bookmark.getCoach();
 
-		// Create new athlete
+		// Create new coach
 		final String coachId = counterService.getUniqueId("coach");
 		final User coach = new User(coachId, "firstname" + coachId, "lastname" + coachId);
 		coach.setPassword("pwd" + coachId);
 		coach.setRole(roleService.findByRoleName("ROLE_COACH"));
+		coach.setStatut("VALIDE");
 		userRepository.save(coach);
 
 		// Update bookmark with new discipline
@@ -360,7 +353,7 @@ public class BookmarkDAOTest {
 		userRepository.delete(coach);
 	}
 
-	private void checkBookmark(final Bookmark bookmark, final Long id) {
+	private void checkBookmark(final Bookmark bookmark) {
 		assertNotNull("athlete", bookmark.getAthlete());
 		assertNotNull("coach", bookmark.getCoach());
 	}
@@ -371,24 +364,26 @@ public class BookmarkDAOTest {
 		final User athlete = new User(athleteId, "firstname" + athleteId, "lastname" + athleteId);
 		athlete.setPassword("pwd" + athleteId);
 		athlete.setRole(roleService.findByRoleName("ROLE_ATHLETE"));
+		athlete.setStatut("VALIDE");
 		userRepository.save(athlete);
 		return athlete;
 	}
-	
+
 	// Creates a new discipline and return it
 	private User createNewCoach() throws CreateException, FinderException {
-		final String coachId = counterService.getUniqueId("coach");
+		final String coachId = counterService.getUniqueId("athlete");
 		final User coach = new User(coachId, "firstname" + coachId, "lastname" + coachId);
 		coach.setPassword("pwd" + coachId);
 		coach.setRole(roleService.findByRoleName("ROLE_COACH"));
+		coach.setStatut("VALIDE");
 		userRepository.save(coach);
 		return coach;
 	}
 
 	// Creates an bookmark linked to an existing user
-	private Bookmark createBookmarkForAthlete(final User athlete) throws CreateException {
-		final Long id = bookmarkRepository.findLastId().orElse(10000L) + 1;
-		final Bookmark bookmark = new Bookmark(athlete, new User("coach"));
+	private Bookmark createBookmarkForAthlete(final User athlete) throws CreateException, FinderException {
+		User coach = createNewCoach();
+		final Bookmark bookmark = new Bookmark(athlete, coach);
 		bookmarkRepository.save(bookmark);
 		return bookmark;
 	}
@@ -396,5 +391,4 @@ public class BookmarkDAOTest {
 	private void removeUser(final User user) throws RemoveException, ObjectNotFoundException {
 		userRepository.delete(user);
 	}
-
 }

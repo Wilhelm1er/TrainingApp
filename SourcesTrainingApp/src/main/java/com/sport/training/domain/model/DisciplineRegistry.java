@@ -36,15 +36,15 @@ public class DisciplineRegistry implements Serializable {
 	private Date registerDate;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "COACH_FK", nullable = false)
-	@NotNull(message = "invalid Athlete")
+	@JoinColumn(name = "COACH_FK")
+	@NotNull(message = "invalid Coach")
 	private User coach;
-
+ 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "DISCIPLINE_FK")
 	@NotNull(message = "invalid Discipline")
 	private Discipline discipline;
-
+ 
 	@Column(name = "Doc_STATUT")
 	private String docStatut;
 

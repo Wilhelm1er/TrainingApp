@@ -55,7 +55,7 @@
 						sec:authentication="name"></span></a>
 					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 						<!--  Partie ADMIN    -->
-						<a class="dropdown-item" th:href="@{/manage-disciplines}"
+						<a class="dropdown-item" th:href="@{/manage-sports}"
 							th:text="#{manage.sport}" sec:authorize="hasRole('ADMIN')"></a> <a
 							class="dropdown-item" th:href="@{/display-coaches}"
 							th:text="#{coachs.list}" sec:authorize="hasRole('ADMIN')"></a> <a

@@ -41,24 +41,24 @@ public class Message implements Serializable {
 	private String texte = "";
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "SENDER")
+	@JoinColumn(name = "SENDER", nullable = false)
 	@NotNull(message = "invalid Sender")
 	private User sender;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "RECIPIENT")
+	@JoinColumn(name = "RECIPIENT", nullable = false)
 	@NotNull(message = "invalid Recipient")
 	private User recipient;
- 
+
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "DISCUSSION_FK")
+	@JoinColumn(name = "DISCUSSION_FK", nullable = false)
 	@NotNull(message = "invalid Discussion")
 	private Discussion discussion;
 
 	// ======================================
 	// = Constructors =
 	// ======================================
- 
+
 	public Message() {
 		id = 0L;
 		this.date = new Date();

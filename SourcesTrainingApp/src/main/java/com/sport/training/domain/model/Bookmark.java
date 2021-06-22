@@ -28,17 +28,17 @@ public class Bookmark implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "book_seq_gen")
 	private Long id;
-
+ 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "COACH_FK")
+	@JoinColumn(name = "COACH_FK", nullable = false)
 	@NotNull(message = "invalid Coach")
 	private User coach;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ATHLETE_FK")
+	@JoinColumn(name = "ATHLETE_FK", nullable = false)
 	@NotNull(message = "invalid Athlete")
 	private User athlete;
-
+ 
 	// ======================================
 	// = Constructors =
 	// ======================================

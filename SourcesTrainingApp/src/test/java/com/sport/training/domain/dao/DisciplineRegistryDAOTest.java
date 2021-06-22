@@ -1,22 +1,25 @@
 package com.sport.training.domain.dao;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import java.util.Collection;
 import java.util.NoSuchElementException;
+import java.util.Random;
 
-import javax.transaction.Transactional;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.sport.training.domain.model.Activity;
+import com.sport.training.authentication.domain.dao.UserRepository;
+import com.sport.training.authentication.domain.model.User;
+import com.sport.training.authentication.domain.service.RoleService;
 import com.sport.training.domain.model.Discipline;
+import com.sport.training.domain.model.DisciplineRegistry;
 import com.sport.training.domain.service.CounterService;
 import com.sport.training.exception.CreateException;
 import com.sport.training.exception.FinderException;
@@ -29,16 +32,23 @@ import com.sport.training.exception.UpdateException;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Transactional
+//@Transactional
 public class DisciplineRegistryDAOTest {
 
-	private static final String COUNTER_NAME = "activity";
+	private static Logger logger = LogManager.getLogger(DisciplineRegistryDAOTest.class);
+
 	@Autowired
-	private ActivityRepository activityRepository;
+	private DisciplineRegistryRepository disciplineRegistryRepository;
 	@Autowired
 	private DisciplineRepository disciplineRepository;
 	@Autowired
+	private UserRepository userRepository;
+	@Autowired
 	private CounterService counterService;
+	@Autowired
+	private RoleService roleService;
+
+	private Random random = new Random();
 
 	// ==================================
 	// = Test cases =
@@ -47,26 +57,27 @@ public class DisciplineRegistryDAOTest {
 	 * This test tries to find an object with a invalid identifier.
 	 */
 	@Test
-	public void testDomainFindActivityWithInvalidValues() throws Exception {
+	public void testDomainFindDisciplineRegistryWithInvalidValues() throws Exception {
 
 		// Finds an object with a unknown identifier
-		final String id = counterService.getUniqueId(COUNTER_NAME);
+		final Long id = disciplineRegistryRepository.findLastId().orElse(10000L) + 1;
+
 		try {
-			findActivity(id);
+			findDisciplineRegistry(id);
 			fail("Object with unknonw id should not be found");
 		} catch (NoSuchElementException e) {
 		}
 
 		// Finds an object with an empty identifier
 		try {
-			activityRepository.findById(new String()).get();
+			disciplineRegistryRepository.findById(random.nextLong() + 1L).get();
 			fail("Object with empty id should not be found");
 		} catch (Exception e) {
 		}
 
 		// Finds an object with a null identifier
 		try {
-			activityRepository.findById(null).get();
+			disciplineRegistryRepository.findById(null).get();
 			fail("Object with null id should not be found");
 		} catch (Exception e) {
 		}
@@ -77,34 +88,31 @@ public class DisciplineRegistryDAOTest {
 	 * creates a new object and does a second findAll.
 	 */
 	@Test
-	public void testDomainFindAllActivities() throws Exception {
-		final String id = counterService.getUniqueId(COUNTER_NAME);
-
+	public void testDomainFindAllDisciplineRegistries() throws Exception {
 		// First findAll
-		final int firstSize = findAllActivities();
-
+		final int firstSize = findAllDisciplineRegistries();
 		// Create an object
-		createActivity(id);
+		final long disciplineRegId = createDisciplineRegistry();
 
 		// Ensures that the object exists
 		try {
-			findActivity(id);
+			findDisciplineRegistry(disciplineRegId);
 		} catch (NoSuchElementException e) {
 			fail("Object has been created it should be found");
 		}
 
 		// second findAll
-		final int secondSize = findAllActivities();
-		
+		final int secondSize = findAllDisciplineRegistries();
+
 		// Checks that the collection size has increase of one
 		if (firstSize + 1 != secondSize)
 			fail("The collection size should have increased by 1");
 
 		// Cleans the test environment
-		removeActivity(id);
+		removeDisciplineRegistry(disciplineRegId);
 
 		try {
-			findActivity(id);
+			findDisciplineRegistry(disciplineRegId);
 			fail("Object has been deleted it shouldn't be found");
 		} catch (NoSuchElementException e) {
 		}
@@ -115,37 +123,113 @@ public class DisciplineRegistryDAOTest {
 	 * creates a new object and does a second findAll.
 	 */
 	@Test
-	public void testDomainFindAllActivitysForADiscipline() throws Exception {
-		Discipline newdiscipline = createNewDiscipline();
-		final String disciplineId = newdiscipline.getId();
+	public void testDomainFindAllDisciplineRegistriesForACoach() throws Exception {
+
+		User newCoach = createNewCoach();
+		final String coachId = newCoach.getUsername();
 
 		// First findAll
-		final int firstSize = findAllActivities(disciplineId);
+		final int firstSize = findAllDisciplineRegistriesByCoach(coachId);
 
 		// Checks that the collection is empty
 		if (firstSize != 0)
 			fail("The collection should be empty");
 
 		// Create an object
-		Activity activity = createActivityForDiscipline(newdiscipline);
+		DisciplineRegistry disciplineReg1 = createDisciplineRegistryForCoach(newCoach);
 
 		// Ensures that the object exists
 		try {
-			findActivity(activity.getId());
+			findDisciplineRegistry(disciplineReg1.getId());
 		} catch (NoSuchElementException e) {
 			fail("Object has been created it should be found");
 		}
 
 		// second findAll
-		final int secondSize = findAllActivities(disciplineId);
+		final int secondSize = findAllDisciplineRegistriesByCoach(coachId);
 
 		// Checks that the collection size has increase of one
 		if (firstSize + 1 != secondSize)
 			fail("The collection size should have increased by 1");
 
-		// Cleans the test environment
-		removeActivity(activity.getId());
+		// Create an new object with a different id
+		DisciplineRegistry disciplineReg2 = createDisciplineRegistryForCoach(newCoach);
 
+		// Ensures that the new object exists
+		try {
+			findDisciplineRegistry(disciplineReg2.getId());
+		} catch (NoSuchElementException e) {
+			fail("Object has been created it should be found");
+		}
+
+		// third findAll
+		final int thirdSize = findAllDisciplineRegistriesByCoach(coachId);
+
+		// Checks that the collection size has increase of one
+		if (thirdSize != secondSize + 1)
+			fail("The collection should have the same size");
+
+		// Cleans the test environment
+		disciplineRegistryRepository.delete(disciplineReg1);
+		disciplineRegistryRepository.delete(disciplineReg2);
+		removeCoach(newCoach);
+	}
+
+	/**
+	 * This test ensures that the method findAll works. It does a first findAll,
+	 * creates a new object and does a second findAll.
+	 */
+	@Test
+	public void testDomainFindAllDisciplineRegistriesForADiscipline() throws Exception {
+
+		Discipline newDiscipline = createNewDiscipline();
+		final String disciplineId = newDiscipline.getId();
+
+		// First findAll
+		final int firstSize = findAllDisciplineRegistriesByDiscipline(disciplineId);
+
+		// Checks that the collection is empty
+		if (firstSize != 0)
+			fail("The collection should be empty");
+
+		// Create an object
+		DisciplineRegistry disciplineReg1 = createDisciplineRegistryForDiscipline(newDiscipline);
+
+		// Ensures that the object exists
+		try {
+			findDisciplineRegistry(disciplineReg1.getId());
+		} catch (NoSuchElementException e) {
+			fail("Object has been created it should be found");
+		}
+
+		// second findAll
+		final int secondSize = findAllDisciplineRegistriesByDiscipline(disciplineId);
+
+		// Checks that the collection size has increase of one
+		if (firstSize + 1 != secondSize)
+			fail("The collection size should have increased by 1");
+
+		// Create an new object with a different id
+		DisciplineRegistry disciplineReg2 = createDisciplineRegistryForDiscipline(newDiscipline);
+
+		// Ensures that the new object exists
+		try {
+			findDisciplineRegistry(disciplineReg2.getId());
+		} catch (NoSuchElementException e) {
+			fail("Object has been created it should be found");
+		}
+
+		// third findAll
+		final int thirdSize = findAllDisciplineRegistriesByDiscipline(disciplineId);
+
+		// Checks that the collection size has increase of one
+		if (thirdSize != secondSize + 1)
+			fail("The collection should have the same size");
+
+		// Cleans the test environment
+		disciplineRegistryRepository.delete(disciplineReg1);
+		disciplineRegistryRepository.delete(disciplineReg2);
+		removeDiscipline(newDiscipline.getId());
 	}
 
 	/**
@@ -153,35 +237,26 @@ public class DisciplineRegistryDAOTest {
 	 * makes sure it doesn't exist, creates it and checks it then exists.
 	 */
 	@Test
-	public void testDomainCreateActivity() throws Exception {
-		final String id = counterService.getUniqueId(COUNTER_NAME);
-		Activity activity = null;
+	public void testDomainCreateDisciplineRegistry() throws Exception {
+		DisciplineRegistry disciplineRegistry = null;
 
+		// Creates an object
+		final long disciplineRegId = createDisciplineRegistry();
 		// Ensures that the object doesn't exist
 		try {
-			activity = findActivity(id);
+			disciplineRegistry = findDisciplineRegistry(disciplineRegId);
 			fail("Object has not been created yet it shouldn't be found");
 		} catch (NoSuchElementException e) {
 		}
 
-		// Creates an object
-		createActivity(id);
-
-		// Ensures that the object exists
-		try {
-			activity = findActivity(id);
-		} catch (NoSuchElementException e) {
-			fail("Object has been created it should be found");
-		}
-
 		// Checks that it's the right object
-		checkActivity(activity, id);
+		checkDisciplineRegistry(disciplineRegistry);
 
 		// Cleans the test environment
-		removeActivity(id);
+		removeDisciplineRegistry(disciplineRegId);
 
 		try {
-			findActivity(id);
+			findDisciplineRegistry(disciplineRegId);
 			fail("Object has been deleted it shouldn't be found");
 		} catch (NoSuchElementException e) {
 		}
@@ -191,42 +266,40 @@ public class DisciplineRegistryDAOTest {
 	 * This test make sure that updating an object success
 	 */
 	@Test
-	public void testDomainUpdateActivity() throws Exception {
-		final String id = counterService.getUniqueId(COUNTER_NAME);
-
+	public void testDomainUpdateDisciplineRegistry() throws Exception {
 		// Creates an object
-		createActivity(id);
+		final long disciplineRegId = createDisciplineRegistry();
 
 		// Ensures that the object exists
-		Activity activity = null;
+		DisciplineRegistry disciplineRegistry = null;
 		try {
-			activity = findActivity(id);
+			disciplineRegistry = findDisciplineRegistry(disciplineRegId);
 		} catch (NoSuchElementException e) {
 			fail("Object has been created it should be found");
 		}
 
 		// Checks that it's the right object
-		checkActivity(activity, id);
+		checkDisciplineRegistry(disciplineRegistry);
 
 		// Updates the object with new values
-		updateActivity(activity, id + 1);
+		updateDisciplineRegistry(disciplineRegistry);
 
 		// Ensures that the object still exists
-		Activity activityUpdated = null;
+		DisciplineRegistry disciplineRegistryUpdated = null;
 		try {
-			activityUpdated = findActivity(id);
+			disciplineRegistryUpdated = findDisciplineRegistry(disciplineRegId);
 		} catch (NoSuchElementException e) {
 			fail("Object should be found");
 		}
 
 		// Checks that the object values have been updated
-		checkActivity(activityUpdated, id + 1);
+		checkDisciplineRegistry(disciplineRegistryUpdated);
 
 		// Cleans the test environment
-		removeActivity(id);
+		removeDisciplineRegistry(disciplineRegId);
 
 		try {
-			findActivity(id);
+			findDisciplineRegistry(disciplineRegId);
 			fail("Object has been deleted it shouldn't be found");
 		} catch (NoSuchElementException e) {
 		}
@@ -236,10 +309,10 @@ public class DisciplineRegistryDAOTest {
 	 * This test ensures that the system cannont remove an unknown object
 	 */
 	@Test
-	public void testDomainDeleteUnknownActivity() throws Exception {
+	public void testDomainDeleteUnknownDisciplineRegistry() throws Exception {
 		// Removes an unknown object
 		try {
-			activityRepository.delete(null);
+			disciplineRegistryRepository.delete(null);
 			fail("Deleting an unknown object should break");
 		} catch (Exception e) {
 		}
@@ -248,107 +321,170 @@ public class DisciplineRegistryDAOTest {
 	// ==================================
 	// = Private Methods =
 	// ==================================
-	private Activity findActivity(final String id) throws NoSuchElementException {
-		final Activity activity = activityRepository.findById(id).get();
-		return activity;
+	private DisciplineRegistry findDisciplineRegistry(final Long id) throws NoSuchElementException {
+		final DisciplineRegistry discReg = disciplineRegistryRepository.findById(id).get();
+		return discReg;
 	}
 
-	private int findAllActivities() throws FinderException {
+	private int findAllDisciplineRegistries() throws FinderException {
 		try {
-			return ((Collection<Activity>) activityRepository.findAll()).size();
+			return ((Collection<DisciplineRegistry>) disciplineRegistryRepository.findAll()).size();
 		} catch (Exception e) {
+			logger.info("Exception is ... " + e.getMessage());
 			return 0;
 		}
 	}
 
-	private int findAllActivities(String disciplineId) throws FinderException {
+	private int findAllDisciplineRegistriesByDiscipline(String disciplineId) throws FinderException {
 		try {
 			Discipline discipline = disciplineRepository.findById(disciplineId).get();
-			return ((Collection<Activity>) activityRepository.findAllByDiscipline(discipline)).size();
+			return ((Collection<DisciplineRegistry>) disciplineRegistryRepository.findAllByDiscipline(discipline))
+					.size();
 		} catch (Exception e) {
 			return 0;
 		}
 	}
 
-	// Creates a discipline first and then a activity linked to this discipline
-	private void createActivity(final String id) throws CreateException, ObjectNotFoundException {
-		// Create discipline
-		final String newdisciplineId = counterService.getUniqueId("discipline");
-		final Discipline discipline = new Discipline(newdisciplineId, "name" + newdisciplineId,
-				"description" + newdisciplineId);
-		discipline.setDocuments("documents" + newdisciplineId);
-		disciplineRepository.save(discipline);
-		// Create activity
-		final Activity activity = new Activity(id, "name" + id, "description" + id, discipline);
-		activity.setCreditcostMax(4.0);
-		activity.setCreditcostMin(1.0);
+	private int findAllDisciplineRegistriesByCoach(String coachId) throws FinderException {
 		try {
-			activityRepository.save(activity);
+			User coach = userRepository.findById(coachId).get();
+			return ((Collection<DisciplineRegistry>) disciplineRegistryRepository.findAllByCoach(coach)).size();
 		} catch (Exception e) {
-			// remove the added discipline object
-			disciplineRepository.deleteById(newdisciplineId);
-			// rethrow the exception
-			throw e;
+			return 0;
 		}
 	}
 
-	// Creates a discipline and updates the activity with this new discipline
-	private void updateActivity(final Activity activity, final String id)
-			throws UpdateException, CreateException, ObjectNotFoundException {
-		// Create discipline
-		final String newdisciplineId = counterService.getUniqueId("discipline");
-		final Discipline discipline = new Discipline(newdisciplineId, "name" + newdisciplineId,
-				"description" + newdisciplineId);
-		discipline.setDocuments("documents" + newdisciplineId);
+	// Creates a discipline first, then a activity and then an event linked to this
+	// activity
+	private long createDisciplineRegistry() throws CreateException, RemoveException, FinderException {
+
+		// Create new coach
+		final String coachId = counterService.getUniqueId("Coach");
+		final User coach = new User("user" + coachId, "firstname" + coachId, "lastname" + coachId);
+		coach.setPassword("pwd" + coachId);
+		coach.setRole(roleService.findByRoleName("ROLE_COACH"));
+		coach.setStatut("VALIDE");
+		userRepository.save(coach);
+
+		// Finds an object with a unknown identifier
+		final String id = counterService.getUniqueId("Discipline");
+		final Discipline discipline = new Discipline("disc" + id, "name" + id, "description" + id);
+		discipline.setDocuments("documents" + id);
 		disciplineRepository.save(discipline);
 
-		// get old discipline
-		Discipline disc = activity.getDiscipline();
+		// Create DisciplineRegistry
+		final DisciplineRegistry disciplineRegistry = new DisciplineRegistry(discipline, coach);
 
-		// Update activity with new discipline
-		activity.setName("name" + id);
-		activity.setDescription("description" + id);
-		activity.setDiscipline(discipline);
-		activity.setCreditcostMax(4.0);
-		activity.setCreditcostMin(1.0);
-		activityRepository.save(activity);
+		disciplineRegistryRepository.save(disciplineRegistry);
+		return disciplineRegistry.getId();
+	}
 
-		// delete old discipline
+	// Creates a discipline, an activity and updates the event with this new
+	// activity
+	private void updateDisciplineRegistry(final DisciplineRegistry disciplineRegistry)
+			throws UpdateException, CreateException, RemoveException, FinderException {
+		// get old user
+		User coa = disciplineRegistry.getCoach();
+
+		// Create new coach
+		final String coachId = counterService.getUniqueId("coach");
+		final User coach = new User("user" + coachId, "firstname" + coachId, "lastname" + coachId);
+		coach.setPassword("pwd" + coachId);
+		coach.setRole(roleService.findByRoleName("ROLE_COACH"));
+		coach.setStatut("VALIDE");
+		userRepository.save(coach);
+
+		// get old event
+		Discipline disc = disciplineRegistry.getDiscipline();
+
+		// Create Event
+		Discipline discipline = createNewDiscipline();
+		// Updates the event
+		disciplineRegistry.setCoach(coach);
+		disciplineRegistry.setDiscipline(discipline);
+		disciplineRegistryRepository.save(disciplineRegistry);
+		// delete old discipline & activity
+		// delete old coach
 		disciplineRepository.delete(disc);
+		userRepository.delete(coa);
 	}
 
-	private void removeActivity(final String id) throws RemoveException, ObjectNotFoundException {
-		final String activityId = id;
-		Activity activity = activityRepository.findById(activityId).get();
-		final String disciplineId = activity.getDiscipline().getId();
-		activityRepository.deleteById(id);
-		disciplineRepository.deleteById(disciplineId);
+	private void checkDisciplineRegistry(final DisciplineRegistry disciplineRegistry) {
+		assertNotNull("coach", disciplineRegistry.getCoach());
+		assertNotNull("discipline", disciplineRegistry.getDiscipline());
 	}
 
-	private void checkActivity(final Activity activity, final String id) {
-		assertEquals("name", "name" + id, activity.getName());
-		assertEquals("description", "description" + id, activity.getDescription());
-		assertNotNull("discipline", activity.getDiscipline());
+	private void removeDisciplineRegistry(final long disciplineRegId) throws RemoveException, ObjectNotFoundException {
+		DisciplineRegistry disciplineRegistry = disciplineRegistryRepository.findById(disciplineRegId).get();
+		final String coachId = disciplineRegistry.getCoach().getUsername();
+		User coach = userRepository.findById(coachId).get();
+		final String disciplineId = disciplineRegistry.getDiscipline().getId();
+		Discipline discipline = disciplineRepository.findById(disciplineId).get();
+
+		disciplineRepository.delete(discipline);
+		userRepository.delete(coach);
+		disciplineRegistryRepository.deleteById(disciplineRegId);
 	}
 
-	// Creates a new discipline and return it
-	private Discipline createNewDiscipline() throws CreateException {
-		final String newDisciplineId = counterService.getUniqueId("Discipline");
-		final Discipline discipline = new Discipline("cat" + newDisciplineId, "name" + newDisciplineId,
-				"description" + newDisciplineId);
-		discipline.setDocuments("documents" + newDisciplineId);
+	// Creates a discipline first, then an activity and return it
+	private Discipline createNewDiscipline() throws CreateException, FinderException {
+		// Finds an object with a unknown identifier
+		final String id = counterService.getUniqueId("Discipline");
+		final Discipline discipline = new Discipline("disc" + id, "name" + id, "description" + id);
+		discipline.setDocuments("documents" + id);
 		disciplineRepository.save(discipline);
 		return discipline;
 	}
 
-	// Creates an activity linked to an existing discipline
-	private Activity createActivityForDiscipline(final Discipline discipline) throws CreateException {
-		final String id = counterService.getUniqueId(COUNTER_NAME);
-		final Activity activity = new Activity(id, "name" + id, "description" + id, discipline);
-		activity.setCreditcostMax(4.0);
-		activity.setCreditcostMin(1.0);
-		activityRepository.save(activity);
-		return activity;
+	// Creates a coach
+	private User createNewCoach() throws CreateException, FinderException {
+		// Create Coach
+		final String newCoachId = counterService.getUniqueId("Coach");
+		final User coach = new User("user" + newCoachId, "firstname" + newCoachId, "lastname" + newCoachId);
+		coach.setCity("city" + newCoachId);
+		coach.setCountry("cnty" + newCoachId);
+		coach.setState("state" + newCoachId);
+		coach.setAddress1("address1" + newCoachId);
+		coach.setAddress2("address2" + newCoachId);
+		coach.setTelephone("phone" + newCoachId);
+		coach.setEmail("email" + newCoachId);
+		coach.setPassword("pwd" + newCoachId);
+		coach.setZipcode("zip" + newCoachId);
+		coach.setStatut("VALIDE");
+		coach.setPassword("pwd" + newCoachId);
+		coach.setRole(roleService.findByRoleName("ROLE_COACH"));
+		userRepository.save(coach);
+		return coach;
 	}
 
+	// Creates an event linked to an existing activity
+	private DisciplineRegistry createDisciplineRegistryForCoach(final User coach)
+			throws CreateException, FinderException {
+
+		// Create Event
+		Discipline discipline = createNewDiscipline();
+
+		final DisciplineRegistry disciplineReg = new DisciplineRegistry(discipline, coach);
+		disciplineRegistryRepository.save(disciplineReg);
+		return disciplineReg;
+	}
+
+	// Creates an event linked to an existing activity
+	private DisciplineRegistry createDisciplineRegistryForDiscipline(final Discipline discipline)
+			throws CreateException, FinderException {
+		// Create User
+		User coach = createNewCoach();
+		final DisciplineRegistry disciplineRegistry = new DisciplineRegistry(discipline, coach);
+		disciplineRegistryRepository.save(disciplineRegistry);
+		return disciplineRegistry;
+	}
+
+	private void removeDiscipline(final String disciplineId) throws RemoveException, ObjectNotFoundException {
+		Discipline discipline = disciplineRepository.findById(disciplineId).get();
+		disciplineRepository.delete(discipline);
+	}
+
+	private void removeCoach(final User coach) throws RemoveException, ObjectNotFoundException {
+		userRepository.delete(coach);
+	}
 }

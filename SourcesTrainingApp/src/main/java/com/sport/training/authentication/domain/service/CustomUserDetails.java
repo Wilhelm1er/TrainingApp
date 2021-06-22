@@ -26,14 +26,12 @@ public class CustomUserDetails implements UserDetails {
 		this.grantedAuthorities=grantedAuthorities;
 		this.credit=credit;
 		this.statut=statut;
-		
 	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {;
 	    return grantedAuthorities;
 	}
-
 
 	@Override
 	public String getPassword() {

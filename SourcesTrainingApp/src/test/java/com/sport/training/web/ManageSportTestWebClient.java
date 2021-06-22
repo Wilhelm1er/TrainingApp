@@ -30,7 +30,7 @@ public class ManageSportTestWebClient {
 	private WebClient webClient;
 
 	private HtmlPage index, loginPage;
-	private HtmlPage itemManagePage, itemUpdateHtmlPage, itemCreateHtmlPage;
+	private HtmlPage eventCreatePage, itemUpdateHtmlPage, itemCreateHtmlPage;
 
 	private HtmlElement itemUpdateLink;
 
@@ -40,23 +40,22 @@ public class ManageSportTestWebClient {
 	@Test
 	public void testWebCreateEvent() throws Exception {
 
-		// 1st, we log in as admin
+		// 1st, we log in as a coach
 		loginPage = webClient.getPage("/login");
-		loginPage.getFormByName("loginForm").getInputByName("username").setValueAttribute("MrRobot");
+		loginPage.getFormByName("loginForm").getInputByName("username").setValueAttribute("coach1");
 		loginPage.getFormByName("loginForm").getInputByName("password").setValueAttribute("cnam");
 		index = loginPage.getFormByName("loginForm").getButtonByName("loginButton").click();
 
-		/* items */
+		/* events */
 		try {
-			webClient.getPage("/manage-events").getWebResponse();
+			webClient.getPage("/select-activity/coach1").getWebResponse();
 		} catch (Exception e) {
 			assertTrue(e instanceof FailingHttpStatusCodeException);
 		}
-		itemManagePage = webClient.getPage("/manage-products/BIRDS");
-		assertTrue(itemManagePage.getBody().asText().contains("Gestion du catalogue"));
-		assertTrue(itemManagePage.getBody().asText().contains("Produits"));
+		eventCreatePage = webClient.getPage("/select-activity?userId=coach1");
+		assertTrue(eventCreatePage.getBody().asText().contains("créer un evenement"));
 
-		itemUpdateLink = itemManagePage.getBody().getOneHtmlElementByAttribute("a", "href", "/create-item/AVCB01");
+		itemUpdateLink = eventCreatePage.getBody().getOneHtmlElementByAttribute("a", "href", "/create-item/AVCB01");
 		itemCreateHtmlPage = itemUpdateLink.click();
 		assertTrue(itemCreateHtmlPage.getBody().asText().contains("Création d'un article"));
 		assertTrue(itemCreateHtmlPage.getBody().asText().contains("id"));
@@ -80,11 +79,11 @@ public class ManageSportTestWebClient {
 	 * This test starts at login page the moves around catalog update pages
 	 */
 	@Test
-	public void testWebUpdateItem() throws Exception {
+	public void testWebUpdateEvent() throws Exception {
 
 		// 1st, we log in as admin
 		loginPage = webClient.getPage("/login");
-		loginPage.getFormByName("loginForm").getInputByName("username").setValueAttribute("stb01");
+		loginPage.getFormByName("loginForm").getInputByName("username").setValueAttribute("coach1");
 		loginPage.getFormByName("loginForm").getInputByName("password").setValueAttribute("cnam");
 		index = loginPage.getFormByName("loginForm").getButtonByName("loginButton").click();
 
@@ -113,24 +112,19 @@ public class ManageSportTestWebClient {
 	 * A user should not be able to manage the catalog
 	 */
 	@Test
-	@WithMockUser(username = "bill000", password = "cnam", roles = "USER")
-	public void testWebManageCatalogAsUser() throws Exception {
-		index = webClient.getPage("/manage-categories");
-		assertTrue(index.getBody().asText().contains("Page d'erreur"));
-
-		index = webClient.getPage("/manage-products/BIRDS");
-		assertTrue(index.getBody().asText().contains("Page d'erreur"));
-
-		index = webClient.getPage("/manage-items/AVCB01");
-		assertTrue(index.getBody().asText().contains("Page d'erreur"));
-
-		index = webClient.getPage("/update-item/EST25");
+	@WithMockUser(username = "athlete1", password = "cnam", roles = "ATHLETE")
+	public void testWebManageSportAsUser() throws Exception {
+		index = webClient.getPage("/manage-sports");
 		assertTrue(index.getBody().asText().contains("Page d'erreur"));
 		assertTrue(index.getBody().asText().contains("AccessDeniedException"));
 
-		index = webClient.getPage("/create-item/AVCB01");
+		index = webClient.getPage("/manage-activities/BOXE");
 		assertTrue(index.getBody().asText().contains("Page d'erreur"));
-		assertTrue(index.getBody().asText().contains("AccessDeniedException"));
+
+		index = webClient.getPage("/select-activity/athlete1");
+		assertTrue(index.getBody().asText().contains("Page d'erreur"));
+
+		index = webClient.getPage("/select-activity?userId=athlete1");
+		assertTrue(index.getBody().asText().contains("Page d'erreur"));
 	}
-
 }
