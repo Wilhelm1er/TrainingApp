@@ -86,13 +86,11 @@ public class DiscussionDAOTest {
 	 */
 	@Test
 	public void testDomainFindAllDiscussions() throws Exception {
-		final Long id = discussionRepository.findLastId().orElse(10000L) + 1;
-
 		// First findAll
 		final int firstSize = findAllDiscussions();
 
 		// Create an object
-		final Long discussionId = createDiscussion(id);
+		final Long discussionId = createDiscussion();
 
 		// Ensures that the object exists
 		try {
@@ -171,7 +169,6 @@ public class DiscussionDAOTest {
 		// Cleans the test environment
 		discussionRepository.delete(discussion1);
 		discussionRepository.delete(discussion2);
-
 		// Cleans the test environment
 		removeUser(newuser);
 
@@ -183,21 +180,10 @@ public class DiscussionDAOTest {
 	 */
 	@Test
 	public void testDomainCreateDiscussion() throws Exception {
-		final Long id = discussionRepository.findLastId().orElse(10000L) + 1;
 		Discussion discussion = null;
 
 		// Creates an object
-		final long discussionId = createDiscussion(id);
-
-		// Ensures that the object doesn't exist
-		try {
-			discussion = findDiscussion(discussionId);
-			fail("Object has not been created yet it shouldn't be found");
-		} catch (NoSuchElementException e) {
-		}
-
-		// Creates an object
-		createDiscussion(id);
+		final long discussionId = createDiscussion();
 
 		// Ensures that the object exists
 		try {
@@ -207,7 +193,7 @@ public class DiscussionDAOTest {
 		}
 
 		// Checks that it's the right object
-		checkDiscussion(discussion, id);
+		checkDiscussion(discussion);
 
 		// Cleans the test environment
 		removeDiscussion(discussionId);
@@ -224,10 +210,8 @@ public class DiscussionDAOTest {
 	 */
 	@Test
 	public void testDomainUpdateDiscussion() throws Exception {
-		final Long id = discussionRepository.findLastId().orElse(10000L) + 1;
-
 		// Creates an object
-		final long discussionId = createDiscussion(id);
+		final long discussionId = createDiscussion();
 
 		// Ensures that the object exists
 		Discussion discussion = null;
@@ -238,10 +222,10 @@ public class DiscussionDAOTest {
 		}
 
 		// Checks that it's the right object
-		checkDiscussion(discussion, id);
+		checkDiscussion(discussion);
 
 		// Updates the object with new values
-		updateDiscussion(discussion, id + 1);
+		updateDiscussion(discussion);
 
 		// Ensures that the object still exists
 		Discussion discussionUpdated = null;
@@ -252,7 +236,7 @@ public class DiscussionDAOTest {
 		}
 
 		// Checks that the object values have been updated
-		checkDiscussion(discussionUpdated, id + 1);
+		checkDiscussion(discussionUpdated);
 
 		// Cleans the test environment
 		removeDiscussion(discussionId);
@@ -304,30 +288,30 @@ public class DiscussionDAOTest {
 	}
 
 	// Creates a discipline first and then a discussion linked to this discipline
-	private long createDiscussion(final Long id) throws CreateException, FinderException {
+	private long createDiscussion() throws CreateException, FinderException {
 		// Create user
-		final String newuserId = counterService.getUniqueId("User");
+		String newuserId = counterService.getUniqueId("User");
 		final User user = new User(newuserId, "firstname" + newuserId, "lastname" + newuserId);
 		user.setPassword("pwd" + newuserId);
 		user.setRole(roleService.findByRoleName("ROLE_COACH"));
 		user.setStatut("VALIDE");
 		userRepository.save(user);
 		// Create discussion
-		final Discussion discussion = new Discussion(user, "subject" + id);
+		final Discussion discussion = new Discussion(user, "subject" + newuserId);
 
 		discussionRepository.save(discussion);
 		return discussion.getId();
 	}
 
 	// Creates a discipline and updates the discussion with this new discipline
-	private void updateDiscussion(final Discussion discussion, final long id)
+	private void updateDiscussion(final Discussion discussion)
 			throws UpdateException, CreateException, FinderException {
 		// get old customer
 		User usr = discussion.getUser();
 
 		// Create new user
-		final String userId = counterService.getUniqueId("user");
-		final User user = new User("user" + userId, "firstname" + userId, "lastname" + userId);
+		String userId = counterService.getUniqueId("user");
+		final User user = new User(userId, "firstname" + userId, "lastname" + userId);
 		user.setPassword("pwd" + userId);
 		user.setRole(roleService.findByRoleName("ROLE_COACH"));
 		user.setStatut("VALIDE");
@@ -335,7 +319,7 @@ public class DiscussionDAOTest {
 
 		// Update discussion with new discipline
 		discussion.setUser(user);
-		discussion.setSubject("newSubject" + userId);
+		discussion.setSubject("subject" + userId);
 		discussionRepository.save(discussion);
 
 		// delete old user
@@ -344,13 +328,13 @@ public class DiscussionDAOTest {
 
 	private void removeDiscussion(final long discussionId) throws RemoveException, ObjectNotFoundException {
 		Discussion discussion = discussionRepository.findById(discussionId).get();
-		final User user = discussion.getUser();
+		User user = discussion.getUser();
 		discussionRepository.deleteById(discussionId);
 		userRepository.delete(user);
 	}
 
-	private void checkDiscussion(final Discussion discussion, final Long id) {
-		assertEquals("subject", "subject" + id, discussion.getSubject());
+	private void checkDiscussion(final Discussion discussion) {
+		assertEquals("subject", "subject" + discussion.getUser().getUsername(), discussion.getSubject());
 		assertNotNull("user", discussion.getUser());
 	}
 
@@ -367,8 +351,8 @@ public class DiscussionDAOTest {
 
 	// Creates an discussion linked to an existing user
 	private Discussion createDiscussionForUser(final User user) throws CreateException {
-		final Long id = discussionRepository.findLastId().orElse(10000L) + 1;
-		final Discussion discussion = new Discussion(user, "subject" + id);
+		final String userId = user.getUsername();
+		final Discussion discussion = new Discussion(user, "subject" + userId);
 		discussionRepository.save(discussion);
 		return discussion;
 	}

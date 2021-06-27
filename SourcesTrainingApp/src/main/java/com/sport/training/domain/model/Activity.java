@@ -45,7 +45,7 @@ public class Activity implements Serializable {
 	private Double creditcostMax;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "DISCIPLINE_FK")
+	@JoinColumn(name = "DISCIPLINE_FK", nullable = false)
 	@NotNull(message = "invalid Discipline")
 	private Discipline discipline;
 

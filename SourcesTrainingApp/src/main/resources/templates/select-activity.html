@@ -11,7 +11,10 @@
 	<br>
 	<div class="container" sec:authorize="hasRole('COACH')">
 
-		<h5 th:text="#{user.discipline.choice}"></h5>
+		
+		
+		<div class="erreur" th:if="${activityByDisciplinesCoach.empty}" th:text="'Documents en attente de validation'"></div><br>
+		<h5 th:text="#{user.activity.choice}"></h5>
 
 		<div id="decision" class="row" style="margin-top: 1%;">
 			<div class="col-md-4"

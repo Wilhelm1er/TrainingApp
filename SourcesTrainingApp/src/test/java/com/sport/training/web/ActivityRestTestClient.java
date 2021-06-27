@@ -42,42 +42,18 @@ public class ActivityRestTestClient {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	@Test
-	public void tesRestShowActivities() throws Exception {
-		MvcResult result = mockMvc
-				.perform(get("/activities").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk()).andReturn();
-		assertTrue(result.getResponse().getContentAsString().contains("BODY"));
-		assertTrue(result.getResponse().getContentAsString().contains("Bodysculpt"));
-		assertTrue(result.getResponse().getContentAsString().contains("Tonifier sa silhouette, decharger son stress et perdre du poids"));
-		assertTrue(result.getResponse().getContentAsString().contains("BOXE"));
-		assertTrue(result.getResponse().getContentAsString().contains("Boxe"));
-		assertTrue(result.getResponse().getContentAsString().contains(
-				"Renforcement du corps, canaliser son énergie et se surpasser"));
-		assertTrue(result.getResponse().getContentAsString().contains("ABDOS"));
-		assertTrue(result.getResponse().getContentAsString().contains("Abdominaux"));
-		assertTrue(result.getResponse().getContentAsString().contains("Permet de travailler l ensemble des muscles de la sangle abdominale sous la forme d exercices cibles"));
-		assertTrue(result.getResponse().getContentAsString().contains("GYM"));
-		assertTrue(result.getResponse().getContentAsString().contains("Gym"));
-		assertTrue(result.getResponse().getContentAsString().contains(
-				"Entretenez votre forme physique par des assouplissements, des etirements et des exercices de tonicite musculaire"));
-	}
+
 
 	@Test
 	public void tesRestShowActivityByDisciplineId() throws Exception {
 		MvcResult result = mockMvc.perform(
-				get("/activities/REPTILES").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+				get("/find-activities?disciplineId=BOXE").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk()).andReturn();
-		assertTrue(result.getResponse().getContentAsString().contains("RPLI02"));
-		assertTrue(result.getResponse().getContentAsString().contains("Iguana"));
-		assertTrue(result.getResponse().getContentAsString().contains("Friendly green friend"));
-		assertTrue(result.getResponse().getContentAsString().contains("REPTILES"));
-		assertTrue(result.getResponse().getContentAsString().contains("Reptiles"));
-		assertTrue(result.getResponse().getContentAsString().contains(
-				"Any of various cold-blooded, usually egg-laying vertebrates, such as a snake, lizard, crocodile, turtle"));
-		assertTrue(result.getResponse().getContentAsString().contains("RPSN01"));
-		assertTrue(result.getResponse().getContentAsString().contains("Rattlesnake"));
-		assertTrue(result.getResponse().getContentAsString().contains("Doubles as a watch dog"));
+		assertTrue(result.getResponse().getContentAsString().contains("Bodysculpt"));
+		assertTrue(result.getResponse().getContentAsString().contains("Tonifier sa silhouette, decharger son stress et perdre du poids"));
+		assertTrue(result.getResponse().getContentAsString().contains("Cardio boxe"));
+		assertTrue(result.getResponse().getContentAsString().contains("Combat training"));
+		assertTrue(result.getResponse().getContentAsString().contains("Mouvement de boxe, corde à sauter et travail de la silhouette "));
 	}
 
 	@Test
@@ -175,8 +151,9 @@ public class ActivityRestTestClient {
 		String json = objectMapper.writeValueAsString(abdos);
 		MvcResult result = mockMvc.perform(post("/activity").with(csrf()).contentType(MediaType.APPLICATION_JSON)
 				.content(json).accept(MediaType.APPLICATION_JSON)).andExpect(status().isCreated()).andReturn();
-		assertTrue(result.getResponse().getContentAsString().equals(
-				"{\"id\":\"ABDOOS\",\"name\":\"Abdominaux\",\"description\":\"Permet de travailler\",\"creditcostmin\":0.0,\"creditcostmax\":2.0,\"disciplineDTO\":{\"id\":\"GYM\",\"name\":\"Gym\",\"description\":\"Entretenez votre forme physique par des assouplissements, des etirements et des exercices de tonicite musculaire\",\"documents\":\"Brevet d Etat AGFF - Activites Gymniques de la Forme et de la Force\"}}"));
+		assertTrue(result.getResponse().getContentAsString().contains(
+				"{\"id\":\"ABDOOS\",\"name\":\"Abdominaux\",\"description\":\"Permet de travailler l ensemble des muscles de la sangle abdominale sous la forme d exercices cibles\","
+				+ "\"creditcostmin\":0.0,\"creditcostmax\":2.0,\"disciplineDTO\":{\"id\":\"GYM\",\"name\":\"Gym\",\"description\":\"Entretenez votre forme physique par des assouplissements, des etirements et des exercices de tonicite musculaire\",\"documents\":\"Brevet d Etat AGFF - Activites Gymniques de la Forme et de la Force\"}}"));
 		}
 
 	@Test

@@ -49,7 +49,7 @@ public class DisciplineRestTestClient {
 				.andExpect(status().isOk()).andReturn();
 		assertTrue(result.getResponse().getContentAsString().contains("BOXE"));
 		assertTrue(result.getResponse().getContentAsString().contains(
-				"Renforcement du corps, canaliser son énergie et se surpasser"));
+				"Renforcement du corps, canaliser son energie et se surpasser"));
 		assertTrue(result.getResponse().getContentAsString().contains("CARDIO"));
 		assertTrue(result.getResponse().getContentAsString().contains("DANSE"));
 		assertTrue(result.getResponse().getContentAsString().contains("YOGA"));
@@ -65,13 +65,7 @@ public class DisciplineRestTestClient {
 				.andExpect(status().isOk()).andReturn();
 		assertTrue(result.getResponse().getContentAsString().contains("BOXE"));
 		assertTrue(result.getResponse().getContentAsString().contains(
-				"Renforcement du corps, canaliser son énergie et se surpasser"));
-		assertTrue(result.getResponse().getContentAsString().contains("CARDIO"));
-		assertTrue(result.getResponse().getContentAsString().contains("DANSE"));
-		assertTrue(result.getResponse().getContentAsString().contains("YOGA"));
-		assertTrue(result.getResponse().getContentAsString().contains("GYM"));
-		assertTrue(result.getResponse().getContentAsString().contains(
-				"Entretenez votre forme physique par des assouplissements, des etirements et des exercices de tonicite musculaire"));
+				"Renforcement du corps, canaliser son energie et se surpasser"));
 	}
 
 	@Test
@@ -182,7 +176,7 @@ public class DisciplineRestTestClient {
 	@Test
 	@WithMockUser(username = "root", password = "cnam", roles = "ADMIN")
 	public void testRestFailedDeleteDiscipline() throws Exception {
-		MvcResult result = mockMvc.perform(delete("/discipline/BOXE") // No such category
+		MvcResult result = mockMvc.perform(delete("/discipline/BOXXXE") // No such category
 				.with(csrf()).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNotFound()).andReturn();
 		assertTrue(result.getResponse().getStatus() == 404);

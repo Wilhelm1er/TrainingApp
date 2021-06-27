@@ -35,6 +35,7 @@ public class UserDTO implements Serializable {
     
     public UserDTO(final String username) {
     	this.username=username;
+    	 setCredit(0.0);
     }
 
     public UserDTO(final String username, final String firstname, final String lastname) {

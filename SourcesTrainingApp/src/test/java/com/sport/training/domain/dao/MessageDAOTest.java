@@ -18,6 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.sport.training.authentication.domain.dao.UserRepository;
 import com.sport.training.authentication.domain.model.User;
+import com.sport.training.authentication.domain.service.RoleService;
 import com.sport.training.domain.model.Discussion;
 import com.sport.training.domain.model.Message;
 import com.sport.training.domain.service.CounterService;
@@ -35,8 +36,6 @@ import com.sport.training.exception.UpdateException;
 //@Transactional
 public class MessageDAOTest {
 
-	private static final String COUNTER_NAME = "Message";
-
 	private static Logger logger = LogManager.getLogger(MessageDAOTest.class);
 
 	@Autowired
@@ -47,6 +46,8 @@ public class MessageDAOTest {
 	private UserRepository userRepository;
 	@Autowired
 	private CounterService counterService;
+	@Autowired
+	private RoleService roleService;
 
 	private Random random = new Random();
 
@@ -94,7 +95,7 @@ public class MessageDAOTest {
 		// First findAll
 		final int firstSize = findAllMessages();
 		// Create an object
-		final long messageId = createMessage(id);
+		final Long messageId = createMessage();
 
 		// Ensures that the object exists
 		try {
@@ -126,7 +127,6 @@ public class MessageDAOTest {
 	 */
 	@Test
 	public void testDomainFindAllMessagesForACoach() throws Exception {
-
 		User newCoach = createNewUser();
 		final String coachId = newCoach.getUsername();
 
@@ -231,7 +231,7 @@ public class MessageDAOTest {
 		// Cleans the test environment
 		messageRepository.delete(message1);
 		messageRepository.delete(message2);
-		removeDiscussion(newDiscussion);
+		discussionRepository.delete(newDiscussion);
 	}
 
 	/**
@@ -240,34 +240,25 @@ public class MessageDAOTest {
 	 */
 	@Test
 	public void testDomainCreateMessage() throws Exception {
-		final Long id = messageRepository.findLastId().orElse(10000L) + 1;
 		Message message = null;
-
-		// Ensures that the object doesn't exist
-		try {
-			message = findMessage(id);
-			fail("Object has not been created yet it shouldn't be found");
-		} catch (NoSuchElementException e) {
-		}
-
 		// Creates an object
-		createMessage(id);
+		final long messageId = createMessage();
 
 		// Ensures that the object exists
 		try {
-			message = findMessage(id);
+			message = findMessage(messageId);
 		} catch (NoSuchElementException e) {
 			fail("Object has been created it should be found");
 		}
 
 		// Checks that it's the right object
-		checkMessage(message, id);
+		checkMessage(message);
 
 		// Cleans the test environment
-		removeMessage(id);
+		removeMessage(messageId);
 
 		try {
-			findMessage(id);
+			findMessage(messageId);
 			fail("Object has been deleted it shouldn't be found");
 		} catch (NoSuchElementException e) {
 		}
@@ -278,41 +269,39 @@ public class MessageDAOTest {
 	 */
 	@Test
 	public void testDomainUpdateMessage() throws Exception {
-		final Long id = messageRepository.findLastId().orElse(10000L) + 1;
-
 		// Creates an object
-		createMessage(id);
+		final long messageId = createMessage();
 
 		// Ensures that the object exists
 		Message message = null;
 		try {
-			message = findMessage(id);
+			message = findMessage(messageId);
 		} catch (NoSuchElementException e) {
 			fail("Object has been created it should be found");
 		}
 
 		// Checks that it's the right object
-		checkMessage(message, id);
+		checkMessage(message);
 
 		// Updates the object with new values
-		updateMessage(message, id + 1);
+		updateMessage(message);
 
 		// Ensures that the object still exists
 		Message messageUpdated = null;
 		try {
-			messageUpdated = findMessage(id);
+			messageUpdated = findMessage(messageId);
 		} catch (NoSuchElementException e) {
 			fail("Object should be found");
 		}
 
 		// Checks that the object values have been updated
-		checkMessage(messageUpdated, id + 1);
+		checkMessage(messageUpdated);
 
 		// Cleans the test environment
-		removeMessage(id);
+		removeMessage(messageId);
 
 		try {
-			findMessage(id);
+			findMessage(messageId);
 			fail("Object has been deleted it shouldn't be found");
 		} catch (NoSuchElementException e) {
 		}
@@ -368,10 +357,14 @@ public class MessageDAOTest {
 
 	// Creates a coach first, then a activity and then an message linked to this
 	// activity and coach
-	private long createMessage(final long id) throws CreateException, RemoveException, FinderException {
-
-		// Create Sender
-		final User sender = createNewUser();
+	private long createMessage() throws CreateException, RemoveException, FinderException {
+		// Create user
+		String newSenderId = counterService.getUniqueId("User");
+		final User sender = new User(newSenderId, "firstname" + newSenderId, "lastname" + newSenderId);
+		sender.setPassword("pwd" + newSenderId);
+		sender.setRole(roleService.findByRoleName("ROLE_COACH"));
+		sender.setStatut("VALIDE");
+		userRepository.save(sender);
 
 		// Create Sender
 		final User recipient = createNewUser();
@@ -380,7 +373,7 @@ public class MessageDAOTest {
 		final Discussion discussion = createNewDiscussion();
 
 		// Create Message
-		final Message message = new Message("texte" + id, sender, recipient, discussion);
+		final Message message = new Message("texte" + newSenderId, sender, recipient, discussion);
 
 		messageRepository.save(message);
 		return message.getId();
@@ -389,31 +382,35 @@ public class MessageDAOTest {
 	// Creates a discipline, an activity and a coach, updates the message with this
 	// new
 	// activity and coach
-	private void updateMessage(final Message message, final long id)
+	private void updateMessage(final Message message)
 			throws UpdateException, CreateException, RemoveException, FinderException {
 		// get old activity
 		final Discussion discu = message.getDiscussion();
 
-		// Create Activity
+		// Create Discussion
 		final Discussion discussion = createNewDiscussion();
 
 		// get old activity
-		final User sen = message.getSender();
+		User sen = message.getSender();
 
-		// Create Coach
-		final User sender = createNewUser();
+		// Create user
+		String newSenderId = counterService.getUniqueId("User");
+		final User sender = new User(newSenderId, "firstname" + newSenderId, "lastname" + newSenderId);
+		sender.setPassword("pwd" + newSenderId);
+		sender.setStatut("VALIDE");
+		userRepository.save(sender);
 		// Updates the message
-		message.setTexte("texte" + id);
+		message.setTexte("texte" + newSenderId);
 		message.setDiscussion(discussion);
 		message.setSender(sender);
 		messageRepository.save(message);
 		// delete old discipline & activity
-		removeDiscussion(discu);
+		discussionRepository.delete(discu);
 		removeUser(sen);
 	}
 
-	private void checkMessage(final Message message, final Long id) {
-		assertEquals("texte", "texte" + id, message.getTexte());
+	private void checkMessage(final Message message) {
+		assertEquals("texte", "texte" + message.getSender().getUsername(), message.getTexte());
 		assertNotNull("sender", message.getSender());
 		assertNotNull("recipient", message.getRecipient());
 	}
@@ -426,33 +423,26 @@ public class MessageDAOTest {
 		User sender = userRepository.findById(senderId).get();
 		final String recipientId = message.getRecipient().getUsername();
 		User recipient = userRepository.findById(recipientId).get();
-
+		messageRepository.deleteById(messageId);
 		userRepository.delete(sender);
 		discussionRepository.delete(discussion);
 		userRepository.delete(recipient);
-		messageRepository.deleteById(messageId);
+
 	}
 
 	// Creates a discipline first, then an activity and return it
 	private Discussion createNewDiscussion() throws CreateException, FinderException {
-
-		// Create User
-		final User user = createNewUser();
-
-		// Finds an object with a unknown identifier
-		final Long id = discussionRepository.findLastId().orElse(10000L) + 1;
+		// Create user
+		String newuserId = counterService.getUniqueId("User");
+		final User user = new User(newuserId, "firstname" + newuserId, "lastname" + newuserId);
+		user.setPassword("pwd" + newuserId);
+		user.setRole(roleService.findByRoleName("ROLE_COACH"));
+		user.setStatut("VALIDE");
+		userRepository.save(user);
 		// Create discussion
-		final String newDiscussionId = counterService.getUniqueId("Discussion");
-		final Discussion discussion = new Discussion(user, "subject" + newDiscussionId);
+		final Discussion discussion = new Discussion(user, "sub" + newuserId);
 
-		try {
-			discussionRepository.save(discussion);
-		} catch (Exception e) {
-			// remove the added user object
-			userRepository.deleteById(user.getUsername());
-			// rethrow the exception
-			throw e;
-		}
+		discussionRepository.save(discussion);
 		return discussion;
 	}
 
@@ -478,8 +468,7 @@ public class MessageDAOTest {
 
 	// Creates an message linked to an existing activity
 	private Message createMessageForCoach(final User sender) throws CreateException, FinderException {
-		final String id = counterService.getUniqueId(COUNTER_NAME);
-
+		final String id = counterService.getUniqueId("Sender");
 		// Create Activity
 		Discussion discussion = createNewDiscussion();
 		// Create Coach
@@ -491,7 +480,7 @@ public class MessageDAOTest {
 
 	// Creates an message linked to an existing activity
 	private Message createMessageForDiscussion(final Discussion discussion) throws CreateException, FinderException {
-		final String id = counterService.getUniqueId(COUNTER_NAME);
+		final String id = counterService.getUniqueId("Discussion");
 		// Create Coach
 		User sender = createNewUser();
 		// Create Coach
@@ -499,13 +488,6 @@ public class MessageDAOTest {
 		final Message message = new Message("texte" + id, sender, recipient, discussion);
 		messageRepository.save(message);
 		return message;
-	}
-
-	private void removeDiscussion(final Discussion discussion) throws RemoveException, ObjectNotFoundException {
-		final String userId = discussion.getUser().getUsername();
-		User user = userRepository.findById(userId).get();
-		userRepository.delete(user);
-		discussionRepository.delete(discussion);
 	}
 
 	private void removeUser(final User coach) throws RemoveException, ObjectNotFoundException {

@@ -7,12 +7,11 @@ import com.sport.training.authentication.domain.dao.UserDAOTest;
 import com.sport.training.authentication.domain.service.UserServiceTest;
 import com.sport.training.configuration.TestConfig;
 import com.sport.training.domain.dao.DisciplineDAOTest;
-import com.sport.training.domain.dao.DisciplineRegistryDAOTest;
+import com.sport.training.domain.dao.DisciplineUserDAOTest;
 import com.sport.training.domain.dao.DiscussionDAOTest;
 import com.sport.training.domain.dao.EventDAOTest;
-import com.sport.training.domain.dao.EventRegistryDAOTest;
+import com.sport.training.domain.dao.EventUserDAOTest;
 import com.sport.training.domain.dao.MessageDAOTest;
-import com.sport.training.domain.dao.NotationDAOTest;
 import com.sport.training.domain.dao.ActivityDAOTest;
 import com.sport.training.domain.dao.BookmarkDAOTest;
 import com.sport.training.domain.service.SportServiceTest;
@@ -33,9 +32,8 @@ import junit.framework.JUnit4TestAdapter;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ UserDAOTest.class, UserServiceTest.class, TestConfig.class, 
-		ActivityDAOTest.class, BookmarkDAOTest.class, DisciplineDAOTest.class, DisciplineRegistryDAOTest.class,
-		DiscussionDAOTest.class, EventDAOTest.class, EventRegistryDAOTest.class, MessageDAOTest.class,
-		NotationDAOTest.class,  
+		ActivityDAOTest.class, BookmarkDAOTest.class, DisciplineDAOTest.class, DisciplineUserDAOTest.class,
+		DiscussionDAOTest.class, EventDAOTest.class, EventUserDAOTest.class, MessageDAOTest.class,
 		CreditCardServiceTest.class, ShoppingCartTest.class, SportServiceTest.class,
 		UniqueIdGeneratorTest.class, 
 		ActivityRestTestClient.class, CreateUserTestWebClient.class, DisciplineRestTestClient.class,

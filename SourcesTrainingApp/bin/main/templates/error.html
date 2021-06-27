@@ -5,23 +5,21 @@
 </head>
 <body>
 	<nav th:insert="layout/default.html :: navbar"></nav>
-	<div class="container">
-		<br> <br> <br>
-		<h1 th:text="#{error.page}"></h1>
-		<br>
-		<div th:if="${exception != null}" class="alert alert-warning"
-			th:text="${exception}">message</div>
+<div class="container" >
+<br><br><br>
+<h1 th:text="#{error.page}"></h1>
+<br>
+<div th:if="${exception != null}" class="alert alert-warning" th:text="${exception}">message</div>
 
-		<div th:if="${exceptions}" class="alert alert-warning">
-			<table class="table table-striped ">
-				<tbody>
-					<tr class="row" th:each="exc : ${exceptions}">
-						<td th:text="${exc}"></td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
+<div th:if="${exceptions}" class="alert alert-warning">
+                    <table class="table table-striped ">
+                        <tbody>
+                        <tr class="row" th:each="exc : ${exceptions}">
+                                <td th:text="${exc}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+ </div>
 	<br>
 	<br>
 	<br>

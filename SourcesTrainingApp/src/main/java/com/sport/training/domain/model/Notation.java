@@ -64,17 +64,20 @@ public class Notation implements Serializable {
 	// = Constructors =
 	// ======================================
 	public Notation() {
-		this.notationDate = new Date();
+		id = 0L;
+		notationDate = null;
+		athlete = new User();
+		coach = new User();
+		event = new Event();
 	}
 
 	public Notation(final int note, final String comments, final User athlete, final User coach, final Event event) {
 		this.notationDate = new Date();
-		setNotationDate(notationDate);
-		setNote(note);
-		setComments(comments);
-		setAthlete(athlete);
-		setCoach(coach);
-		setEvent(event);
+		this.note=note;
+		this.comments=comments;
+		this.athlete=athlete;
+		this.coach=coach;
+		this.event=event;
 	}
 
 	// ======================================

@@ -26,78 +26,46 @@ public class VisualiseCatalogTestWebClient {
 	@Autowired
 	private WebClient webClient;
 
-	private HtmlPage index, productsHtmlPage, itemsHtmlPage, itemHtmlPage;
+	private HtmlPage index, activitiesHtmlPage, eventsHtmlPage, eventHtmlPage;
 
-	private HtmlElement productsLink, itemsLink, itemLink;
+	private HtmlElement activitiesLink, eventsLink, eventLink;
 
 	/**
 	 * This tests starts at index page and click on the products, items and item
 	 * links
 	 */
 	@Test
-	public void testWebVisualiseProducts() throws Exception {
+	public void testWebVisualiseActivities() throws Exception {
 
 		// The test starts at the index page
 		index = webClient.getPage("/");
 		assertTrue(index.getBody().asText()
-				.contains("The YAPS Pet Store Demo for Spring Boot is a fictional sample application"));
+				.contains("Centre d'entraînements"));
 
 		// We click on the first link of the index page
-		productsLink = index.getBody().getOneHtmlElementByAttribute("area", "href", "/find-products?categoryId=BIRDS");
-		productsHtmlPage = productsLink.click();
-		assertTrue(productsHtmlPage.getBody().asText().contains("Liste de produits appartenant à la catégorie BIRDS"));
+		activitiesLink = index.getBody().getOneHtmlElementByAttribute("area", "href", "/find-activities?disciplineId=BOXE");
+		activitiesHtmlPage = activitiesLink.click();
+		assertTrue(activitiesHtmlPage.getBody().asText().contains("Liste d'activités appartenant à la discipline BOXE"));
 	}
 
 	@Test
-	public void testWebVisualiseItems() throws Exception {
+	public void testWebVisualiseEvents() throws Exception {
 
 		// The test starts at the index page
-		index = webClient.getPage("/");
-		assertTrue(index.getBody().asText()
-				.contains("The YAPS Pet Store Demo for Spring Boot is a fictional sample application"));
+				index = webClient.getPage("/");
+				assertTrue(index.getBody().asText()
+						.contains("Centre d'entraînements"));
 
 		// We click on the first link of the index page
-		productsLink = index.getBody().getOneHtmlElementByAttribute("area", "href", "/find-products?categoryId=BIRDS");
-		productsHtmlPage = productsLink.click();
-		assertTrue(productsHtmlPage.getBody().asText().contains("Liste de produits appartenant à la catégorie BIRDS"));
+		activitiesLink = index.getBody().getOneHtmlElementByAttribute("area", "href", "/find-activities?disciplineId=BOXE");
+		activitiesHtmlPage = activitiesLink.click();
+		assertTrue(activitiesHtmlPage.getBody().asText().contains("Liste d'activités appartenant à la discipline BOXE"));
 
 		// We click on the first link of the products page
-		itemsLink = productsHtmlPage.getBody().getOneHtmlElementByAttribute("a", "href",
-				"/find-items?productId=AVCB01");
-		itemsHtmlPage = itemsLink.click();
+		eventsLink = activitiesHtmlPage.getBody().getOneHtmlElementByAttribute("a", "href",
+				"/find-events?activityId=BODY");
+		eventsHtmlPage = eventsLink.click();
 		assertTrue(
-				itemsHtmlPage.getBody().asText().contains("Liste des articles appartenant au produit Amazon Parrot"));
+				eventsHtmlPage.getBody().asText().contains("No Event in the database"));
 	}
-
-	@Test
-	public void testWebVisualiseOneItem() throws Exception {
-
-		// The test starts at the index page
-		index = webClient.getPage("/");
-		assertTrue(index.getBody().asText()
-				.contains("The YAPS Pet Store Demo for Spring Boot is a fictional sample application"));
-
-		// We click on the first link of the index page
-		productsLink = index.getBody().getOneHtmlElementByAttribute("area", "href", "/find-products?categoryId=BIRDS");
-		productsHtmlPage = productsLink.click();
-		assertTrue(productsHtmlPage.getBody().asText().contains("Liste de produits appartenant à la catégorie BIRDS"));
-
-		// We click on the first link of the products page
-		itemsLink = productsHtmlPage.getBody().getOneHtmlElementByAttribute("a", "href",
-				"/find-items?productId=AVCB01");
-		itemsHtmlPage = itemsLink.click();
-		assertTrue(
-				itemsHtmlPage.getBody().asText().contains("Liste des articles appartenant au produit Amazon Parrot"));
-
-		// We click on the first link of the items page
-		itemLink = itemsHtmlPage.getBody().getOneHtmlElementByAttribute("a", "href", "/find-item?itemId=EST25");
-		itemHtmlPage = itemLink.click();
-		assertTrue(itemHtmlPage.getBody().asText().contains("Amazon Parrot sélectionné"));
-		assertTrue(itemHtmlPage.getBody().asText().contains("prix unitaire : 120.0 euros"));
-		// ATTENTION : TEMPORAIRE. TESTE UN VARIABLE QUI EVOLUE AVEC LA DATE DU JOUR.
-		// VALABLE JUSQU'AU 14 FEVRIER 2021
-		assertFalse(itemHtmlPage.getBody().asText().contains("an(s)"));
-		assertTrue(itemHtmlPage.getBody().asText().contains("Male Adult - 10 mois"));
-	}
-
 }

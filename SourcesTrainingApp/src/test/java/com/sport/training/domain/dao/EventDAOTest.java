@@ -97,12 +97,11 @@ public class EventDAOTest {
 	 */
 	@Test
 	public void testDomainFindAllEvents() throws Exception {
-		final Long id = eventRepository.findLastId().orElse(10000L) + 1;
 
 		// First findAll
 		final int firstSize = findAllEvents();
 		// Create an object
-		final long eventId = createEvent(id);
+		final long eventId = createEvent();
 
 		// Ensures that the object exists
 		try {
@@ -190,7 +189,6 @@ public class EventDAOTest {
 	 */
 	@Test
 	public void testDomainFindAllEventsForAnActivity() throws Exception {
-
 		Activity newActivity = createNewActivity();
 		final String activityId = newActivity.getId();
 
@@ -247,21 +245,20 @@ public class EventDAOTest {
 	 */
 	@Test
 	public void testDomainCreateEvent() throws Exception {
-		final Long id = eventRepository.findLastId().orElse(10000L) + 1;
 		Event event = null;
 
 		// Creates an object
-		final long eventId = createEvent(id);
+		final long eventId = createEvent();
 
-		// Ensures that the object doesn't exist
+		// Ensures that the object exists
 		try {
-			event = findEvent(id);
-			fail("Object has not been created yet it shouldn't be found");
+			event = findEvent(eventId);
 		} catch (NoSuchElementException e) {
+			fail("Object has been created it should be found");
 		}
 
 		// Checks that it's the right object
-		checkEvent(event, id);
+		checkEvent(event);
 
 		// Cleans the test environment
 		removeEvent(eventId);
@@ -278,10 +275,8 @@ public class EventDAOTest {
 	 */
 	@Test
 	public void testDomainUpdateEvent() throws Exception {
-		final Long id = eventRepository.findLastId().orElse(10000L) + 1;
-
 		// Creates an object
-		final long eventId = createEvent(id);
+		final long eventId = createEvent();
 
 		// Ensures that the object exists
 		Event event = null;
@@ -292,10 +287,10 @@ public class EventDAOTest {
 		}
 
 		// Checks that it's the right object
-		checkEvent(event, id);
+		checkEvent(event);
 
 		// Updates the object with new values
-		updateEvent(event, id + 1);
+		updateEvent(event);
 
 		// Ensures that the object still exists
 		Event eventUpdated = null;
@@ -306,7 +301,7 @@ public class EventDAOTest {
 		}
 
 		// Checks that the object values have been updated
-		checkEvent(eventUpdated, id + 1);
+		checkEvent(eventUpdated);
 
 		// Cleans the test environment
 		removeEvent(eventId);
@@ -368,21 +363,25 @@ public class EventDAOTest {
 
 	// Creates a coach first, then a activity and then an event linked to this
 	// activity and coach
-	private long createEvent(final long id) throws CreateException, RemoveException, FinderException {
-
-		// Create Coach
-		final User coach = createNewCoach();
+	private long createEvent() throws CreateException, RemoveException, FinderException {
+		// Create user
+		String newCoachId = counterService.getUniqueId("User");
+		final User coach = new User(newCoachId, "firstname" + newCoachId, "lastname" + newCoachId);
+		coach.setPassword("pwd" + newCoachId);
+		coach.setRole(roleService.findByRoleName("ROLE_COACH"));
+		coach.setStatut("VALIDE");
+		userRepository.save(coach);
 
 		// Create Activity
 		final Activity activity = createNewActivity();
 
 		// Create Event
-		final Event event = new Event("name" + id, _defaultDate, _defaultCreditCost, coach, activity);
+		final Event event = new Event("name" + newCoachId, _defaultDate, _defaultCreditCost, coach, activity);
 
 		event.setDuration(50);
 		event.setIntensity(3);
-		event.setEquipment("equipment" + String.valueOf(id));
-		event.setDescription("description" + String.valueOf(id));
+		event.setEquipment("equipment" + newCoachId);
+		event.setDescription("description" + newCoachId);
 
 		eventRepository.save(event);
 		return event.getId();
@@ -391,31 +390,37 @@ public class EventDAOTest {
 	// Creates a discipline, an activity and a coach, updates the event with this
 	// new
 	// activity and coach
-	private void updateEvent(final Event event, final long id)
+	private void updateEvent(final Event event)
 			throws UpdateException, CreateException, RemoveException, FinderException {
 		// get old activity
-		final Activity activ = event.getActivity();
+		User coa = event.getCoach();
 
-		// Create Activity
-		final Activity activity = createNewActivity();
+		// Create user
+		final String newCoachId = counterService.getUniqueId("User");
+		final User coach = new User(newCoachId, "firstname" + newCoachId, "lastname" + newCoachId);
+		coach.setPassword("pwd" + newCoachId);
+		coach.setStatut("VALIDE");
+		userRepository.save(coach);
 
 		// get old activity
-		final User coa = event.getCoach();
+		Activity activ = event.getActivity();
 
-		// Create Coach
-		final User coach = createNewCoach();
+		// Create Activity
+		Activity activity = createNewActivity();
+
 		// Updates the event
-		event.setName("name" + id);
+		event.setName("name" + newCoachId);
 		event.setActivity(activity);
 		event.setCoach(coach);
 		eventRepository.save(event);
-		// delete old discipline & activity
-		removeActivity(activ);
-		removeCoach(coa);
+		// delete old activity et discipline
+		activityRepository.delete(activ);
+		// delete old user
+		userRepository.delete(coa);
 	}
 
-	private void checkEvent(final Event event, final Long id) {
-		assertEquals("name", "name" + id, event.getName());
+	private void checkEvent(final Event event) {
+		assertEquals("name", "name" + event.getCoach().getUsername(), event.getName());
 		assertNotNull("activity", event.getActivity());
 		assertNotNull("coach", event.getCoach());
 	}
@@ -452,7 +457,6 @@ public class EventDAOTest {
 			// rethrow the exception
 			throw e;
 		}
-		System.out.println("activity:" + activity);
 		return activity;
 	}
 
@@ -461,15 +465,6 @@ public class EventDAOTest {
 		// Create Coach
 		final String newCoachId = counterService.getUniqueId("Coach");
 		final User coach = new User("user" + newCoachId, "firstname" + newCoachId, "lastname" + newCoachId);
-		coach.setCity("city" + newCoachId);
-		coach.setCountry("cnty" + newCoachId);
-		coach.setState("state" + newCoachId);
-		coach.setAddress1("address1" + newCoachId);
-		coach.setAddress2("address2" + newCoachId);
-		coach.setTelephone("phone" + newCoachId);
-		coach.setEmail("email" + newCoachId);
-		coach.setPassword("pwd" + newCoachId);
-		coach.setZipcode("zip" + newCoachId);
 		coach.setStatut("VALIDE");
 		coach.setPassword("pwd" + newCoachId);
 		coach.setRole(roleService.findByRoleName("ROLE_COACH"));
@@ -479,22 +474,41 @@ public class EventDAOTest {
 
 	// Creates an event linked to an existing activity
 	private Event createEventForCoach(final User coach) throws CreateException, ObjectNotFoundException {
-		final String id = counterService.getUniqueId("Coach");
 
+		final String newUserId = coach.getUsername();
 		// Create Activity
-		Activity activity = createNewActivity();
+		final Activity activity = createNewActivity();
 
-		final Event event = new Event("name" + id, _defaultDate, _defaultCreditCost, coach, activity);
+		// Create Event
+		final Event event = new Event("name" + newUserId, _defaultDate, _defaultCreditCost, coach, activity);
+
+		event.setDuration(50);
+		event.setIntensity(3);
+		event.setEquipment("equipment" + newUserId);
+		event.setDescription("description" + newUserId);
+
 		eventRepository.save(event);
 		return event;
 	}
 
 	// Creates an event linked to an existing activity
 	private Event createEventForActivity(final Activity activity) throws CreateException, FinderException {
-		final String id = counterService.getUniqueId("Activity");
-		// Create Coach
-		User coach = createNewCoach();
-		final Event event = new Event("name" + id, _defaultDate, _defaultCreditCost, coach, activity);
+		// Create user
+		String newCoachId = counterService.getUniqueId("User");
+		final User coach = new User(newCoachId, "firstname" + newCoachId, "lastname" + newCoachId);
+		coach.setPassword("pwd" + newCoachId);
+		coach.setRole(roleService.findByRoleName("ROLE_COACH"));
+		coach.setStatut("VALIDE");
+		userRepository.save(coach);
+
+		// Create Event
+		final Event event = new Event("name" + newCoachId, _defaultDate, _defaultCreditCost, coach, activity);
+
+		event.setDuration(50);
+		event.setIntensity(3);
+		event.setEquipment("equipment" + newCoachId);
+		event.setDescription("description" + newCoachId);
+
 		eventRepository.save(event);
 		return event;
 	}
@@ -504,7 +518,6 @@ public class EventDAOTest {
 		Discipline discipline = disciplineRepository.findById(categoryId).get();
 		activityRepository.delete(activity);
 		disciplineRepository.delete(discipline);
-
 	}
 
 	private void removeCoach(final User coach) throws RemoveException, ObjectNotFoundException {

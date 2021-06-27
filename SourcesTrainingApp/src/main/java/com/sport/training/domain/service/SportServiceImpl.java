@@ -60,7 +60,7 @@ public class SportServiceImpl implements SportService {
 	private UserService userService;
 
 	@Autowired
-	private ModelMapper commonModelMapper, activityModelMapper, eventModelMapper, userDTOModelMapper;
+	private ModelMapper commonModelMapper, activityModelMapper, eventModelMapper;
 
 	// =====================================
 	// = Constructors =
@@ -334,7 +334,6 @@ public class SportServiceImpl implements SportService {
 			throw new CreateException("Event object is invalid");
 
 		try {
-			System.out.println("activity Id: " + eventDTO.getActivityDTO().getId());
 			findActivity(eventDTO.getActivityDTO().getId());
 		} catch (FinderException e) {
 			throw new CreateException("Activity must exist to create an Event");
@@ -351,10 +350,10 @@ public class SportServiceImpl implements SportService {
 
 		// :::::::::::::::: We change DTO to model ::::::::::::::: //
 		Event event = eventModelMapper.map(eventDTO, Event.class);
-
+		
 		// Creates the object
 		eventRepository.save(event);
-
+		eventDTO.setId(eventRepository.findLastId().get());
 		LOGGER.debug("exiting " + mname);
 		return eventDTO;
 	}

@@ -25,9 +25,8 @@ import com.sport.training.authentication.domain.dto.UserDTO;
 import com.sport.training.authentication.domain.service.UserService;
 import com.sport.training.domain.dto.ActivityDTO;
 import com.sport.training.domain.dto.DisciplineDTO;
-import com.sport.training.domain.dto.DisciplineRegistryDTO;
+import com.sport.training.domain.dto.DisciplineUserDTO;
 import com.sport.training.domain.dto.EventDTO;
-import com.sport.training.domain.service.RegistryService;
 import com.sport.training.domain.service.SportService;
 import com.sport.training.exception.CreateException;
 import com.sport.training.exception.DuplicateKeyException;
@@ -44,9 +43,6 @@ public class GestionCoachController {
 	private UserService userService;
 
 	@Autowired
-	private RegistryService registryService;
-
-	@Autowired
 	private SportService sportService;
 
 	@GetMapping(path = "/select-activity/{username}")
@@ -59,7 +55,7 @@ public class GestionCoachController {
 		HashMap<String, List<ActivityDTO>> activityByDisciplinesCoach = new HashMap<String, List<ActivityDTO>>();
 		try {
 			userDTO = userService.findUser(username);
-			disciplineDTOsCoach = registryService.findDisciplineOkByCoach(username);
+			disciplineDTOsCoach = userService.findDisciplineOkByCoach(username);
 			if (disciplineDTOsCoach != null) {
 				for (DisciplineDTO disciplineDTO : disciplineDTOsCoach) {
 					List<ActivityDTO> list = new ArrayList<ActivityDTO>(
@@ -237,12 +233,14 @@ public class GestionCoachController {
 			coachDTO = userService.findUser(userDetails.getUsername());
 
 			disciplineDTOs = sportService.findDisciplines();
-			disciplineDTOsCoach = registryService.findDisciplinesByCoach(coachDTO.getUsername());
-			disciplineDTOsToCheckCoach = registryService.findDisciplineToCheckByCoach(coachDTO.getUsername());
+			disciplineDTOsCoach = userService.findDisciplinesByCoach(coachDTO.getUsername());
+			disciplineDTOsToCheckCoach = userService.findDisciplineToCheckByCoach(coachDTO.getUsername());
 
 		} catch (FinderException e) {
-			model.addAttribute("exception", e.getMessage());
-			return "error";
+			model.addAttribute("error", e.getMessage());
+			model.addAttribute("disciplineDTOs", disciplineDTOs);
+			model.addAttribute("coachDTO", coachDTO);
+			return "coach-discipline";
 		}
 
 		model.addAttribute("disciplineDTOsToCheckCoach", disciplineDTOsToCheckCoach);
@@ -264,8 +262,8 @@ public class GestionCoachController {
 			coachDTO = userService.findUser(userDetails.getUsername());
 			System.out.println("coach: " + coachDTO);
 			for (String disciplineIdChecked : disciplineId) {
-				registryService.createDisciplineRegistry(
-						new DisciplineRegistryDTO(sportService.findDiscipline(disciplineIdChecked), coachDTO));
+				userService.createDisciplineUser(
+						new DisciplineUserDTO(sportService.findDiscipline(disciplineIdChecked), coachDTO));
 			}
 			model.addAttribute("message", "Coach discipline(s) added");
 			return "coach-discipline";

@@ -23,12 +23,14 @@ import com.sport.training.domain.dto.ActivityDTO;
 import com.sport.training.domain.dto.DisciplineDTO;
 import com.sport.training.domain.dto.EventDTO;
 import com.sport.training.domain.model.Activity;
+import com.sport.training.domain.model.Discipline;
 import com.sport.training.domain.model.Event;
 import com.sport.training.exception.CreateException;
 import com.sport.training.exception.FinderException;
+import com.sport.training.exception.ObjectNotFoundException;
 import com.sport.training.exception.RemoveException;
 
-@Transactional
+//@Transactional
 @Import(TestConfig.class)
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -41,8 +43,6 @@ public class ShoppingCartTest {
 	SportService sportService;
 
 	@Autowired
-	private CounterService counterService;
-	@Autowired
 	private UserService userService;
 
 	private final Double _defaultCreditCost = 1.0;
@@ -51,13 +51,12 @@ public class ShoppingCartTest {
 	@Test
 	public void testshoppingCartService() throws Exception {
 
-		Long id = getPossibleUniqueStringId();
 		double total;
 		EventDTO eventDTO = null;
 		EventDTO newEventDTO = null;
 
-		// Creates an item
-		createEvent(id);
+		// Creates an event
+		Long id = createEvent();
 
 		// Gets the item
 		try {
@@ -72,12 +71,10 @@ public class ShoppingCartTest {
 		// Checks the amount of the shopping cart
 		total = eventDTO.getCreditCost() * 1;
 		assertEquals("The total should be equal to " + total, shoppingCartService.getTotal(), (Double) total);
-
-		// Creates a new event
-		id = getPossibleUniqueStringId();
-		createEvent(id);
+		
+		Long id2 = createEvent();
 		try {
-			newEventDTO = findEvent(id);
+			newEventDTO = findEvent(id2);
 		} catch (FinderException e) {
 			fail("Object has been created it should be found");
 		}
@@ -104,7 +101,7 @@ public class ShoppingCartTest {
 		assertEquals("The total should be equal to " + total, shoppingCartService.getTotal(), (Double) total);
 
 		// Cleans the test environment
-		deleteItem(id);
+		deleteEvent(id2);
 	}
 
 	// ==================================
@@ -115,59 +112,37 @@ public class ShoppingCartTest {
 		return eventDTO;
 	}
 
-	// Creates a category first, then a product and then an item linked to this
+	// Creates a discipline first, then an activity and then an event linked to this
 	// product
-	private void createEvent(final Long id) throws CreateException, FinderException, RemoveException {
-		// Create Category
-		final DisciplineDTO disciplineDTO = new DisciplineDTO("disc" + id, "name" + id, "description" + id);
-		sportService.createDiscipline(disciplineDTO);
-		// Create Product
-		final ActivityDTO activityDTO = new ActivityDTO("act" + id, "name" + id, "description" + id);
-		activityDTO.setDisciplineDTO(disciplineDTO);
-		sportService.createActivity(activityDTO);
-		// Create Coach
-		final String newCoachId = counterService.getUniqueId("Coach");
-		final UserDTO coachDTO = new UserDTO("user" + newCoachId, "firstname" + newCoachId, "lastname" + newCoachId);
-		coachDTO.setCity("city" + newCoachId);
-		coachDTO.setCountry("cnty" + newCoachId);
-		coachDTO.setState("state" + newCoachId);
-		coachDTO.setAddress1("address1" + newCoachId);
-		coachDTO.setAddress2("address2" + newCoachId);
-		coachDTO.setTelephone("phone" + newCoachId);
-		coachDTO.setEmail("email" + newCoachId);
-		coachDTO.setPassword("pwd" + newCoachId);
-		coachDTO.setZipcode("zip" + newCoachId);
-		coachDTO.setStatut("VALIDE");
-		coachDTO.setPassword("pwd" + newCoachId);
-		coachDTO.setRoleName("ROLE_COACH");
-		userService.createUser(coachDTO);
+	private long createEvent() throws CreateException, FinderException, RemoveException {
+		final String coachId = "coach1";
+		UserDTO coachDTO = findUser(coachId);
+		ActivityDTO activityDTO = findActivity("ABDOS");
+		// Create Event
+		final EventDTO eventDTO = new EventDTO("name" + coachId, _defaultDate, _defaultCreditCost, coachDTO,
+				activityDTO);
+		eventDTO.setActivityDTO(activityDTO);
+		eventDTO.setDuration(50);
+		eventDTO.setIntensity(3);
+		eventDTO.setEquipment("equipment" + coachId);
+		eventDTO.setDescription("description" + coachId);
 		
-		final EventDTO eventDTO = new EventDTO("name" + id, _defaultDate, _defaultCreditCost, coachDTO, activityDTO);
-		  try {
-			  sportService.createEvent(eventDTO);
-	        } catch ( Exception e ) {
-	        	// remove the added category object
-	        	sportService.deleteDiscipline(disciplineDTO.getId());
-	        	sportService.deleteActivity(activityDTO.getId());
-	        	userService.deleteUser(coachDTO.getUsername());
-	        	// rethrow the exception
-	        	throw e;
-	        }
+		EventDTO evtDTO = sportService.createEvent(eventDTO);
+		
+		return evtDTO.getId();
+		
 	}
 
-	private void deleteItem(final Long id) throws RemoveException, FinderException {
+	private void deleteEvent(final Long id) throws RemoveException, FinderException {
 		sportService.deleteEvent(id);
-		sportService.deleteActivity("act" + id);
-		sportService.deleteDiscipline("disc" + id);
 	}
-
-	protected Long getPossibleUniqueIntId() {
-		return (long) (Math.random() * 100000);
+	
+	private UserDTO findUser(final String id) throws FinderException {
+		final UserDTO userDTO = userService.findUser(id);
+		return userDTO;
 	}
-
-	protected Long getPossibleUniqueStringId() {
-		Long id = (long) (Math.random() * 100000);
-		return id;
+	private ActivityDTO findActivity(final String id) throws FinderException {
+		final ActivityDTO activityDTO = sportService.findActivity(id);
+		return activityDTO;
 	}
-
 }

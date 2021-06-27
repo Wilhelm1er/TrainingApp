@@ -24,7 +24,6 @@ import com.sport.training.domain.dao.EventRepository;
 import com.sport.training.domain.dto.DiscussionDTO;
 import com.sport.training.domain.dto.MessageDTO;
 import com.sport.training.domain.service.CoachService;
-import com.sport.training.domain.service.RegistryService;
 import com.sport.training.domain.service.SportService;
 import com.sport.training.exception.CreateException;
 
@@ -37,16 +36,7 @@ public class MessagerieController {
 	private UserService userService;
 
 	@Autowired
-	private RegistryService registryService;
-
-	@Autowired
-	private EventRepository eventRepository;
-
-	@Autowired
 	private RoleRepository roleRepository;
-
-	@Autowired
-	private SportService sportService;
 
 	@Autowired
 	private CoachService coachService;

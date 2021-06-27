@@ -17,10 +17,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import com.sport.training.authentication.domain.dto.UserDTO;
 import com.sport.training.authentication.domain.service.CustomUserDetails;
 import com.sport.training.authentication.domain.service.UserService;
-import com.sport.training.domain.dto.CreditRegistryDTO;
-import com.sport.training.domain.dto.EventRegistryDTO;
+import com.sport.training.domain.dto.CreditUserDTO;
+import com.sport.training.domain.dto.EventUserDTO;
 import com.sport.training.domain.dto.ShoppingCartEventDTO;
-import com.sport.training.domain.service.RegistryService;
 import com.sport.training.domain.service.ShoppingCartService;
 import com.sport.training.domain.service.SportService;
 import com.sport.training.exception.CreateException;
@@ -36,16 +35,13 @@ public class ShoppingCartCheckoutController {
 	ShoppingCartService shoppingCartService;
 
 	@Autowired
-	RegistryService registryService;
-
-	@Autowired
 	private SportService sportService;
 
 	@Autowired
 	private UserService userService;
 
 	@GetMapping("/checkout")
-	protected String checkout(Model model, @Valid @ModelAttribute EventRegistryDTO eventRegistryDTO,
+	protected String checkout(Model model, @Valid @ModelAttribute EventUserDTO eventRegistryDTO,
 			Authentication authentication) throws CreateException {
 		final String mname = "checkout";
 		LOGGER.debug("entering " + mname);
@@ -58,7 +54,7 @@ public class ShoppingCartCheckoutController {
 		CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 		String username = userDetails.getUsername();
 		UserDTO athleteDTO;
-		CreditRegistryDTO creditRegistryDTO;
+		CreditUserDTO creditRegistryDTO;
 		Double newSolde;
 		try {
 
@@ -67,15 +63,20 @@ public class ShoppingCartCheckoutController {
 				model.addAttribute("exception", "Not enough credit");
 				return "error";
 			}
+			if(shoppingCartService.getCart().isEmpty()) {
+		
+	            model.addAttribute("error", "Order object is empty");
+				return "checkout";
+				}
 
 			Collection<ShoppingCartEventDTO> cartEvents = shoppingCartService.getEvents();
 			Iterator<ShoppingCartEventDTO> it = cartEvents.iterator();
 			while (it.hasNext()) {
 				ShoppingCartEventDTO ShoppingCartEventDTO = it.next();
-				eventRegistryDTO = new EventRegistryDTO(athleteDTO,
+				eventRegistryDTO = new EventUserDTO(athleteDTO,
 						sportService.findEvent(ShoppingCartEventDTO.getEventId()));
 				try {
-					registryService.createEventRegistry(eventRegistryDTO);
+					userService.createEventUser(eventRegistryDTO);
 
 				} catch (CreateException e) {
 					LOGGER.error(mname + " - " + e.getMessage());
@@ -84,10 +85,10 @@ public class ShoppingCartCheckoutController {
 					return "error";
 				}
 			}
-			creditRegistryDTO = new CreditRegistryDTO(athleteDTO, shoppingCartService.getTotal());
+			creditRegistryDTO = new CreditUserDTO(athleteDTO, shoppingCartService.getTotal());
 			newSolde = userDetails.getCredit() - shoppingCartService.getTotal();
 			userDetails.setCredit(newSolde);
-			registryService.createCreditRegistry(creditRegistryDTO);
+			userService.createCreditUser(creditRegistryDTO);
 			shoppingCartService.empty();
 		} catch (FinderException e) {
 			LOGGER.error(mname + " - " + e.getMessage());

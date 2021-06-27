@@ -16,13 +16,13 @@ CONSTRAINT `PK_T_DISCIPLINE` PRIMARY KEY (`ID`)
 )  ENGINE=InnoDB
 ;
 
-CREATE TABLE `T_DISCIPLINE_REGISTRY` ( 
+CREATE TABLE `T_DISCIPLINE_USER` ( 
   `ID`                            BIGINT NOT NULL,
   `REGISTER_DATE`   TIMESTAMP(2) NOT NULL DEFAULT CURRENT_TIMESTAMP(2) ON UPDATE CURRENT_TIMESTAMP(2),
   `COACH_FK`                   	  VARCHAR(10),
   `DISCIPLINE_FK`                 VARCHAR(10),
   `Doc_STATUT` VARCHAR(10) DEFAULT NULL,
-CONSTRAINT `PK_T_DISCIPLINE_REGISTRY` PRIMARY KEY (`ID`)
+CONSTRAINT `PK_T_DISCIPLINE_USER` PRIMARY KEY (`ID`)
 )  ENGINE=InnoDB
 ;
 
@@ -53,12 +53,12 @@ CONSTRAINT `PK_T_EVENT` PRIMARY KEY (`ID`)
 )  ENGINE=InnoDB
 ;
 
-CREATE TABLE `T_EVENT_REGISTRY` ( 
+CREATE TABLE `T_EVENT_USER` ( 
   `ID`                            BIGINT NOT NULL,
   `REGISTER_DATE`   TIMESTAMP(2) NOT NULL DEFAULT CURRENT_TIMESTAMP(2) ON UPDATE CURRENT_TIMESTAMP(2),
   `USER_FK`                   	  VARCHAR(10),
   `EVENT_FK`          	          BIGINT,
-CONSTRAINT `PK_T_EVENT_REGISTRY` PRIMARY KEY (`ID`)
+CONSTRAINT `PK_T_EVENT_USER` PRIMARY KEY (`ID`)
 )  ENGINE=InnoDB
 ;
 
@@ -94,12 +94,12 @@ CONSTRAINT `PK_T_USER` PRIMARY KEY (`ID`)
 )  ENGINE=InnoDB
 ;
 
-CREATE TABLE `T_CREDIT_REGISTRY` ( 
+CREATE TABLE `T_CREDIT_USER` ( 
   `ID`                            BIGINT NOT NULL,
   `MOUVEMENT_DATE`  TIMESTAMP(2) NOT NULL DEFAULT CURRENT_TIMESTAMP(2) ON UPDATE CURRENT_TIMESTAMP(2),
   `CREDIT`          	          INT(10),
   `USER_FK`                   	  VARCHAR(10),
-CONSTRAINT `PK_T_CREDIT_REGISTRY` PRIMARY KEY (`ID`)
+CONSTRAINT `PK_T_CREDIT_USER` PRIMARY KEY (`ID`)
 )  ENGINE=InnoDB
 ;
 
@@ -117,7 +117,7 @@ CREATE TABLE `T_FILE` (
   `DATE` DATETIME(6) NOT NULL,
   `name` VARCHAR(255) DEFAULT NULL,
   `type` VARCHAR(255) DEFAULT NULL,
-  `USER_FK` VARCHAR(10) NOT NULL,
+  `USER_FK` VARCHAR(10),
 CONSTRAINT `PK_T_FILE` PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB;
 
@@ -125,17 +125,17 @@ CREATE TABLE `T_MESSAGE` (
   `id` BIGINT(20) NOT NULL,
   `DATE` DATETIME(6) NOT NULL,
   `TEXTE` VARCHAR(255) DEFAULT NULL,
-  `DISCUSSION_FK` BIGINT(20) NOT NULL,
-  `RECIPIENT` VARCHAR(255) NOT NULL,
-  `SENDER` VARCHAR(255) NOT NULL,
+  `DISCUSSION_FK` BIGINT(20),
+  `RECIPIENT_FK` VARCHAR(10),
+  `SENDER_FK` VARCHAR(10),
   CONSTRAINT `PK_T_MESSAGE` PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB;
 
 CREATE TABLE `T_DISCUSSION` (
   `id` BIGINT(20) NOT NULL,
   `CREATION_DATE` DATETIME(6) DEFAULT NULL,
-  `SUBJECT` VARCHAR(255) DEFAULT NULL,
-  `USER_FK` VARCHAR(255) NOT NULL,
+  `SUBJECT` VARCHAR(10) DEFAULT NULL,
+  `USER_FK` VARCHAR(10),
   CONSTRAINT `PK_T_DISCUSSION` PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB;
 
@@ -152,54 +152,95 @@ CREATE TABLE `T_ROLE` (
 CONSTRAINT `PK_T_ROLE` PRIMARY KEY (`ID`)
 )  ENGINE=InnoDB
 ;
+--
+-- Indexes for dumped tables
+--
 
-/*============================================================================*/
-/*                               FOREIGN KEYS                                 */
-/*============================================================================*/
+--
+-- Indexes for table `T_ACTIVITY`
+--
 ALTER TABLE `T_ACTIVITY`
-    ADD CONSTRAINT `FK_DISCIPLINE_FK`
-        FOREIGN KEY (`DISCIPLINE_FK`)
-            REFERENCES `T_DISCIPLINE` (`ID`)
- ;
- 
- ALTER TABLE `T_BOOKMARK`
-    ADD CONSTRAINT `FK_ATHLETE_FK`
-        FOREIGN KEY (`ATHLETE_FK`)
-            REFERENCES `T_USER` (`ID`)
- ;
- 
- ALTER TABLE `T_BOOKMARK`
-    ADD CONSTRAINT `FK_COACH_FK`
-        FOREIGN KEY (`COACH_FK`)
-            REFERENCES `T_USER` (`ID`)
- ;
- 
- ALTER TABLE `T_CREDIT_REGISTRY`
-    ADD CONSTRAINT `FK_USER_FK`
-        FOREIGN KEY (`USER_FK`)
-            REFERENCES `T_USER` (`ID`)
- ;
- 
-ALTER TABLE `T_EVENT`
-    ADD CONSTRAINT `FK_ACTIVITY_FK`
-        FOREIGN KEY (`ACTIVITY_FK`)
-            REFERENCES `T_ACTIVITY` (`ID`)
- ;
+  ADD KEY `FK_DISCIPLINE_FK` (`DISCIPLINE_FK`);
 
+--
+-- Indexes for table `T_BOOKMARK`
+--
+ALTER TABLE `T_BOOKMARK`
+  ADD KEY `FK_ATHLETE_FK` (`ATHLETE_FK`),
+  ADD KEY `FK_COACH_FK` (`COACH_FK`);
+
+
+--
+-- Indexes for table `T_DISCUSSION`
+--
+ALTER TABLE `T_DISCUSSION`
+  ADD KEY `FK_USER_FK` (`USER_FK`);
+  
+  
+  --
+-- Indexes for table `T_DISCIPLINE_USER`
+--
+ALTER TABLE `T_DISCIPLINE_USER`
+  ADD KEY `FK_COACH_FK` (`COACH_FK`),
+  ADD KEY `FK_DISCIPLINE_FK` (`DISCIPLINE_FK`);
+  
+  
+    --
+-- Indexes for table `T_EVENT_USER`
+--
+ALTER TABLE `T_EVENT_USER`
+  ADD KEY `FK_USER_FK` (`USER_FK`),
+  ADD KEY `FK_EVENT_FK` (`EVENT_FK`);
+  
+      --
+-- Indexes for table `T_MESSAGE`
+--
+ALTER TABLE `T_MESSAGE`
+  ADD KEY `FK_DISCUSSION_FK` (`DISCUSSION_FK`),
+  ADD KEY `FK_SENDER_FK` (`SENDER_FK`),
+  ADD KEY `FK_RECIPIENT_FK` (`RECIPIENT_FK`);
+  
+       --
+-- Indexes for table `T_NOTATION`
+--
+ALTER TABLE `T_NOTATION`
+  ADD KEY `FK_ATHLETE_FK` (`ATHLETE_FK`),
+  ADD KEY `FK_COACH_FK` (`COACH_FK`),
+  ADD KEY `FK_EVENT_FK` (`EVENT_FK`);
+      --
+-- Indexes for table `T_CREDIT_USER`
+--
+ALTER TABLE `T_CREDIT_USER`
+  ADD KEY `FK_USER_FK` (`USER_FK`);
+  
+        --
+-- Indexes for table `T_FILE`
+--
+ALTER TABLE `T_FILE`
+  ADD KEY `FK_USER_FK` (`USER_FK`);
+  
+--
+-- Indexes for table `T_EVENT`
+--
+ALTER TABLE `T_EVENT`
+  ADD KEY `FK_COACH_FK` (`COACH_FK`),
+  ADD KEY `FK_ACTIVITY_FK` (`ACTIVITY_FK`);
+
+--
 ALTER TABLE `T_USER`
-    ADD CONSTRAINT `FK_ROLE_FK`
-        FOREIGN KEY (`ROLE_FK`)
-            REFERENCES `T_ROLE` (`ID`)
- ;
+  ADD KEY `FK_ROLE_FK` (`ROLE_FK`);
+--
+-- Constraints for dumped tables
+--
  
 -- Cleanup
 DELETE FROM T_USER;
 DELETE FROM T_EVENT;
 DELETE FROM T_ACTIVITY;
 DELETE FROM T_DISCIPLINE;
-DELETE FROM T_DISCIPLINE_REGISTRY;
-DELETE FROM T_EVENT_REGISTRY;
-DELETE FROM T_CREDIT_REGISTRY;
+DELETE FROM T_DISCIPLINE_USER;
+DELETE FROM T_EVENT_USER;
+DELETE FROM T_CREDIT_USER;
 DELETE FROM T_BOOKMARK;
 DELETE FROM T_NOTATION;
 DELETE FROM T_FILE;
@@ -209,10 +250,10 @@ DELETE FROM T_COUNTER;
 DELETE FROM T_ROLE;
 
 -- Load
-INSERT INTO T_DISCIPLINE VALUES ('BOXE', 'Boxe', 'Renforcement du corps, canaliser son énergie et se surpasser', 'Brevet professionnel de la jeunesse, de l\'éducation populaire et du sport. Spécialité educateur sportif, mention Boxe' ),
+INSERT INTO T_DISCIPLINE VALUES ('BOXE', 'Boxe', 'Renforcement du corps, canaliser son energie et se surpasser', 'Brevet professionnel de la jeunesse, de l\'éducation populaire et du sport. Spécialité educateur sportif, mention Boxe' ),
 ('CARDIO', 'Cardio', 'Transpirer, se défouler, perdre du poids ou améliorer vos performances en augmentant votre fréquence cardiaque', 'Documents' ),
 ('DANSE', 'Danse', 'Laissez libre cours à votre fibre artistique dans vos expressions corporelles et émotions', 'Diplôme d\'état ou certificat d\'aptitude aux fonctions de professeur de danse' ),
-('GYM', 'Gym', ' Entretenez votre forme physique par des assouplissements, des étirements et des exercices de tonicité musculaire pour assurer l\'équilibre parfait du corps', 'Brevet d\’Etat AGFF - Activités Gymniques de la Forme et de la Force' ),
+('GYM', 'Gym', 'Entretenez votre forme physique par des assouplissements, des etirements et des exercices de tonicite musculaire', 'Brevet d Etat AGFF - Activites Gymniques de la Forme et de la Force' ),
 ('YOGA', 'Yoga', 'Différents cours et exercices qui vous permettront de vous déconnecter du monde extérieur pour vous connecter à votre pratique', 'Professeurs de Yoga Certifiés (PYC)' ),
 ('MUSCU', 'Musculation', 'Exercices et cours élaborés par nos coachs professionnels qui mixent le travail musculaire et l\'entraînement cardio', 'Brevet professionnel de la jeunesse, de l\'éducation populaire et du sport. Option cours collectif ou haltérophilie-musculation' );
 
@@ -230,7 +271,7 @@ INSERT INTO T_ACTIVITY VALUES ('COMB', 'Combat training', 'Mouvement de boxe, co
 ('AEROXPRT', 'Aero expert', 'Rythmé par plusieurs chansons autour d\’une seule chorégraphie à apprendre et mémoriser pendant la séance', '0', '2', 'DANSE'),
 ('DANSBALL', 'Danse ballet', 'Sur des airs de danse classique, j\’évolue comme une vraie ballerine chorégraphies après chorégraphie', '0', '2', 'DANSE'),
 ('DANSEMEGA', 'Danse megamix', 'Cours de danse qui permet de brûler des calories sans vous en rendre compte car le plaisir de danser prendra le dessus', '0', '2', 'DANSE'),
-('ABDOS', 'Abominaux', 'Permet de travailler l\’ensemble des muscles de la sangle abdominale sous la forme d\’exercices ciblés', '0', '2', 'GYM'),
+('ABDOS', 'Abdominaux', 'Permet de travailler l ensemble des muscles de la sangle abdominale sous la forme d exercices cibles', '0', '2', 'GYM'),
 ('BODYTONE', 'Bodytone', 'Cours de renforcement musculaire dans lequel l\'utilisation d\’un ballon permet l\'alternance de mouvements dynamiques et d\’exercices de stabilité', '0', '2', 'GYM'),
 ('GYMLGT', 'Gym light', 'Permet de me tonifier et d\’entretenir mon corps quel que soit mon niveau sportif', '0', '2', 'GYM'),
 ('GYMVIT', 'Gym vitality', 'La GYMVITALITY développe les capacités physiques selon le rythme de chacun', '0', '2', 'GYM'),
@@ -253,21 +294,16 @@ INSERT INTO T_ROLE VALUES('1','ROLE_ADMIN'),
 
 INSERT INTO T_USER VALUES('root','Elliot', 'Alderson', '','','','','','','','100','VALIDE','elliotalderson@protonmail.com','$2a$10$id93M61FLpdk9sXOBzZlsuhNETXn7YsjyBZs3X09Ll7f5S3lqpee2','1'),
 ('athlete1','nick', 'alberts', '','','','','','','','30','VALIDE','nick@gmail.com','$2a$10$id93M61FLpdk9sXOBzZlsuhNETXn7YsjyBZs3X09Ll7f5S3lqpee2','3'),
-('athlete2','sam', 'dupont', '','','','','','','','12','VALIDE','samd@hotmail.com','$2a$10$id93M61FLpdk9sXOBzZlsuhNETXn7YsjyBZs3X09Ll7f5S3lqpee2','3'),
+('athlete2','sam', 'dupont', '','','','','','','','10','VALIDE','samd@hotmail.com','$2a$10$id93M61FLpdk9sXOBzZlsuhNETXn7YsjyBZs3X09Ll7f5S3lqpee2','3'),
 ('athlete3','peter', 'parker', '','','','','','','','52','INVALIDE','peter@yopmail.com','$2a$10$id93M61FLpdk9sXOBzZlsuhNETXn7YsjyBZs3X09Ll7f5S3lqpee2','3'),
-('coach1','andrew', 'wiggin', '','','','','','','','34','VALIDE','andy@protonmail.com','$2a$10$id93M61FLpdk9sXOBzZlsuhNETXn7YsjyBZs3X09Ll7f5S3lqpee2','2'),
+('athlete4','patrice', 'remo', '','','','','','','','20','VALIDE','pat@gmail.com','$2a$10$id93M61FLpdk9sXOBzZlsuhNETXn7YsjyBZs3X09Ll7f5S3lqpee2','3'),
+('athlete5','remy', 'lodoid', '','','','','','','','12','VALIDE','remy@hotmail.com','$2a$10$id93M61FLpdk9sXOBzZlsuhNETXn7YsjyBZs3X09Ll7f5S3lqpee2','3'),
+('athlete6','daniel', 'raoue', '','','','','','','','12','INVALIDE','daniel@yopmail.com','$2a$10$id93M61FLpdk9sXOBzZlsuhNETXn7YsjyBZs3X09Ll7f5S3lqpee2','3'),
+('coach1','andrew', 'wiggin', '','','','','','','','42','VALIDE','andy@protonmail.com','$2a$10$id93M61FLpdk9sXOBzZlsuhNETXn7YsjyBZs3X09Ll7f5S3lqpee2','2'),
 ('coach2','chuck', 'norris', '','','','','','','','45','VALIDE','chucky@hotmail.com','$2a$10$id93M61FLpdk9sXOBzZlsuhNETXn7YsjyBZs3X09Ll7f5S3lqpee2','2'),
-('coach3','jean claude', 'vandamme', '','','','','','','','18','INVALIDE','jcvd@gmail.com','$2a$10$id93M61FLpdk9sXOBzZlsuhNETXn7YsjyBZs3X09Ll7f5S3lqpee2','2')
+('coach3','jean claude', 'vandamme', '','','','','','','','8','INVALIDE','jcvd@gmail.com','$2a$10$id93M61FLpdk9sXOBzZlsuhNETXn7YsjyBZs3X09Ll7f5S3lqpee2','2'),
+('coach4','adam', 'wiggin', '','','','','','','','90','VALIDE','andam@protonmail.com','$2a$10$id93M61FLpdk9sXOBzZlsuhNETXn7YsjyBZs3X09Ll7f5S3lqpee2','2'),
+('coach5','claude', 'norris', '','','','','','','','31','VALIDE','claude@hotmail.com','$2a$10$id93M61FLpdk9sXOBzZlsuhNETXn7YsjyBZs3X09Ll7f5S3lqpee2','2'),
+('coach6','jean marie', 'leduc', '','','','','','','','4','INVALIDE','jmaried@gmail.com','$2a$10$id93M61FLpdk9sXOBzZlsuhNETXn7YsjyBZs3X09Ll7f5S3lqpee2','2');
+
 ;
-
-INSERT INTO T_DISCIPLINE_REGISTRY VALUES ('1','2021-05-25 22:40:06','coach1','BOXE','no'),
-('2','2021-05-12 16:30:12','coach1','CARDIO','ok'),
-('3','2021-05-22 02:45:00','coach2','GYM','ok'),
-('4','2021-05-20 10:40:06','coach3','MUSCU','ok'),
-('5','2021-05-12 17:30:12','coach1','YOGA','ok'),
-('6','2021-05-22 16:45:00','coach2','BOXE','no'),
-('7','2021-05-20 22:40:06','coach3','DANSE','ok');
-
-
-
-

@@ -8,20 +8,20 @@ import org.springframework.context.annotation.Configuration;
 import com.sport.training.authentication.domain.dto.UserDTO;
 import com.sport.training.authentication.domain.model.User;
 import com.sport.training.domain.dto.EventDTO;
-import com.sport.training.domain.dto.EventRegistryDTO;
+import com.sport.training.domain.dto.EventUserDTO;
 import com.sport.training.domain.dto.FileDTO;
 import com.sport.training.domain.dto.MessageDTO;
 import com.sport.training.domain.dto.ActivityDTO;
 import com.sport.training.domain.dto.BookmarkDTO;
-import com.sport.training.domain.dto.DisciplineRegistryDTO;
+import com.sport.training.domain.dto.DisciplineUserDTO;
 import com.sport.training.domain.dto.DiscussionDTO;
 import com.sport.training.domain.model.Event;
-import com.sport.training.domain.model.EventRegistry;
+import com.sport.training.domain.model.EventUser;
 import com.sport.training.domain.model.File;
 import com.sport.training.domain.model.Message;
 import com.sport.training.domain.model.Activity;
 import com.sport.training.domain.model.Bookmark;
-import com.sport.training.domain.model.DisciplineRegistry;
+import com.sport.training.domain.model.DisciplineUser;
 import com.sport.training.domain.model.Discussion;
 
 @Configuration
@@ -71,23 +71,23 @@ public class MapperConfig {
 	}
 
 	@Bean
-	public ModelMapper eventRegistryModelMapper() {
+	public ModelMapper eventUserModelMapper() {
 		ModelMapper modelMapper = new ModelMapper();
-		TypeMap<EventRegistry, EventRegistryDTO> typeMap = modelMapper.createTypeMap(EventRegistry.class,
-				EventRegistryDTO.class);
-		typeMap.addMappings(mapper -> mapper.map(EventRegistry::getUser, EventRegistryDTO::setUserDTO));
-		typeMap.addMappings(mapper -> mapper.map(EventRegistry::getEvent, EventRegistryDTO::setEventDTO));
+		TypeMap<EventUser, EventUserDTO> typeMap = modelMapper.createTypeMap(EventUser.class,
+				EventUserDTO.class);
+		typeMap.addMappings(mapper -> mapper.map(EventUser::getUser, EventUserDTO::setUserDTO));
+		typeMap.addMappings(mapper -> mapper.map(EventUser::getEvent, EventUserDTO::setEventDTO));
 		return modelMapper;
 	}
 
 	@Bean
-	public ModelMapper disciplineRegistryModelMapper() {
+	public ModelMapper disciplineUserModelMapper() {
 		ModelMapper modelMapper = new ModelMapper();
-		TypeMap<DisciplineRegistry, DisciplineRegistryDTO> typeMap = modelMapper.createTypeMap(DisciplineRegistry.class,
-				DisciplineRegistryDTO.class);
-		typeMap.addMappings(mapper -> mapper.map(DisciplineRegistry::getCoach, DisciplineRegistryDTO::setCoachDTO));
+		TypeMap<DisciplineUser, DisciplineUserDTO> typeMap = modelMapper.createTypeMap(DisciplineUser.class,
+				DisciplineUserDTO.class);
+		typeMap.addMappings(mapper -> mapper.map(DisciplineUser::getCoach, DisciplineUserDTO::setCoachDTO));
 		typeMap.addMappings(
-				mapper -> mapper.map(DisciplineRegistry::getDiscipline, DisciplineRegistryDTO::setDisciplineDTO));
+				mapper -> mapper.map(DisciplineUser::getDiscipline, DisciplineUserDTO::setDisciplineDTO));
 		return modelMapper;
 	}
 

@@ -41,5 +41,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			LOGGER.debug("exiting "+mname);
 			return new CustomUserDetails(userDTO.getUsername(), userDTO.getPassword(), grantedAuthorities, userDTO.getCredit(), userDTO.getStatut());
 		}
+		
+		
 	}
 }

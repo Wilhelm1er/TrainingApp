@@ -17,11 +17,10 @@ import com.sport.training.authentication.domain.dto.UserDTO;
 import com.sport.training.authentication.domain.service.CustomUserDetails;
 import com.sport.training.authentication.domain.service.UserService;
 import com.sport.training.domain.dto.BookmarkDTO;
-import com.sport.training.domain.dto.CreditRegistryDTO;
+import com.sport.training.domain.dto.CreditUserDTO;
 import com.sport.training.domain.dto.EventDTO;
-import com.sport.training.domain.dto.EventRegistryDTO;
+import com.sport.training.domain.dto.EventUserDTO;
 import com.sport.training.domain.service.CoachService;
-import com.sport.training.domain.service.RegistryService;
 import com.sport.training.domain.service.SportService;
 import com.sport.training.exception.CreateException;
 import com.sport.training.exception.FinderException;
@@ -41,8 +40,6 @@ public class GestionAthleteController {
 	@Autowired
 	private SportService sportService;
 
-	@Autowired
-	private RegistryService registryService;
 
 	@GetMapping(path = "/bookmark")
 	public String showBookmark(Model model, Authentication authentication) throws CreateException {
@@ -103,7 +100,7 @@ public class GestionAthleteController {
 		LocalDateTime dateNow = LocalDateTime.now();
 
 		try {
-			eventDTOs = registryService.findEventsByAthlete(username);
+			eventDTOs = userService.findEventsByAthlete(username);
 			for (EventDTO eventDTO : eventDTOs) {
 				// checke si les 30minutes avant event sont depassé pour annuler
 				if (eventDTO.getDateTime().minusMinutes(30).isBefore(dateNow)) {
@@ -134,17 +131,17 @@ public class GestionAthleteController {
 		CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 		String username = userDetails.getUsername();
 		UserDTO athleteDTO;
-		EventRegistryDTO eventReg;
+		EventUserDTO eventReg;
 		EventDTO eventDTO = null;
 		Double newSolde;
 		try {
 			athleteDTO = userService.findUser(username);
-			eventReg = registryService.findEventRegistryByAthleteAndEvent(userDetails.getUsername(), eventId);
+			eventReg = userService.findEventUserByAthleteAndEvent(userDetails.getUsername(), eventId);
 			eventDTO = sportService.findEvent(eventId);
 			newSolde = userDetails.getCredit() + eventDTO.getCreditCost();
 			userDetails.setCredit(newSolde);
-			registryService.createCreditRegistry(new CreditRegistryDTO(athleteDTO, eventDTO.getCreditCost()));
-			registryService.deleteEventRegistry(eventReg.getId());
+			userService.createCreditUser(new CreditUserDTO(athleteDTO, eventDTO.getCreditCost()));
+			userService.deleteEventUser(eventReg.getId());
 
 		} catch (FinderException e) {
 			LOGGER.error("exception in " + mname + " : " + e.getMessage());
@@ -173,7 +170,7 @@ public class GestionAthleteController {
 		EventDTO eventDTO;
 		try {
 			athleteDTO = userService.findUser(username);
-			userDTOs = registryService.findAthleteByEvent(eventId);
+			userDTOs = userService.findAthleteByEvent(eventId);
 			eventDTO = sportService.findEvent(eventId);
 
 		} catch (FinderException e) {

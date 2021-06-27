@@ -7,7 +7,7 @@ import javax.persistence.Embeddable;
  * This class encapsulates all the data for a credit card.
  *
  * @see com.sport.training.authentication.domain.model.User.domain.customer.Customer
- * @see com.EventRegistry.petstore.Registration.domain.order.Order
+ * @see com.EventUser.petstore.Registration.domain.order.Order
  */
 @Embeddable
 public class CreditCard {

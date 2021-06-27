@@ -13,15 +13,21 @@
 		<h3 th:text="#{manage.sport}">Gestion des disciplines</h3>
 
 		<br>
-		<h5 th:if="${!disciplineDTOsCoach.empty}"
+		
+		<div class="container">
+		<h5 
 			th:text="#{coachs.your.discipline}"></h5>
+			
+			<div class="erreur" th:if="${error}" th:text="${error}"></div><br>
+			
 		<div id="decision" class="row" style="margin-top: 1%;">
 			<div class="col-md-4"
 				th:each="disciplineDTO : ${disciplineDTOsCoach}">
 				<label th:text="${disciplineDTO.name}"></label><br>
 			</div>
 		</div>
-
+		</div>
+		
 		<br>
 
 		<form class="form-horizontal" method="post" name="userForm"
@@ -46,8 +52,10 @@
 				</div>
 			</div>
 		</form>
+		
 		<br>
-		<h5 th:if="${!disciplineDTOsToCheckCoach.empty}"
+		
+		<h5 
 			th:text="#{user.discipline}"></h5>
 
 		<div id="decision" class="row" style="margin-top: 1%;">

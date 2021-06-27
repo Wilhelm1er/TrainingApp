@@ -6,18 +6,19 @@
 	<nav th:insert="layout/default.html :: navbar"></nav>
 <div class="container">
 <br><br><br><br>
-	<h3 th:text="#{order.complete}"></h3>
+	
+
+
+<div class="erreur" th:if="${error}" th:text="${error}"></div><br>
+<div th:if="${error == null}">
+<h3 th:text="#{order.complete}"></h3>
 	<br>
-
-
-
-
 	<p th:text="#{Thanks.for.shopping}" />
 	<p th:text="#{cart.newSolde}+${athleteCredit}" />
 	
 	<a th:href="@{'/athlete-events/'+${#authentication.getPrincipal().getUsername()}}"
 							th:text="#{menu.sessions}"></a>
-
+</div>
 
 </div>
 	<br>

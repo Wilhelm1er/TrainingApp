@@ -66,25 +66,25 @@
 							th:text="#{documents}" sec:authorize="hasAnyRole('ADMIN')"></a>
 						<!--  Partie ATHLETE ET COACH   -->
 						<a class="dropdown-item" 
-							th:href="@{'/account/'+${#authentication.getPrincipal().getUsername()}}"
+							th:href="@{'/account/'+${#authentication.name}}"
 							th:text="#{view.account.title}"
 							sec:authorize="hasAnyRole('ATHLETE','COACH')"></a>
 						<!--  Partie ATHLETE      -->
-						<a class="dropdown-item" th:if="${#authentication.getPrincipal().getStatut()}=='VALIDE'" th:href="@{/bookmark}"
+						<a class="dropdown-item" th:href="@{/bookmark}"
 							th:text="#{menu.bookmark}" sec:authorize="hasAnyRole('ATHLETE')"></a>
-						<a class="dropdown-item" th:if="${#authentication.getPrincipal().getStatut()}=='VALIDE'"
-							th:href="@{'/athlete-events/'+${#authentication.getPrincipal().getUsername()}}"
+						<a class="dropdown-item"
+							th:href="@{'/athlete-events/'+${#authentication.name}}"
 							th:text="#{menu.sessions}" sec:authorize="hasAnyRole('ATHLETE')"></a>
 						<!--  Partie COACH        -->
 						<a class="dropdown-item" 
 							th:href="@{/coach-discipline/}"
 							th:text="#{coachs.discipline}"
 							sec:authorize="hasAnyRole('COACH')"></a> 
-						<a class="dropdown-item" th:if="${#authentication.getPrincipal().getStatut()}=='VALIDE'"
-							th:href="@{'/select-activity/'+${#authentication.getPrincipal().getUsername()}}"
+						<a class="dropdown-item"
+							th:href="@{'/select-activity/'+${#authentication.name}}"
 							th:text="#{coachs.event}" sec:authorize="hasAnyRole('COACH')"></a>
-						<a class="dropdown-item" th:if="${#authentication.getPrincipal().getStatut()}=='VALIDE'"
-							th:href="@{'/events/'+${#authentication.getPrincipal().getUsername()}}"
+						<a class="dropdown-item"
+							th:href="@{'/events/'+${#authentication.name}}"
 							th:text="#{coachs.event.list}"
 							sec:authorize="hasAnyRole('COACH')"></a>
 						<!--  Partie Pour tous     -->
@@ -105,10 +105,10 @@
 					<a class="nav-link dropdown-toggle" th:href="@{/#}"
 					id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
 					aria-haspopup="true" aria-expanded="false"><span
-						th:text="'Solde: '+${#authentication.getPrincipal().getCredit()}+ ' Cr'"></span></a>
+						th:text="'Vos crédits'"></span></a>
 					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 						<a class="nav-item dropdown-item"></a> <a class="dropdown-item"
-							th:href="@{'/credit/'+${#authentication.getPrincipal().getUsername()}}"
+							th:href="@{'/credit/'+${#authentication.name}}"
 							th:text="#{credit.gestion}">Credit</a>
 
 					</div>

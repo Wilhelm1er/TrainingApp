@@ -10,7 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.sport.training.authentication.domain.dto.UserDTO;
-import com.sport.training.domain.service.RegistryService;
+import com.sport.training.authentication.domain.service.UserService;
 import com.sport.training.exception.FinderException;
 
 /**
@@ -22,7 +22,7 @@ public class FindCoachController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FindCoachController.class);
 
 	@Autowired
-	private RegistryService registryService;
+	private UserService userService;
 
 	@GetMapping("/find-coachs")
 	protected String findCoachs(Model model, @RequestParam String disciplineId) {
@@ -31,7 +31,7 @@ public class FindCoachController {
 
 		Set<UserDTO> coachDTOs = null;
 		try {
-			coachDTOs = registryService.findCoachsByDiscipline(disciplineId);
+			coachDTOs = userService.findCoachsByDiscipline(disciplineId);
 
 		} catch (FinderException e) {
 			model.addAttribute("exception", e.getMessage());

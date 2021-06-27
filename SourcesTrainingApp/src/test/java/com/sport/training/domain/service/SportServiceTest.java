@@ -7,6 +7,7 @@ import static org.junit.Assert.fail;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
@@ -44,11 +45,11 @@ import junit.framework.TestCase;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Transactional
+//@Transactional
 public class SportServiceTest extends TestCase {
 
 	private final Double _defaultCreditCost = 1.0;
-	private final LocalDateTime _defaultDate =  LocalDateTime.of(2021, 7, 12, 20, 15, 50, 345678900);
+	private final LocalDateTime _defaultDate = LocalDateTime.of(2021, 7, 12, 20, 15, 50, 345678900);
 
 	@Autowired
 	private SportService sportService;
@@ -60,7 +61,7 @@ public class SportServiceTest extends TestCase {
 	private CounterService counterService;
 	@Autowired
 	private UserService userService;
-	
+
 	private Random random = new Random();
 
 	// ==================================
@@ -655,7 +656,7 @@ public class SportServiceTest extends TestCase {
 
 		// Finds an object with a unknown identifier
 		final Long id = eventRepository.findLastId().orElse(10000L) + 1;
-		
+
 		try {
 			sportService.findEvent(id);
 			fail("Object with unknonw id should not be found");
@@ -677,13 +678,12 @@ public class SportServiceTest extends TestCase {
 	 */
 	@Test
 	public void testServiceFindAllEvents() throws Exception {
-		final Long id = eventRepository.findLastId().orElse(10000L) + 1;
 
 		// First findAll
 		final int firstSize = findAllEvents();
 		// Create an object
-		final long eventId = createEvent(id);
-		
+		final long eventId = createEvent();
+
 		// Ensures that the object exists
 		try {
 			findEvent(eventId);
@@ -704,7 +704,7 @@ public class SportServiceTest extends TestCase {
 		try {
 			findEvent(eventId);
 			fail("Object has been deleted it shouldn't be found");
-		} catch (NoSuchElementException e) {
+		} catch (FinderException e) {
 		}
 	}
 
@@ -714,6 +714,17 @@ public class SportServiceTest extends TestCase {
 		final String firstname = "andrew";
 		final String lastname = "wiggin";
 		UserDTO coachDTO = findUser(coachId);
+		ActivityDTO activityDTO = findActivity("ABDOS");
+		// Create Event
+		final EventDTO eventAddDTO = new EventDTO("name" + coachId, _defaultDate, _defaultCreditCost, coachDTO,
+				activityDTO);
+		eventAddDTO.setActivityDTO(activityDTO);
+		eventAddDTO.setDuration(50);
+		eventAddDTO.setIntensity(3);
+		eventAddDTO.setEquipment("equipment" + coachId);
+		eventAddDTO.setDescription("description" + coachId);
+		sportService.createEvent(eventAddDTO);
+
 		assertEquals(firstname, coachDTO.getFirstname());
 		assertEquals(lastname, coachDTO.getLastname());
 		List<EventDTO> eventDTOs = getAllEventsForActivity(coachId);
@@ -727,8 +738,8 @@ public class SportServiceTest extends TestCase {
 	 * creates a new object and does a second findAll.
 	 */
 	@Test
-	public void testServiceFindAllEventsForAActivity() throws Exception {
-		ActivityDTO newActivityDTO = createNewActivity();
+	public void testServiceFindAllEventsForAnActivity() throws Exception {
+		ActivityDTO newActivityDTO = findActivity("BODY");
 		final String activityId = newActivityDTO.getId();
 
 		// First findAll
@@ -750,33 +761,30 @@ public class SportServiceTest extends TestCase {
 
 		// second findAll
 		final int secondSize = findAllEvents(activityId);
-
 		// Checks that the collection size has increase of one
 		if (firstSize + 1 != secondSize)
 			fail("The collection size should have increased by 1");
 
 		// Create an object
 		EventDTO eventDTO2 = createEventForActivity(newActivityDTO);
-			
+
 		// Ensures that the object exists
-				try {
-					findEvent(eventDTO2.getId());
-				} catch (FinderException e) {
-					fail("Object has been created it should be found");
-				}
-				
-				// third findAll
-				final int thirdSize = findAllEvents(activityId);
+		try {
+			findEvent(eventDTO2.getId());
+		} catch (FinderException e) {
+			fail("Object has been created it should be found");
+		}
 
-				// Checks that the collection size has increase of one
-				if (thirdSize != secondSize + 1)
-					fail("The collection should have the same size");
+		// third findAll
+		final int thirdSize = findAllEvents(activityId);
 
-				
+		// Checks that the collection size has increase of one
+		if (thirdSize != secondSize + 1)
+			fail("The collection should have the same size");
+
 		// Cleans the test environment
 		deleteEvent(eventDTO1.getId());
 		deleteEvent(eventDTO2.getId());
-		deleteActivity(newActivityDTO.getId());
 	}
 
 	/**
@@ -785,35 +793,29 @@ public class SportServiceTest extends TestCase {
 	 */
 	@Test
 	public void testServiceCreateEvent() throws Exception {
-		// Finds an object with a unknown identifier
-		final Long id = eventRepository.findLastId().orElse(10000L) + 1;
 		EventDTO eventDTO = null;
 
-		// Ensures that the object doesn't exist
-		try {
-			findEvent(id);
-			fail("Object has not been created yet it shouldn't be found");
-		} catch (FinderException e) {
-		}
-
 		// Creates an object
-		createEvent(id);
+		final long eventId = createEvent();
+		
+		// Creates an object
+		createEvent();
 
 		// Ensures that the object exists
 		try {
-			eventDTO = findEvent(id);
+			eventDTO = findEvent(eventId);
 		} catch (FinderException e) {
 			fail("Object has been created it should be found");
 		}
 
 		// Checks that it's the right object
-		checkEvent(eventDTO, id);
+		checkEvent(eventDTO, String.valueOf(eventId));
 
 		// Cleans the test environment
-		deleteEvent(id);
+		deleteEvent(eventId);
 
 		try {
-			findEvent(id);
+			findEvent(eventId);
 			fail("Object has been deleted it shouldn't be found");
 		} catch (FinderException e) {
 		}
@@ -835,7 +837,7 @@ public class SportServiceTest extends TestCase {
 
 		// Creates an object with empty values
 		try {
-			eventDTO = new EventDTO(new String(), _defaultDate, null,new UserDTO(), new ActivityDTO());
+			eventDTO = new EventDTO(new String(), _defaultDate, null, new UserDTO(), new ActivityDTO());
 			sportService.createEvent(eventDTO);
 			fail("Object with empty values should not be created");
 		} catch (Exception e) {
@@ -844,7 +846,7 @@ public class SportServiceTest extends TestCase {
 
 		// Creates an object with null values
 		try {
-			eventDTO = new EventDTO(null, null, null,null, null);
+			eventDTO = new EventDTO(null, null, null, null, null);
 			sportService.createEvent(eventDTO);
 			fail("Object with null values should not be created");
 		} catch (Exception e) {
@@ -862,7 +864,7 @@ public class SportServiceTest extends TestCase {
 
 		// Creates an object with no object linked
 		try {
-			eventDTO = new EventDTO(id, "name" + id, 0);
+			eventDTO = new EventDTO("name" + id, _defaultDate, 0.0, new UserDTO(), new ActivityDTO());
 			sportService.createEvent(eventDTO);
 			fail("Object with no object linked should not be created");
 		} catch (Exception e) {
@@ -871,7 +873,7 @@ public class SportServiceTest extends TestCase {
 
 		// Creates an object with a null linked object
 		try {
-			eventDTO = new EventDTO(id, "name" + id, 0);
+			eventDTO = new EventDTO("name" + id, _defaultDate, 0.0, new UserDTO(), new ActivityDTO());
 			sportService.createEvent(eventDTO);
 			fail("Object with null object linked should not be created");
 		} catch (Exception e) {
@@ -880,7 +882,7 @@ public class SportServiceTest extends TestCase {
 
 		// Creates an object with an empty linked object
 		try {
-			eventDTO = new EventDTO(id, "name" + id, 0);
+			eventDTO = new EventDTO("name" + id, _defaultDate, 0.0, new UserDTO(), new ActivityDTO());
 			sportService.createEvent(eventDTO);
 			fail("Object with an empty object linked should not be created");
 		} catch (Exception e) {
@@ -889,7 +891,7 @@ public class SportServiceTest extends TestCase {
 
 		// Creates an object with an unknown linked object
 		try {
-			eventDTO = new EventDTO(id, "name" + id, 0);
+			eventDTO = new EventDTO("name" + id, _defaultDate, 0.0, new UserDTO(), new ActivityDTO());
 			sportService.createEvent(eventDTO);
 			fail("Object with an unknown object linked should not be created");
 		} catch (Exception e) {
@@ -902,22 +904,22 @@ public class SportServiceTest extends TestCase {
 	 */
 	@Test
 	public void testServiceUpdateEvent() throws Exception {
-		final String id = counterService.getUniqueId("Event");
-		final String updatePattern = id + "_updated";
+		
 
 		// Creates an object
-		createEvent(id);
+		final long eventId = createEvent();
+		final String updatePattern = String.valueOf(eventId) + "_updated";
 
 		// Ensures that the object exists
 		EventDTO eventDTO = null;
 		try {
-			eventDTO = findEvent(id);
+			eventDTO = findEvent(eventId);
 		} catch (FinderException e) {
 			fail("Object has been created it should be found");
 		}
 
 		// Checks that it's the right object
-		checkEvent(eventDTO, id);
+		checkEvent(eventDTO, String.valueOf(eventId));
 
 		// Updates the object with new values
 		updateEvent(eventDTO, updatePattern);
@@ -925,7 +927,7 @@ public class SportServiceTest extends TestCase {
 		// Ensures that the object still exists
 		EventDTO eventDTOUpdated = null;
 		try {
-			eventDTOUpdated = findEvent(id);
+			eventDTOUpdated = findEvent(eventId);
 		} catch (FinderException e) {
 			fail("Object should be found");
 		}
@@ -934,10 +936,10 @@ public class SportServiceTest extends TestCase {
 		checkEvent(eventDTOUpdated, updatePattern);
 
 		// Cleans the test environment
-		deleteEvent(id);
+		deleteEvent(eventId);
 
 		try {
-			findEvent(id);
+			findEvent(eventId);
 			fail("Object has been deleted it shouldn't be found");
 		} catch (FinderException e) {
 		}
@@ -959,7 +961,7 @@ public class SportServiceTest extends TestCase {
 
 		// Updates an object with empty values
 		try {
-			eventDTO = new EventDTO(new String(),new LocalDateTime(null, null),null, new UserDTO(), new ActivityDTO());
+			eventDTO = null;
 			sportService.updateEvent(eventDTO);
 			fail("Object with empty values should not be updated");
 		} catch (Exception e) {
@@ -968,7 +970,7 @@ public class SportServiceTest extends TestCase {
 
 		// Updates an object with null values
 		try {
-			eventDTO = new EventDTO(new String(),new LocalDateTime(null, null),null, new UserDTO(), new ActivityDTO());
+			eventDTO = new EventDTO(new String(), _defaultDate, 0.0, new UserDTO(), new ActivityDTO());
 			sportService.updateEvent(eventDTO);
 			fail("Object with null values should not be updated");
 		} catch (Exception e) {
@@ -1023,14 +1025,15 @@ public class SportServiceTest extends TestCase {
 
 	private void createDiscipline(final String id) throws CreateException {
 		final DisciplineDTO disciplineDTO = new DisciplineDTO(id, "name" + id, "description" + id);
-		disciplineDTO.setDocuments("documents"+id);
+		disciplineDTO.setDocuments("documents" + id);
 		sportService.createDiscipline(disciplineDTO);
 	}
 
-	private void updateDiscipline(final DisciplineDTO disciplineDTO, final String updatePattern) throws UpdateException {
+	private void updateDiscipline(final DisciplineDTO disciplineDTO, final String updatePattern)
+			throws UpdateException {
 		disciplineDTO.setName("name" + updatePattern);
 		disciplineDTO.setDescription("description" + updatePattern);
-		disciplineDTO.setDocuments("documents"+updatePattern);
+		disciplineDTO.setDocuments("documents" + updatePattern);
 		sportService.updateDiscipline(disciplineDTO);
 	}
 
@@ -1072,8 +1075,9 @@ public class SportServiceTest extends TestCase {
 	private void createActivity(final String id) throws CreateException, RemoveException, FinderException {
 		// Create Discipline
 		final String disciplineId = counterService.getUniqueId("Discipline");
-		final DisciplineDTO disciplineDTO = new DisciplineDTO(disciplineId, "name" + disciplineId, "description" + disciplineId);
-		disciplineDTO.setDocuments("documents"+disciplineId);
+		final DisciplineDTO disciplineDTO = new DisciplineDTO(disciplineId, "name" + disciplineId,
+				"description" + disciplineId);
+		disciplineDTO.setDocuments("documents" + disciplineId);
 		sportService.createDiscipline(disciplineDTO);
 		// Create Activity
 		final ActivityDTO activityDTO = new ActivityDTO(id, "name" + id, "description" + id);
@@ -1093,8 +1097,9 @@ public class SportServiceTest extends TestCase {
 		String catId = activityDTO.getDisciplineDTO().getId();
 		// Create Discipline
 		final String disciplineId = counterService.getUniqueId("Discipline");
-		final DisciplineDTO disciplineDTO = new DisciplineDTO(disciplineId, "name" + disciplineId, "description" + disciplineId);
-		disciplineDTO.setDocuments("documents"+disciplineId);
+		final DisciplineDTO disciplineDTO = new DisciplineDTO(disciplineId, "name" + disciplineId,
+				"description" + disciplineId);
+		disciplineDTO.setDocuments("documents" + disciplineId);
 		sportService.createDiscipline(disciplineDTO);
 		// Update Activity with new discipline
 		activityDTO.setName("name" + id);
@@ -1121,8 +1126,9 @@ public class SportServiceTest extends TestCase {
 	// Creates a new discipline and return it
 	private DisciplineDTO createNewDiscipline() throws CreateException {
 		final String disciplineId = counterService.getUniqueId("Discipline");
-		final DisciplineDTO disciplineDTO = new DisciplineDTO(disciplineId, "name" + disciplineId, "description" + disciplineId);
-		disciplineDTO.setDocuments("documents"+disciplineId);
+		final DisciplineDTO disciplineDTO = new DisciplineDTO(disciplineId, "name" + disciplineId,
+				"description" + disciplineId);
+		disciplineDTO.setDocuments("documents" + disciplineId);
 		sportService.createDiscipline(disciplineDTO);
 		return disciplineDTO;
 	}
@@ -1146,7 +1152,7 @@ public class SportServiceTest extends TestCase {
 
 	private int findAllEvents() throws FinderException {
 		try {
-			return sportService.findEvents().size();
+			return ((List<EventDTO>)sportService.findEvents()).size();
 		} catch (FinderException e) {
 			return 0;
 		}
@@ -1154,7 +1160,7 @@ public class SportServiceTest extends TestCase {
 
 	private int findAllEvents(String activityId) throws FinderException {
 		try {
-			return sportService.findEvents(activityId).size();
+			return sportService.findEventsByActivity(activityId).size();
 		} catch (FinderException e) {
 			return 0;
 		}
@@ -1170,102 +1176,64 @@ public class SportServiceTest extends TestCase {
 
 	// Creates a discipline first, then a activity and then an event linked to this
 	// activity
-	private long createEvent(final long id) throws CreateException, FinderException {
-		// Create Coach
-				final String newCoachId = counterService.getUniqueId("Coach");
-				final UserDTO coachDTO = new UserDTO("user" + newCoachId, "firstname" + newCoachId, "lastname" + newCoachId);
-				coachDTO.setCity("city" + newCoachId);
-				coachDTO.setCountry("cnty" + newCoachId);
-				coachDTO.setState("state" + newCoachId);
-				coachDTO.setAddress1("address1" + newCoachId);
-				coachDTO.setAddress2("address2" + newCoachId);
-				coachDTO.setTelephone("phone" + newCoachId);
-				coachDTO.setEmail("email" + newCoachId);
-				coachDTO.setPassword("pwd" + newCoachId);
-				coachDTO.setZipcode("zip" + newCoachId);
-				coachDTO.setStatut("VALIDE");
-				coachDTO.setPassword("pwd" + newCoachId);
-				coachDTO.setRoleName("ROLE_COACH");
-				userService.createUser(coachDTO);
-		// Create Discipline
-		final String disciplineId = counterService.getUniqueId("Discipline");
-		final DisciplineDTO disciplineDTO = new DisciplineDTO(disciplineId, "name" + disciplineId, "description" + disciplineId);
-		sportService.createDiscipline(disciplineDTO);
-		// Create Activity
-		final String activityId = counterService.getUniqueId("Activity");
-		final ActivityDTO activityDTO = new ActivityDTO(activityId, "name" + activityId, "description" + activityId);
-		activityDTO.setDisciplineDTO(disciplineDTO);
-		sportService.createActivity(activityDTO);
+	private long createEvent() throws CreateException, FinderException, RemoveException {
+		final String coachId = "coach1";
+		UserDTO coachDTO = findUser(coachId);
+		ActivityDTO activityDTO = findActivity("ABDOS");
 		// Create Event
-		final EventDTO eventDTO = new EventDTO("name" + id, _defaultDate, _defaultCreditCost,
-				coachDTO,activityDTO);
+		final EventDTO eventDTO = new EventDTO("name" + coachId, _defaultDate, _defaultCreditCost, coachDTO,
+				activityDTO);
 		eventDTO.setActivityDTO(activityDTO);
-		sportService.createEvent(eventDTO);
+		eventDTO.setDuration(50);
+		eventDTO.setIntensity(3);
+		eventDTO.setEquipment("equipment" + coachId);
+		eventDTO.setDescription("description" + coachId);
 		
-		return eventDTO.getId();
+		EventDTO evtDTO= sportService.createEvent(eventDTO);
+		
+		return evtDTO.getId();
 	}
 
 	// Creates a discipline, a activity and updates the event with this new activity
 	private void updateEvent(final EventDTO eventDTO, final String updatePattern)
 			throws UpdateException, CreateException, FinderException, RemoveException {
-		// get old activity id
-		String prodId = eventDTO.getActivityDTO().getId();
-		// Create Discipline
-		final String disciplineId = counterService.getUniqueId("Discipline");
-		final DisciplineDTO disciplineDTO = new DisciplineDTO(disciplineId, "name" + disciplineId, "description" + disciplineId);
-		sportService.createDiscipline(disciplineDTO);
-		// Create Activity
-		final String activityId = counterService.getUniqueId("Activity");
-		final ActivityDTO activityDTO = new ActivityDTO(activityId, "name" + activityId, "description" + activityId);
-		activityDTO.setDisciplineDTO(disciplineDTO);
-		sportService.createActivity(activityDTO);
+		ActivityDTO activityDTO = findActivity("BODY");
 		// Updates the event
-		eventDTO.setName("name" + updatePattern);
+		eventDTO.setName("Evt" + updatePattern);
 		eventDTO.setActivityDTO(activityDTO);
 		sportService.updateEvent(eventDTO);
-		deleteActivity(prodId);
 	}
 
-	private void deleteEvent(final Long id) throws RemoveException, FinderException {
-		final EventDTO eventDTO = sportService.findEvent(id);
-		final String activityId = eventDTO.getActivityDTO().getId();
-		final ActivityDTO activityDTO = sportService.findActivity(activityId);
-		final String disciplineId = activityDTO.getDisciplineDTO().getId();
+	private void deleteEvent(final long id) throws RemoveException, FinderException {
+		EventDTO eventDTO = sportService.findEvent(id);
+		System.out.println("id: "+id);
+		final ActivityDTO activityDTO = eventDTO.getActivityDTO();
+		System.out.println("activityDTO: "+activityDTO);
+		final UserDTO user = eventDTO.getCoachDTO();
+		System.out.println("user: "+user);
 		sportService.deleteEvent(id);
-		sportService.deleteActivity(activityId);
-		sportService.deleteDiscipline(disciplineId);
 	}
 
-	private void checkEvent(final EventDTO eventDTO, final long id) {
-		assertEquals("name", "name" + id, eventDTO.getName());
-		assertTrue("creditCost", _defaultCreditCost == eventDTO.getCreditCost());
+	private void checkEvent(final EventDTO eventDTO, final String id) {
+		assertEquals("name", eventDTO.getName(), eventDTO.getName());
 		assertNotNull("activity", eventDTO.getActivityDTO());
 		assertNotNull("coach", eventDTO.getCoachDTO());
 	}
 
-	// Creates a discipline first, then a activity and return it
-	private ActivityDTO createNewActivity() throws CreateException {
-		// Create Discipline
-		final String disciplineId = counterService.getUniqueId("Discipline");
-		final DisciplineDTO disciplineDTO = new DisciplineDTO(disciplineId, "name" + disciplineId, "description" + disciplineId);
-		sportService.createDiscipline(disciplineDTO);
-		// Create Activity
-		final String activityId = counterService.getUniqueId("Activity");
-		final ActivityDTO activityDTO = new ActivityDTO(activityId, "name" + activityId, "description" + activityId);
-		activityDTO.setDisciplineDTO(disciplineDTO);
-		sportService.createActivity(activityDTO);
-		return activityDTO;
-	}
-
 	// Creates an event linked to an existing activity
-	private EventDTO createEventForActivity(final ActivityDTO activityDTO) throws CreateException {
-		// Finds an object with a unknown identifier
-		final Long id = eventRepository.findLastId().orElse(10000L) + 1;
-		final EventDTO eventDTO = new EventDTO("name" + id, _defaultDate, _defaultCreditCost, new UserDTO("coachDTO"+ id),activityDTO);
+	private EventDTO createEventForActivity(final ActivityDTO activityDTO) throws CreateException, FinderException {
+		final String coachId = "coach1";
+		UserDTO coachDTO = findUser(coachId);
+		final EventDTO eventDTO = new EventDTO("for" + coachId, _defaultDate, _defaultCreditCost,
+				coachDTO, activityDTO);
+		eventDTO.setDuration(50);
+		eventDTO.setIntensity(3);
+		eventDTO.setEquipment("equipment" + coachId);
+		eventDTO.setDescription("description" + coachId);
 		sportService.createEvent(eventDTO);
 		return eventDTO;
 	}
-	
+
 	private UserDTO findUser(final String id) throws FinderException {
 		final UserDTO userDTO = userService.findUser(id);
 		return userDTO;

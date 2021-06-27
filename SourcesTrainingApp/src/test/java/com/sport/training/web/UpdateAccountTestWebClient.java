@@ -46,7 +46,7 @@ public class UpdateAccountTestWebClient {
 		updateAccountPage.getFormByName("update-account-form").getInputByName("password").setValueAttribute("cnam");
 		updateAccountPage = updateAccountPage.getFormByName("update-account-form")
 				.getButtonByName("update-account-button").click();
-		assertTrue(updateAccountPage.getBody().asText().contains("account updated"));
+		assertTrue(updateAccountPage.getBody().asText().contains("Vous trouverez ici"));
 
 		mockMvc.perform(logout());
 
@@ -58,8 +58,8 @@ public class UpdateAccountTestWebClient {
 		loginPage.getFormByName("loginForm").getInputByName("username").setValueAttribute("coach1");
 		loginPage.getFormByName("loginForm").getInputByName("password").setValueAttribute("cnam");
 		loginPage.getFormByName("loginForm").getButtonByName("loginButton").click();
-		displayCustomersPage = webClient.getPage("/display-users");
+		displayCustomersPage = webClient.getPage("/account/coach1");
 		assertTrue("could not login after updating account. Something broken ?",
-				displayCustomersPage.getBody().asText().contains("Liste des clients"));
+				displayCustomersPage.getBody().asText().contains("Votre compte"));
 	}
 }

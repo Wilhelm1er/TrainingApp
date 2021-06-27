@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import com.sport.training.authentication.domain.dto.UserDTO;
 import com.sport.training.authentication.domain.service.UserService;
-import com.sport.training.domain.dto.CreditRegistryDTO;
-import com.sport.training.domain.service.RegistryService;
+import com.sport.training.domain.dto.CreditUserDTO;
 import com.sport.training.exception.CreateException;
 import com.sport.training.exception.FinderException;
 
@@ -29,9 +28,6 @@ public class GestionCreditController {
 	@Autowired
 	private UserService userService;
 
-	@Autowired
-	private RegistryService registryService;
-
 	@GetMapping(path = "/credit/{username}")
 	public String showCreditByUser(Model model, @PathVariable String username) throws FinderException {
 		final String mname = "showCreditByUser";
@@ -42,7 +38,7 @@ public class GestionCreditController {
 
 		try {
 			userDTO = userService.findUser(username);
-			creditRegistryList = registryService.findDateAndCreditByUser(username);
+			creditRegistryList = userService.findDateAndCreditByUser(username);
 		} catch (FinderException e) {
 			model.addAttribute("exception", e.getClass().getName());
 			return "error";
@@ -95,7 +91,7 @@ public class GestionCreditController {
 		final String mname = "addCredit";
 		LOGGER.debug("entering " + mname);
 		try {
-			registryService.createCreditRegistry(new CreditRegistryDTO(userDTO, addCredit));
+			userService.createCreditUser(new CreditUserDTO(userDTO, addCredit));
 
 			model.addAttribute("message", "credit added");
 			return "credit";
@@ -116,7 +112,7 @@ public class GestionCreditController {
 		final String mname = "withdrawCredit";
 		LOGGER.debug("entering " + mname);
 		try {
-			registryService.createCreditRegistry(new CreditRegistryDTO(userDTO, withdrawCredit));
+			userService.createCreditUser(new CreditUserDTO(userDTO, withdrawCredit));
 
 			model.addAttribute("message", "credit withdrawed");
 			return "credit";
